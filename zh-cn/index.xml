@@ -1,0 +1,199 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:webfeeds="http://webfeeds.org/rss/1.0">
+  <channel>
+    <title>GUBlog</title>
+    <link>/zh-cn/</link>
+    <description>Recent content on GUBlog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 29 May 2019 16:01:23 +0800</lastBuildDate>
+    
+        <atom:link href="/zh-cn/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>关于</title>
+      <link>/zh-cn/about/</link>
+      <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
+      
+      <guid>/zh-cn/about/</guid>
+      
+        <description>&lt;p&gt;Hugo 是個靜態網頁產生器。&lt;/p&gt;
+
+&lt;p&gt;它利用了一些開放原始碼的專案像是：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/spf13/cobra&#34;&gt;Cobra&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/spf13/viper&#34;&gt;Viper&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/spf13/jWalterWeatherman&#34;&gt;J Walter Weatherman&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/spf13/cast&#34;&gt;Cast&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;了解並貢獻： &lt;a href=&#34;https://github.com/gohugoio&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Linux常用指令</title>
+      <link>/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</link>
+      <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
+      
+      <guid>/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</guid>
+      
+        <description>&lt;h1&gt;Linux常用指令&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;授权文件&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;chmod +x 文件名/文件夹  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;将端口加入到Linux防火墙&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;firewall-cmd --permanent --add-port=80/tcp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;跳过认证直接连接mysql数据库&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mysqld_safe --skip-grant-tables 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;启动，停止，重启，状态&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;service mysqld start/stop/restart/status  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;关闭防火墙命令&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;systemctl stop firewalld.service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;开启防火墙&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;systemctl start firewalld.service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;查询防火墙是否设置端口&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;firewall-cmd --query-port=3306/tcp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;向防火墙添加端口&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;firewall-cmd --permanent --add-port=3306/tcp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;防火墙重启&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;firewall-cmd --reload
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;查看防火墙所有端口&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;firewall-cmd --list-all
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;查看tomcat&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ps -ef|grep tomcat
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;查看所有端口使用情况&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ps -ef
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;查看端口是否启动&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nestat -na|grep 端口号
+kill -9 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;查看程序安装位置&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;which docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;mv 指令可以文件或文件夹重命名&lt;/p&gt;
+
+&lt;p&gt;linux中快速清空文件内容的几种方法,需要的朋友可以参考下&lt;/p&gt;
+
+&lt;p&gt;$ : &amp;gt; filename
+$ &amp;gt; filename
+$ echo &amp;ldquo;&amp;rdquo; &amp;gt; filename
+$ echo &amp;gt; filename
+$ cat /dev/null &amp;gt; filename&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;//重新运行环境变量文件&lt;/strong&gt;
+source etc/profile&lt;/p&gt;
+
+&lt;p&gt;实例1：从远处复制文件到本地目录
+命令：
+scp root@192.168.120.204:/opt/soft/nginx-0.5.38.tar.gz /opt/soft/&lt;/p&gt;
+
+&lt;p&gt;实例2：从远处复制到本地
+命令：
+scp -r root@192.168.120.204:/opt/soft/mongodb /opt/soft/&lt;/p&gt;
+
+&lt;p&gt;实例3：上传本地文件到远程机器指定目录
+命令：
+scp /opt/soft/nginx-0.5.38.tar.gz root@192.168.120.204:/opt/soft/scptest&lt;/p&gt;
+
+&lt;p&gt;实例4：上传本地目录到远程机器指定目录
+命令：
+scp -r /opt/soft/mongodb root@192.168.120.204:/opt/soft/scptest&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>redis在CentOS7安装</title>
+      <link>/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</link>
+      <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
+      
+      <guid>/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</guid>
+      
+        <description>&lt;p&gt;&lt;h1&gt;redis在CentOS7安装&lt;/h1&gt;
+&lt;p&gt;1.# wget &lt;a href=&#34;http://download.redis.io/releases/redis-5.0.3.tar.gz&#34;&gt;http://download.redis.io/releases/redis-5.0.3.tar.gz&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2.# tar xzf redis-5.0.3.tar.gz&lt;/p&gt;
+&lt;p&gt;3.# cd redis-5.0.3&lt;/p&gt;
+&lt;p&gt;4.# yum install gcc-c++&lt;br&gt;&amp;lt;&amp;ndash;可能需要安装gcc c语言编译工具&amp;ndash;&amp;gt;&lt;/p&gt;
+&lt;p&gt;在第一次make指令后再次make会出现“没有那个文件或目录”错误，是因为第一次make后没有清除残留文件导致&lt;/p&gt;
+&lt;p&gt;5.执行# make distclean之后再执行make&lt;/p&gt;
+&lt;p&gt;6.# make&lt;/p&gt;
+&lt;p&gt;7.# make install&lt;/p&gt;
+&lt;p&gt;ps ：/usr/local/bin路径下有启动命令；可以指定配置文件启动，
+开启服务前可以修改配置文件redis.conf，GENERAL模块 daemonize no改为yes 可以最小化后台运行
+这样可以不用改变初始化的文件  redis-server /home/redis/redis.conf&lt;/p&gt;
+进入redis&lt;/p&gt;
+
+&lt;p&gt;redis-cli -p 6379
+退出
+shutdown&lt;/p&gt;
+
+&lt;p&gt;redis常用指令
+select 数字（0-15）切换库，默认有16个库，启始库为0，&lt;br&gt;
+dbsize 查看当前数据库有多少key&lt;br&gt;
+keys */或者其他通配符  keys 7**&lt;br&gt;
+flushdb 清当前库 flushall 情况所有库&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;默认端口6379&lt;br&gt; 哨兵默认端口 16379&lt;br&gt;
+数据类型操作指令大全
+&lt;a href=&#34;http://redisdoc.com/&#34;&gt;http://redisdoc.com/&lt;/a&gt;&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>夕阳</title>
+      <link>/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3/</link>
+      <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
+      
+      <guid>/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3/</guid>
+      
+        <description>&lt;p&gt;這是一個簡單的筆記。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>
