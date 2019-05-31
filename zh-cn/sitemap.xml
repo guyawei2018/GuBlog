@@ -1,77 +1,77 @@
-<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
+<?xml-stylesheet type="text/xsl" href="http://106.15.235.215/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>/zh-cn/about.html</loc>
+    <loc>http://106.15.235.215/zh-cn/about.html</loc>
     <lastmod>2017-08-28T21:41:52+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>/zh-cn/categories.html</loc>
+    <loc>http://106.15.235.215/zh-cn/categories.html</loc>
     <lastmod>2019-05-29T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/zh-cn/</loc>
+    <loc>http://106.15.235.215/zh-cn/</loc>
     <lastmod>2019-05-29T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4.html</loc>
-    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>/zh-cn/category/notes.html</loc>
-    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/zh-cn/posts.html</loc>
-    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/zh-cn/tags.html</loc>
-    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/zh-cn/tag/notes.html</loc>
-    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85.html</loc>
+    <loc>http://106.15.235.215/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4.html</loc>
     <lastmod>2019-05-29T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>/zh-cn/category/demos.html</loc>
+    <loc>http://106.15.235.215/zh-cn/category/notes.html</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://106.15.235.215/zh-cn/posts.html</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://106.15.235.215/zh-cn/tags.html</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://106.15.235.215/zh-cn/tag/notes.html</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://106.15.235.215/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85.html</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://106.15.235.215/zh-cn/category/demos.html</loc>
     <lastmod>2018-03-05T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/zh-cn/tag/images.html</loc>
+    <loc>http://106.15.235.215/zh-cn/tag/images.html</loc>
     <lastmod>2018-03-05T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3.html</loc>
+    <loc>http://106.15.235.215/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3.html</loc>
     <lastmod>2018-03-05T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

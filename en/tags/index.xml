@@ -2,48 +2,48 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on GUBlog</title>
-    <link>/en/tags.html</link>
+    <link>http://106.15.235.215/en/tags.html</link>
     <description>Recent content in Tags on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Tue, 06 Mar 2018 16:01:23 +0800</lastBuildDate>
     
-	<atom:link href="/en/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://106.15.235.215/en/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>preview</title>
-      <link>/en/tag/preview.html</link>
+      <link>http://106.15.235.215/en/tag/preview.html</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/tag/preview.html</guid>
+      <guid>http://106.15.235.215/en/tag/preview.html</guid>
       <description></description>
     </item>
     
     <item>
       <title>shortcodes</title>
-      <link>/en/tag/shortcodes.html</link>
+      <link>http://106.15.235.215/en/tag/shortcodes.html</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/tag/shortcodes.html</guid>
+      <guid>http://106.15.235.215/en/tag/shortcodes.html</guid>
       <description></description>
     </item>
     
     <item>
       <title>tutorial</title>
-      <link>/en/tag/tutorial.html</link>
+      <link>http://106.15.235.215/en/tag/tutorial.html</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/tag/tutorial.html</guid>
+      <guid>http://106.15.235.215/en/tag/tutorial.html</guid>
       <description></description>
     </item>
     
     <item>
       <title>images</title>
-      <link>/en/tag/images.html</link>
+      <link>http://106.15.235.215/en/tag/images.html</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/tag/images.html</guid>
+      <guid>http://106.15.235.215/en/tag/images.html</guid>
       <description></description>
     </item>
     

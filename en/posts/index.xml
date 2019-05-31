@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on GUBlog</title>
-    <link>/en/posts.html</link>
+    <link>http://106.15.235.215/en/posts.html</link>
     <description>Recent content in Posts on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Tue, 06 Mar 2018 16:01:23 +0800</lastBuildDate>
     
-	<atom:link href="/en/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://106.15.235.215/en/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Den Theme Preview</title>
-      <link>/en/2018/03/06/den-theme-preview.html</link>
+      <link>http://106.15.235.215/en/2018/03/06/den-theme-preview.html</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/2018/03/06/den-theme-preview.html</guid>
+      <guid>http://106.15.235.215/en/2018/03/06/den-theme-preview.html</guid>
       <description>&lt;p&gt;This is a simple preview for styles in Den.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Header Image</title>
-      <link>/en/2018/03/05/header-image.html</link>
+      <link>http://106.15.235.215/en/2018/03/05/header-image.html</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/2018/03/05/header-image.html</guid>
+      <guid>http://106.15.235.215/en/2018/03/05/header-image.html</guid>
       <description>This is a simple note.</description>
     </item>
     

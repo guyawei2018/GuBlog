@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>images on GUBlog</title>
-    <link>/en/tag/images.html</link>
+    <link>http://106.15.235.215/en/tag/images.html</link>
     <description>Recent content in images on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Mon, 05 Mar 2018 16:01:23 +0800</lastBuildDate>
     
-	<atom:link href="/en/tag/images/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://106.15.235.215/en/tag/images/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Header Image</title>
-      <link>/en/2018/03/05/header-image.html</link>
+      <link>http://106.15.235.215/en/2018/03/05/header-image.html</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/2018/03/05/header-image.html</guid>
+      <guid>http://106.15.235.215/en/2018/03/05/header-image.html</guid>
       <description>This is a simple note.</description>
     </item>
     
