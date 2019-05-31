@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Demos on GUBlog</title>
-    <link>/en/category/demos/</link>
+    <link>/en/category/demos.html</link>
     <description>Recent content in Demos on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
@@ -13,10 +13,10 @@
     
     <item>
       <title>Header Image</title>
-      <link>/en/2018/03/05/header-image/</link>
+      <link>/en/2018/03/05/header-image.html</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/2018/03/05/header-image/</guid>
+      <guid>/en/2018/03/05/header-image.html</guid>
       <description>This is a simple note.</description>
     </item>
     

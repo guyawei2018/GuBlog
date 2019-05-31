@@ -12,10 +12,10 @@
     
     <item>
       <title>关于</title>
-      <link>/zh-cn/about/</link>
+      <link>/zh-cn/about.html</link>
       <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
       
-      <guid>/zh-cn/about/</guid>
+      <guid>/zh-cn/about.html</guid>
       
         <description>&lt;p&gt;Hugo 是個靜態網頁產生器。&lt;/p&gt;
 
@@ -35,10 +35,10 @@
     
     <item>
       <title>Linux常用指令</title>
-      <link>/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</link>
+      <link>/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4.html</link>
       <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
       
-      <guid>/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</guid>
+      <guid>/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4.html</guid>
       
         <description>&lt;h1&gt;Linux常用指令&lt;/h1&gt;
 
@@ -147,10 +147,10 @@ scp -r /opt/soft/mongodb root@192.168.120.204:/opt/soft/scptest&lt;/p&gt;
     
     <item>
       <title>redis在CentOS7安装</title>
-      <link>/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</link>
+      <link>/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85.html</link>
       <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
       
-      <guid>/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</guid>
+      <guid>/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85.html</guid>
       
         <description>&lt;p&gt;&lt;h1&gt;redis在CentOS7安装&lt;/h1&gt;
 &lt;p&gt;1.# wget &lt;a href=&#34;http://download.redis.io/releases/redis-5.0.3.tar.gz&#34;&gt;http://download.redis.io/releases/redis-5.0.3.tar.gz&lt;/a&gt;&lt;/p&gt;
@@ -185,10 +185,10 @@ flushdb 清当前库 flushall 情况所有库&lt;br&gt;&lt;/p&gt;
     
     <item>
       <title>夕阳</title>
-      <link>/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3/</link>
+      <link>/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3.html</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3/</guid>
+      <guid>/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3.html</guid>
       
         <description>&lt;p&gt;這是一個簡單的筆記。&lt;/p&gt;
 </description>

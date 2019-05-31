@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on GUBlog</title>
-    <link>/zh-tw/categories/</link>
+    <link>/zh-tw/categories.html</link>
     <description>Recent content in Categories on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
@@ -13,19 +13,19 @@
     
     <item>
       <title>Demos</title>
-      <link>/zh-tw/category/demos/</link>
+      <link>/zh-tw/category/demos.html</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/zh-tw/category/demos/</guid>
+      <guid>/zh-tw/category/demos.html</guid>
       <description></description>
     </item>
     
     <item>
       <title>Notes</title>
-      <link>/zh-tw/category/notes/</link>
+      <link>/zh-tw/category/notes.html</link>
       <pubDate>Sun, 04 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/zh-tw/category/notes/</guid>
+      <guid>/zh-tw/category/notes.html</guid>
       <description></description>
     </item>
     

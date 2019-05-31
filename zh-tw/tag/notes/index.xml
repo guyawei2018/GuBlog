@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>notes on GUBlog</title>
-    <link>/zh-tw/tag/notes/</link>
+    <link>/zh-tw/tag/notes.html</link>
     <description>Recent content in notes on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
@@ -13,19 +13,19 @@
     
     <item>
       <title>筆記 2</title>
-      <link>/zh-tw/2018/03/04/%E7%AD%86%E8%A8%98-2/</link>
+      <link>/zh-tw/2018/03/04/%E7%AD%86%E8%A8%98-2.html</link>
       <pubDate>Sun, 04 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/zh-tw/2018/03/04/%E7%AD%86%E8%A8%98-2/</guid>
+      <guid>/zh-tw/2018/03/04/%E7%AD%86%E8%A8%98-2.html</guid>
       <description>這是一個簡單的筆記。</description>
     </item>
     
     <item>
       <title>筆記 1</title>
-      <link>/zh-tw/2018/03/03/%E7%AD%86%E8%A8%98-1/</link>
+      <link>/zh-tw/2018/03/03/%E7%AD%86%E8%A8%98-1.html</link>
       <pubDate>Sat, 03 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/zh-tw/2018/03/03/%E7%AD%86%E8%A8%98-1/</guid>
+      <guid>/zh-tw/2018/03/03/%E7%AD%86%E8%A8%98-1.html</guid>
       <description>這是一個簡單的筆記。</description>
     </item>
     

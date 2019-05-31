@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on GUBlog</title>
-    <link>/zh-cn/tags/</link>
+    <link>/zh-cn/tags.html</link>
     <description>Recent content in Tags on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
@@ -13,19 +13,19 @@
     
     <item>
       <title>notes</title>
-      <link>/zh-cn/tag/notes/</link>
+      <link>/zh-cn/tag/notes.html</link>
       <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
       
-      <guid>/zh-cn/tag/notes/</guid>
+      <guid>/zh-cn/tag/notes.html</guid>
       <description></description>
     </item>
     
     <item>
       <title>images</title>
-      <link>/zh-cn/tag/images/</link>
+      <link>/zh-cn/tag/images.html</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/zh-cn/tag/images/</guid>
+      <guid>/zh-cn/tag/images.html</guid>
       <description></description>
     </item>
     

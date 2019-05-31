@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on GUBlog</title>
-    <link>/en/tags/</link>
+    <link>/en/tags.html</link>
     <description>Recent content in Tags on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
@@ -13,37 +13,37 @@
     
     <item>
       <title>preview</title>
-      <link>/en/tag/preview/</link>
+      <link>/en/tag/preview.html</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/tag/preview/</guid>
+      <guid>/en/tag/preview.html</guid>
       <description></description>
     </item>
     
     <item>
       <title>shortcodes</title>
-      <link>/en/tag/shortcodes/</link>
+      <link>/en/tag/shortcodes.html</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/tag/shortcodes/</guid>
+      <guid>/en/tag/shortcodes.html</guid>
       <description></description>
     </item>
     
     <item>
       <title>tutorial</title>
-      <link>/en/tag/tutorial/</link>
+      <link>/en/tag/tutorial.html</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/tag/tutorial/</guid>
+      <guid>/en/tag/tutorial.html</guid>
       <description></description>
     </item>
     
     <item>
       <title>images</title>
-      <link>/en/tag/images/</link>
+      <link>/en/tag/images.html</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>/en/tag/images/</guid>
+      <guid>/en/tag/images.html</guid>
       <description></description>
     </item>
     
