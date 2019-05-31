@@ -2,20 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://106.15.235.215/en/about.html</loc>
+    <loc>http://106.15.235.215/en/about/</loc>
     <lastmod>2017-08-28T21:41:52+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/categories.html</loc>
+    <loc>http://106.15.235.215/en/categories/</loc>
     <lastmod>2018-03-07T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/2018/03/06/den-theme-preview.html</loc>
+    <loc>http://106.15.235.215/en/2018/03/06/den-theme-preview/</loc>
     <lastmod>2018-03-07T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -28,56 +28,56 @@
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/category/notes.html</loc>
+    <loc>http://106.15.235.215/en/category/notes/</loc>
     <lastmod>2018-03-07T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/posts.html</loc>
+    <loc>http://106.15.235.215/en/posts/</loc>
     <lastmod>2018-03-07T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/tags.html</loc>
+    <loc>http://106.15.235.215/en/tags/</loc>
     <lastmod>2018-03-07T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/tag/preview.html</loc>
+    <loc>http://106.15.235.215/en/tag/preview/</loc>
     <lastmod>2018-03-07T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/tag/shortcodes.html</loc>
+    <loc>http://106.15.235.215/en/tag/shortcodes/</loc>
     <lastmod>2018-03-07T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/tag/tutorial.html</loc>
+    <loc>http://106.15.235.215/en/tag/tutorial/</loc>
     <lastmod>2018-03-07T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/category/demos.html</loc>
+    <loc>http://106.15.235.215/en/category/demos/</loc>
     <lastmod>2018-03-05T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/2018/03/05/header-image.html</loc>
+    <loc>http://106.15.235.215/en/2018/03/05/header-image/</loc>
     <lastmod>2018-03-05T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/en/tag/images.html</loc>
+    <loc>http://106.15.235.215/en/tag/images/</loc>
     <lastmod>2018-03-05T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>

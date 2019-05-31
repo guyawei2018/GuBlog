@@ -12,10 +12,10 @@
     
     <item>
       <title>About</title>
-      <link>http://106.15.235.215/en/about.html</link>
+      <link>http://106.15.235.215/en/about/</link>
       <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
       
-      <guid>http://106.15.235.215/en/about.html</guid>
+      <guid>http://106.15.235.215/en/about/</guid>
       
         <description>&lt;p&gt;Hugo is a static site engine written in Go.&lt;/p&gt;
 
@@ -35,10 +35,10 @@
     
     <item>
       <title>Den Theme Preview</title>
-      <link>http://106.15.235.215/en/2018/03/06/den-theme-preview.html</link>
+      <link>http://106.15.235.215/en/2018/03/06/den-theme-preview/</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/en/2018/03/06/den-theme-preview.html</guid>
+      <guid>http://106.15.235.215/en/2018/03/06/den-theme-preview/</guid>
       
         <description>&lt;p&gt;This is a simple preview for styles in Den.&lt;/p&gt;
 
@@ -217,10 +217,10 @@ text code blocks
     
     <item>
       <title>Header Image</title>
-      <link>http://106.15.235.215/en/2018/03/05/header-image.html</link>
+      <link>http://106.15.235.215/en/2018/03/05/header-image/</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/en/2018/03/05/header-image.html</guid>
+      <guid>http://106.15.235.215/en/2018/03/05/header-image/</guid>
       
         <description>&lt;p&gt;This is a simple note.&lt;/p&gt;
 </description>

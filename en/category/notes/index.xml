@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Notes on GUBlog</title>
-    <link>http://106.15.235.215/en/category/notes.html</link>
+    <link>http://106.15.235.215/en/category/notes/</link>
     <description>Recent content in Notes on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
@@ -13,10 +13,10 @@
     
     <item>
       <title>Den Theme Preview</title>
-      <link>http://106.15.235.215/en/2018/03/06/den-theme-preview.html</link>
+      <link>http://106.15.235.215/en/2018/03/06/den-theme-preview/</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/en/2018/03/06/den-theme-preview.html</guid>
+      <guid>http://106.15.235.215/en/2018/03/06/den-theme-preview/</guid>
       <description>&lt;p&gt;This is a simple preview for styles in Den.&lt;/p&gt;</description>
     </item>
     

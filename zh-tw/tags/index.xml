@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on GUBlog</title>
-    <link>http://106.15.235.215/zh-tw/tags.html</link>
+    <link>http://106.15.235.215/zh-tw/tags/</link>
     <description>Recent content in Tags on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
@@ -13,19 +13,19 @@
     
     <item>
       <title>images</title>
-      <link>http://106.15.235.215/zh-tw/tag/images.html</link>
+      <link>http://106.15.235.215/zh-tw/tag/images/</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/zh-tw/tag/images.html</guid>
+      <guid>http://106.15.235.215/zh-tw/tag/images/</guid>
       <description></description>
     </item>
     
     <item>
       <title>notes</title>
-      <link>http://106.15.235.215/zh-tw/tag/notes.html</link>
+      <link>http://106.15.235.215/zh-tw/tag/notes/</link>
       <pubDate>Sun, 04 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/zh-tw/tag/notes.html</guid>
+      <guid>http://106.15.235.215/zh-tw/tag/notes/</guid>
       <description></description>
     </item>
     
