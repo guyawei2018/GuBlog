@@ -178,7 +178,9 @@ flushdb 清当前库 flushall 情况所有库&lt;br&gt;&lt;/p&gt;
 
 &lt;p&gt;默认端口6379&lt;br&gt; 哨兵默认端口 16379&lt;br&gt;
 数据类型操作指令大全
-&lt;a href=&#34;http://redisdoc.com/&#34;&gt;http://redisdoc.com/&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;http://redisdoc.com/&#34;&gt;http://redisdoc.com/&lt;/a&gt;
+&lt;p&gt; redis知识点&lt;/P&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/redis.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
 </description>
       
     </item>
