@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>notes on GUBlog</title>
-    <link>http://106.15.235.215/zh-cn/tag/notes/</link>
+    <link>https://guyawei.top/zh-cn/tag/notes/</link>
     <description>Recent content in notes on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Wed, 29 May 2019 16:01:23 +0800</lastBuildDate>
     
-	<atom:link href="http://106.15.235.215/zh-cn/tag/notes/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://guyawei.top/zh-cn/tag/notes/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Linux常用指令</title>
-      <link>http://106.15.235.215/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</link>
+      <link>https://guyawei.top/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</link>
       <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</guid>
+      <guid>https://guyawei.top/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</guid>
       <description>Linux常用指令 授权文件 chmod +x 文件名/文件夹 将端口加入到Linux防火墙 firewall-cmd --permanent --add-port=80/tcp 跳过认证直接连接mysql数据库 mysqld_safe --skip-grant-tables 启动，停止，重启，状态 service mysqld</description>
     </item>
     
     <item>
       <title>redis在CentOS7安装</title>
-      <link>http://106.15.235.215/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</link>
+      <link>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</link>
       <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</guid>
+      <guid>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</guid>
       <description>redis在CentOS7安装 1.# wget http://download.redis.io/releases/redis-5.0.3.tar.gz 2.# tar xzf redis-5.0.3.tar.gz 3.# cd redis-5.0.3 4.# yum install gcc-c++ &amp;lt;&amp;ndash;可能需要安装gcc c语言编译工具&amp;ndash;&amp;gt; 在第一</description>
     </item>
     

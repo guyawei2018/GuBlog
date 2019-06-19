@@ -2,48 +2,48 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on GUBlog</title>
-    <link>http://106.15.235.215/en/tags/</link>
+    <link>https://guyawei.top/en/tags/</link>
     <description>Recent content in Tags on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Tue, 06 Mar 2018 16:01:23 +0800</lastBuildDate>
     
-	<atom:link href="http://106.15.235.215/en/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://guyawei.top/en/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>preview</title>
-      <link>http://106.15.235.215/en/tag/preview/</link>
+      <link>https://guyawei.top/en/tag/preview/</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/en/tag/preview/</guid>
+      <guid>https://guyawei.top/en/tag/preview/</guid>
       <description></description>
     </item>
     
     <item>
       <title>shortcodes</title>
-      <link>http://106.15.235.215/en/tag/shortcodes/</link>
+      <link>https://guyawei.top/en/tag/shortcodes/</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/en/tag/shortcodes/</guid>
+      <guid>https://guyawei.top/en/tag/shortcodes/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tutorial</title>
-      <link>http://106.15.235.215/en/tag/tutorial/</link>
+      <link>https://guyawei.top/en/tag/tutorial/</link>
       <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/en/tag/tutorial/</guid>
+      <guid>https://guyawei.top/en/tag/tutorial/</guid>
       <description></description>
     </item>
     
     <item>
       <title>images</title>
-      <link>http://106.15.235.215/en/tag/images/</link>
+      <link>https://guyawei.top/en/tag/images/</link>
       <pubDate>Mon, 05 Mar 2018 16:01:23 +0800</pubDate>
       
-      <guid>http://106.15.235.215/en/tag/images/</guid>
+      <guid>https://guyawei.top/en/tag/images/</guid>
       <description></description>
     </item>
     

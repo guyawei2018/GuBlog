@@ -1,84 +1,84 @@
-<?xml-stylesheet type="text/xsl" href="http://106.15.235.215/sitemap.xsl"?>
+<?xml-stylesheet type="text/xsl" href="https://guyawei.top/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://106.15.235.215/zh-cn/about/</loc>
+    <loc>https://guyawei.top/zh-cn/about/</loc>
     <lastmod>2017-08-28T21:41:52+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/zh-cn/categories/</loc>
+    <loc>https://guyawei.top/zh-cn/categories/</loc>
     <lastmod>2019-05-29T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/zh-cn/</loc>
+    <loc>https://guyawei.top/zh-cn/</loc>
     <lastmod>2019-05-29T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</loc>
-    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>http://106.15.235.215/zh-cn/category/notes/</loc>
-    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://106.15.235.215/zh-cn/posts/</loc>
-    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://106.15.235.215/zh-cn/tags/</loc>
-    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://106.15.235.215/zh-cn/tag/notes/</loc>
-    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://106.15.235.215/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</loc>
+    <loc>https://guyawei.top/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</loc>
     <lastmod>2019-05-29T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/zh-cn/category/demos/</loc>
+    <loc>https://guyawei.top/zh-cn/category/notes/</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/posts/</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/tags/</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/tag/notes/</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/category/demos/</loc>
     <lastmod>2018-04-21T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/zh-cn/tag/images/</loc>
+    <loc>https://guyawei.top/zh-cn/tag/images/</loc>
     <lastmod>2018-04-21T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/zh-cn/2019/04/21/%E6%B5%99%E6%B1%9F%E5%AE%81%E6%B3%A2%E6%B8%B8%E7%8E%A9/</loc>
+    <loc>https://guyawei.top/zh-cn/2019/04/21/%E6%B5%99%E6%B1%9F%E5%AE%81%E6%B3%A2%E6%B8%B8%E7%8E%A9/</loc>
     <lastmod>2018-04-21T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>http://106.15.235.215/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3/</loc>
+    <loc>https://guyawei.top/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3/</loc>
     <lastmod>2018-03-05T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
