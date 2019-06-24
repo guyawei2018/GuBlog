@@ -10,7 +10,6 @@
   <meta name="keywords" content="Hugo, theme, den" />
 
 <link rel="canonical" href="https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/" />
-<link rel="alternate" href="https://guyawei.top/zh-tw/2018/03/03/%E7%AD%86%E8%A8%98-1/" hreflang="zh-tw">
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
@@ -38,7 +37,7 @@
 
 
 
-<meta itemprop="keywords" content="notes," />
+<meta itemprop="keywords" content="java," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="redis在CentOS7安装"/>
 <meta name="twitter:description" content="redis在CentOS7安装 1.# wget http://download.redis.io/releases/redis-5.0.3.tar.gz 2.# tar xzf redis-5.0.3.tar.gz 3.# cd redis-5.0.3 4.# yum install gcc-c&#43;&#43; &lt;&ndash;可能需要安装gcc c语言编译工具&ndash;&gt; 在第一"/>
@@ -69,7 +68,7 @@
           <li class="nav-item">
             
               
-                <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
               
             
           </li>
@@ -77,28 +76,32 @@
           <li class="nav-item">
             
               
-                <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
               
             
           </li>
         
           <li class="nav-item">
             
-              <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
             
           </li>
         
         
           
-            <li class="nav-item">
-              <a class="nav-link" href="https://guyawei.top/en/"><i class="fas fa-globe"></i> English</a>
-            </li>
+            
           
           
           
-            <li class="nav-item">
-              <a class="nav-link" href="https://guyawei.top/zh-tw/"><i class="fas fa-globe"></i> 繁體中文</a>
-            </li>
+            
           
           
           
@@ -119,7 +122,7 @@
         
         2019-05-29
           / 分类：
-          <a href="https://guyawei.top/zh-cn/category/notes/">Notes</a>
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
         </p>
         
         <div class="header-underline"></div>
@@ -127,16 +130,10 @@
           <div class="clearfix"></div>
           <p class="float-right header-tags">
               <i class="fas fa-tags" aria-hidden="true"></i>
-              <a href="https://guyawei.top/zh-cn/tag/notes/">notes</a>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
           </p>
         
-        <div class="clearfix"></div>
-<p class="float-right translations">
-    <i class="fas fa-language" aria-hidden="true"></i>
-    翻译： 
-    <a href="https://guyawei.top/zh-tw/2018/03/03/%E7%AD%86%E8%A8%98-1/">ZH-TW</a>
-</p>
-
+        
 
       </div>
     </div>
@@ -147,34 +144,40 @@
   <main>
 <div class="container content">
   <article>
-  <p><h1>redis在CentOS7安装</h1>
-<p>1.# wget <a href="http://download.redis.io/releases/redis-5.0.3.tar.gz">http://download.redis.io/releases/redis-5.0.3.tar.gz</a></p>
-<p>2.# tar xzf redis-5.0.3.tar.gz</p>
-<p>3.# cd redis-5.0.3</p>
-<p>4.# yum install gcc-c++<br>&lt;&ndash;可能需要安装gcc c语言编译工具&ndash;&gt;</p>
-<p>在第一次make指令后再次make会出现“没有那个文件或目录”错误，是因为第一次make后没有清除残留文件导致</p>
-<p>5.执行# make distclean之后再执行make</p>
-<p>6.# make</p>
-<p>7.# make install</p>
+  <p><strong>redis在CentOS7安装</strong><br></p>
+
+<ul>
+<li>1.# wget <a href="http://download.redis.io/releases/redis-5.0.3.tar.gz">http://download.redis.io/releases/redis-5.0.3.tar.gz</a><br></li>
+<li>2.# tar xzf redis-5.0.3.tar.gz</li>
+<li>3.# cd redis-5.0.3<br></li>
+<li>4.# yum install gcc-c++<br>&lt;&ndash;可能需要安装gcc c语言编译工具&ndash;&gt;<br>
+<p>在第一次make指令后再次make会出现“没有那个文件或目录”错误，是因为第一次make后没有清除残留文件导致</p></li>
+<li>5.执行# make distclean之后再执行make<br></li>
+<li>6.# make<br></li>
+<li>7.# make install<br>
 <p>ps ：/usr/local/bin路径下有启动命令；可以指定配置文件启动，
 开启服务前可以修改配置文件redis.conf，GENERAL模块 daemonize no改为yes 可以最小化后台运行
-这样可以不用改变初始化的文件  redis-server /home/redis/redis.conf</p>
-进入redis</p>
+这样可以不用改变初始化的文件  redis-server /home/redis/redis.conf</p></li>
+</ul>
 
-<p>redis-cli -p 6379
-退出
+<p><strong>进入redis</strong></p>
+
+<p>redis-cli -p 6379<br>
+<strong>退出</strong>
 shutdown</p>
 
-<p>redis常用指令
+<p><strong>redis常用指令</strong>
 select 数字（0-15）切换库，默认有16个库，启始库为0，<br>
 dbsize 查看当前数据库有多少key<br>
 keys */或者其他通配符  keys 7**<br>
 flushdb 清当前库 flushall 情况所有库<br></p>
 
-<p>默认端口6379<br> 哨兵默认端口 16379<br>
+<p><strong>默认端口6379</strong><br>
+<strong>哨兵默认端口 16379</strong><br>
 数据类型操作指令大全
-<a href="http://redisdoc.com/">http://redisdoc.com/</a>
-<p> redis知识点</P>
+<a href="http://redisdoc.com/">http://redisdoc.com/</a></p>
+
+<p><p> redis知识点</P>
 <img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/redis.png" alt="图片" /></p>
 
   </article>

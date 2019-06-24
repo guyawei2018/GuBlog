@@ -5,7 +5,7 @@
     <description>Recent content on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 29 May 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 24 Jun 2019 16:01:23 +0800</lastBuildDate>
     
         <atom:link href="https://guyawei.top/zh-cn/index.xml" rel="self" type="application/rss+xml" />
     
@@ -29,6 +29,107 @@
 &lt;/ul&gt;
 
 &lt;p&gt;了解並貢獻： &lt;a href=&#34;https://github.com/gohugoio&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Docker 入门</title>
+      <link>https://guyawei.top/zh-cn/2019/06/24/docker-%E5%85%A5%E9%97%A8/</link>
+      <pubDate>Mon, 24 Jun 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/06/24/docker-%E5%85%A5%E9%97%A8/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;docker-思想&#34;&gt;Docker 思想&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1.集装箱&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;2.标准化(运输方式、存储方式、API接口)&lt;br&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;3.隔离&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;docker-解决了什么问题&#34;&gt;Docker 解决了什么问题？&lt;/h2&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;1.运行环境不一致&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;2.独立运行、隔离进程&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;3.快速增加服务器（京东已实现所有业务Docker,Docker实例有15万个）&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;docker-几个专业术语&#34;&gt;Docker 几个专业术语&lt;/h2&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;1.image 称为镜像，可以理解为集装箱，image的实现是利用Linux系统底层的联合文件系统(文件分层)，实现镜像存储。image可以对应bulid(构建)&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;2.仓库可以理解为集装箱码头，对应ship(运输)&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;3.容器可以理解为运行的程序，包含程序执行文件和系统运行文件，也是运行的image。对应run(执行)&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;docker-在linux安装-br&#34;&gt;Docker 在Linux安装&lt;br&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Docker支持以下的CentOS版本&lt;/strong&gt;&lt;br&gt;
+CentOS 7 (64-bit)        CentOS 6.5 (64-bit) 或更高的版本&lt;br&gt;
+使用 yum 安装（CentOS 7下）&lt;br&gt;
+Docker 要求 CentOS 系统的内核版本高于 3.10 ，查看本页面的前提条件来验证你的CentOS 版本是否支持 Docker&lt;br&gt;
+&lt;strong&gt;通过 uname -r 命令查看你当前的内核版本&lt;/strong&gt;&lt;br&gt;
+[root@runoob ~]# uname -r &lt;br&gt;
+&lt;strong&gt;安装 Docker&lt;/strong&gt;&lt;br&gt;
+从 2017 年 3 月开始 docker 在原来的基础上分为两个分支版本: Docker CE 和 Docker EE。&lt;br&gt;
+Docker CE 即社区免费版，Docker EE 即企业版，强调安全，但需付费使用。&lt;br&gt;
+本文介绍 Docker CE 的安装使用。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;1.移除旧的版本：&lt;br&gt;
+$ yum remove docker &lt;br /&gt;
+              docker-client &lt;br /&gt;
+              docker-client-latest &lt;br /&gt;
+              docker-common &lt;br /&gt;
+              docker-latest &lt;br /&gt;
+              docker-latest-logrotate &lt;br /&gt;
+              docker-logrotate &lt;br /&gt;
+              docker-selinux &lt;br /&gt;
+              docker-engine-selinux &lt;br /&gt;
+              docker-engine&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;2.安装一些必要的系统工具：&lt;br&gt;
+yum install -y yum-utils device-mapper-persistent-data lvm2&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;3.建议使用阿里云的地址，国外的地址，下载比较慢，而且很容易链接超时：&lt;br&gt;
+官网地址&lt;br&gt;
+yum-config-manager &amp;ndash;add-repo &lt;a href=&#34;https://download.docker.com/linux/centos/docker-ce.repo&#34;&gt;https://download.docker.com/linux/centos/docker-ce.repo&lt;/a&gt;&lt;br&gt;
+阿里云地址&lt;br&gt;
+yum-config-manager &amp;ndash;add-repo &lt;a href=&#34;http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo&#34;&gt;http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo&lt;/a&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;4.更新 yum 缓存和安装docker&lt;br&gt;
+yum makecache fast&lt;br&gt;
+yum install docker-ce&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;5.启动 Docker 后台服务&lt;br&gt;
+sudo systemctl start docker&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;6.测试运行 hello-world&lt;br&gt;
+docker run hello-world&lt;/p&gt;
+
+&lt;h2 id=&#34;docker-常用命令&#34;&gt;Docker 常用命令&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;获取镜像&lt;/strong&gt;&lt;br&gt;
+docker pull  [不写默认中央仓库]  imagename  [TAG]&amp;ndash;镜像版本默认最新版本&lt;br&gt;
+&lt;strong&gt;查看本地镜像列表&lt;/strong&gt;&lt;br&gt;
+docker image ls /docker images&lt;br&gt;
+&lt;strong&gt;运行镜像&lt;/strong&gt;&lt;br&gt;
+docker run [options] imageName [TAG][COMMANP][ARG]&lt;br&gt;
+例: docker run -d -p 8080:8080 [-v xxxxxxxx]  tomcat《后台运行tomcat容器端口映射是8080，如果有-v可以用外部文件替代内部文件》&lt;br&gt;
+&lt;strong&gt;进入容器(类似登录Linux)&lt;/strong&gt;&lt;br&gt;
+docker exec -it 容器名/容器ID&lt;br&gt;
+&lt;strong&gt;查看已经运行的容器&lt;/strong&gt;&lt;br&gt;
+docker container ls &lt;br&gt;
+&lt;strong&gt;其他指令&lt;/strong&gt;&lt;br&gt;
+docker rmi imageName&amp;mdash;删除镜像&lt;br&gt;
+docker start containerId &amp;mdash;运行容器&lt;br&gt;
+docker stop containerId&amp;mdash; 停止容器&lt;br&gt;
+docker container ls &amp;ndash;all &amp;mdash;查看所有容器（包含未运行的容器）&lt;br&gt;
+docker rm containerId&amp;mdash;删除容器&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
       
     </item>
@@ -152,34 +253,40 @@ scp -r /opt/soft/mongodb root@192.168.120.204:/opt/soft/scptest&lt;/p&gt;
       
       <guid>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</guid>
       
-        <description>&lt;p&gt;&lt;h1&gt;redis在CentOS7安装&lt;/h1&gt;
-&lt;p&gt;1.# wget &lt;a href=&#34;http://download.redis.io/releases/redis-5.0.3.tar.gz&#34;&gt;http://download.redis.io/releases/redis-5.0.3.tar.gz&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;2.# tar xzf redis-5.0.3.tar.gz&lt;/p&gt;
-&lt;p&gt;3.# cd redis-5.0.3&lt;/p&gt;
-&lt;p&gt;4.# yum install gcc-c++&lt;br&gt;&amp;lt;&amp;ndash;可能需要安装gcc c语言编译工具&amp;ndash;&amp;gt;&lt;/p&gt;
-&lt;p&gt;在第一次make指令后再次make会出现“没有那个文件或目录”错误，是因为第一次make后没有清除残留文件导致&lt;/p&gt;
-&lt;p&gt;5.执行# make distclean之后再执行make&lt;/p&gt;
-&lt;p&gt;6.# make&lt;/p&gt;
-&lt;p&gt;7.# make install&lt;/p&gt;
+        <description>&lt;p&gt;&lt;strong&gt;redis在CentOS7安装&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1.# wget &lt;a href=&#34;http://download.redis.io/releases/redis-5.0.3.tar.gz&#34;&gt;http://download.redis.io/releases/redis-5.0.3.tar.gz&lt;/a&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;2.# tar xzf redis-5.0.3.tar.gz&lt;/li&gt;
+&lt;li&gt;3.# cd redis-5.0.3&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;4.# yum install gcc-c++&lt;br&gt;&amp;lt;&amp;ndash;可能需要安装gcc c语言编译工具&amp;ndash;&amp;gt;&lt;br&gt;
+&lt;p&gt;在第一次make指令后再次make会出现“没有那个文件或目录”错误，是因为第一次make后没有清除残留文件导致&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;5.执行# make distclean之后再执行make&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;6.# make&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;7.# make install&lt;br&gt;
 &lt;p&gt;ps ：/usr/local/bin路径下有启动命令；可以指定配置文件启动，
 开启服务前可以修改配置文件redis.conf，GENERAL模块 daemonize no改为yes 可以最小化后台运行
-这样可以不用改变初始化的文件  redis-server /home/redis/redis.conf&lt;/p&gt;
-进入redis&lt;/p&gt;
+这样可以不用改变初始化的文件  redis-server /home/redis/redis.conf&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;redis-cli -p 6379
-退出
+&lt;p&gt;&lt;strong&gt;进入redis&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;redis-cli -p 6379&lt;br&gt;
+&lt;strong&gt;退出&lt;/strong&gt;
 shutdown&lt;/p&gt;
 
-&lt;p&gt;redis常用指令
+&lt;p&gt;&lt;strong&gt;redis常用指令&lt;/strong&gt;
 select 数字（0-15）切换库，默认有16个库，启始库为0，&lt;br&gt;
 dbsize 查看当前数据库有多少key&lt;br&gt;
 keys */或者其他通配符  keys 7**&lt;br&gt;
 flushdb 清当前库 flushall 情况所有库&lt;br&gt;&lt;/p&gt;
 
-&lt;p&gt;默认端口6379&lt;br&gt; 哨兵默认端口 16379&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;默认端口6379&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;哨兵默认端口 16379&lt;/strong&gt;&lt;br&gt;
 数据类型操作指令大全
-&lt;a href=&#34;http://redisdoc.com/&#34;&gt;http://redisdoc.com/&lt;/a&gt;
-&lt;p&gt; redis知识点&lt;/P&gt;
+&lt;a href=&#34;http://redisdoc.com/&#34;&gt;http://redisdoc.com/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;p&gt; redis知识点&lt;/P&gt;
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/redis.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
 </description>
       
