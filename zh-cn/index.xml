@@ -128,7 +128,8 @@ docker rmi imageName&amp;mdash;删除镜像&lt;br&gt;
 docker start containerId &amp;mdash;运行容器&lt;br&gt;
 docker stop containerId&amp;mdash; 停止容器&lt;br&gt;
 docker container ls &amp;ndash;all &amp;mdash;查看所有容器（包含未运行的容器）&lt;br&gt;
-docker rm containerId&amp;mdash;删除容器&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+docker rm containerId&amp;mdash;删除容器&lt;br&gt;
+docker cp 文件路径 containerId:文件绝对路径  &amp;mdash;替换docker 内部文件&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
       
