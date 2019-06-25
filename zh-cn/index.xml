@@ -121,8 +121,9 @@ docker image ls /docker images&lt;br&gt;
 docker run [options] imageName [TAG][COMMANP][ARG]&lt;br&gt;
 例: docker run -d -p 8080:8080 [-v xxxxxxxx]  tomcat《后台运行tomcat容器端口映射是8080，如果有-v可以用外部文件替代内部文件》&lt;br&gt;
 &lt;strong&gt;进入容器(类似登录Linux)&lt;/strong&gt;&lt;br&gt;
-docker exec -it 容器名/容器ID&lt;br&gt;
+docker exec -it 容器名/容器ID  bash&lt;br&gt;
 &lt;strong&gt;查看已经运行的容器&lt;/strong&gt;&lt;br&gt;
+docker ps&lt;br&gt;
 docker container ls &lt;br&gt;
 &lt;strong&gt;其他指令&lt;/strong&gt;&lt;br&gt;
 docker rmi imageName&amp;mdash;删除镜像&lt;br&gt;
@@ -130,7 +131,28 @@ docker start containerId &amp;mdash;运行容器&lt;br&gt;
 docker stop containerId&amp;mdash; 停止容器&lt;br&gt;
 docker container ls &amp;ndash;all &amp;mdash;查看所有容器（包含未运行的容器）&lt;br&gt;
 docker rm containerId&amp;mdash;删除容器&lt;br&gt;
-docker cp 文件路径 containerId:文件绝对路径  &amp;mdash;替换docker 内部文件&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+docker cp 文件路径 containerId:文件绝对路径  &amp;mdash;替换docker 内部文件&lt;br&gt;
+docker commit -m  &amp;ldquo;&amp;rdquo;   -a  &amp;ldquo;&amp;rdquo;   [CONTAINER ID]  [给新的镜像命名]   &amp;mdash;&amp;ndash;打包成镜像&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;部署镜像私有仓库&#34;&gt;部署镜像私有仓库&lt;/h2&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;1.下载镜像registry&lt;br&gt;
+$ docker pull registry&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;2.启动容器&lt;br&gt;
+$ docker run -d -p 5000:5000  &amp;ndash;name=registry-srv [-v /mydata/dockerRegistry:/var/lib/registry] registry&lt;br&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625200858.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;3.作制本地镜像上传仓库&lt;br&gt;
+$ docker tag 源镜像 仓库IP:5000/目标镜像&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;4.上传tag镜像到仓库&lt;br&gt;
+docker push 制作好的image&lt;br&gt;
+说明：push 会出现错误 Get &lt;a href=&#34;https://xxxxxxxx:5000/v1/_ping:&#34;&gt;https://xxxxxxxx:5000/v1/_ping:&lt;/a&gt; http: server gave HTTP response to HTTPS client&lt;br&gt;
+这是因为Docker在1.3.x之后默认docker registry使用的是https，为了解决这个问题，修改本地主机的docker启动配置文件&lt;br&gt;
+$ vim /etc/docker/daemon.json  不存在就新建&lt;br&gt;
+&lt;strong&gt;{&amp;ldquo;insecure-registries&amp;rdquo;:[&amp;ldquo;192.168.84.104:5000&amp;rdquo;]}&lt;/strong&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625202047.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
       

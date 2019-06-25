@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-06-24T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-06-24T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="896">
+<meta itemprop="wordCount" content="1136">
 
 
 
@@ -224,8 +224,9 @@ docker image ls /docker images<br>
 docker run [options] imageName [TAG][COMMANP][ARG]<br>
 例: docker run -d -p 8080:8080 [-v xxxxxxxx]  tomcat《后台运行tomcat容器端口映射是8080，如果有-v可以用外部文件替代内部文件》<br>
 <strong>进入容器(类似登录Linux)</strong><br>
-docker exec -it 容器名/容器ID<br>
+docker exec -it 容器名/容器ID  bash<br>
 <strong>查看已经运行的容器</strong><br>
+docker ps<br>
 docker container ls <br>
 <strong>其他指令</strong><br>
 docker rmi imageName&mdash;删除镜像<br>
@@ -233,7 +234,28 @@ docker start containerId &mdash;运行容器<br>
 docker stop containerId&mdash; 停止容器<br>
 docker container ls &ndash;all &mdash;查看所有容器（包含未运行的容器）<br>
 docker rm containerId&mdash;删除容器<br>
-docker cp 文件路径 containerId:文件绝对路径  &mdash;替换docker 内部文件<br></p></li>
+docker cp 文件路径 containerId:文件绝对路径  &mdash;替换docker 内部文件<br>
+docker commit -m  &ldquo;&rdquo;   -a  &ldquo;&rdquo;   [CONTAINER ID]  [给新的镜像命名]   &mdash;&ndash;打包成镜像<br></p>
+
+<h2 id="部署镜像私有仓库">部署镜像私有仓库</h2></li>
+
+<li><p>1.下载镜像registry<br>
+$ docker pull registry<br></p></li>
+
+<li><p>2.启动容器<br>
+$ docker run -d -p 5000:5000  &ndash;name=registry-srv [-v /mydata/dockerRegistry:/var/lib/registry] registry<br>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625200858.png" alt="图片" /></p></li>
+
+<li><p>3.作制本地镜像上传仓库<br>
+$ docker tag 源镜像 仓库IP:5000/目标镜像<br></p></li>
+
+<li><p>4.上传tag镜像到仓库<br>
+docker push 制作好的image<br>
+说明：push 会出现错误 Get <a href="https://xxxxxxxx:5000/v1/_ping:">https://xxxxxxxx:5000/v1/_ping:</a> http: server gave HTTP response to HTTPS client<br>
+这是因为Docker在1.3.x之后默认docker registry使用的是https，为了解决这个问题，修改本地主机的docker启动配置文件<br>
+$ vim /etc/docker/daemon.json  不存在就新建<br>
+<strong>{&ldquo;insecure-registries&rdquo;:[&ldquo;192.168.84.104:5000&rdquo;]}</strong>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625202047.png" alt="图片" /></p></li>
 </ul>
 
   </article>
