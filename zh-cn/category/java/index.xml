@@ -29,5 +29,14 @@
       <description>redis在CentOS7安装 1.# wget http://download.redis.io/releases/redis-5.0.3.tar.gz 2.# tar xzf redis-5.0.3.tar.gz 3.# cd redis-5.0.3 4.# yum install gcc-c++ &amp;lt;&amp;ndash;可能需要安装gcc c语言编译工具&amp;ndash;&amp;gt; 在第一</description>
     </item>
     
+    <item>
+      <title>FRP内网服务穿透</title>
+      <link>https://guyawei.top/zh-cn/1/01/01/frp%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E7%A9%BF%E9%80%8F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/1/01/01/frp%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E7%A9%BF%E9%80%8F/</guid>
+      <description>部署FRP服务 实现内网穿透 先抛出几个问题 1.我们有在本地开发的某一个 B/S 程序，希望给客户直接在线演示，怎么办？ 2.程序在内部开发调试阶段，对于</description>
+    </item>
+    
   </channel>
 </rss>

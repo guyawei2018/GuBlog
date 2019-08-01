@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-06-24T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-06-24T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="1136">
+<meta itemprop="wordCount" content="1217">
 
 
 
@@ -223,6 +223,17 @@ docker image ls /docker images<br>
 <strong>运行镜像</strong><br>
 docker run [options] imageName [TAG][COMMANP][ARG]<br>
 例: docker run -d -p 8080:8080 [-v xxxxxxxx]  tomcat《后台运行tomcat容器端口映射是8080，如果有-v可以用外部文件替代内部文件》<br>
+<strong>运行nginx</strong><br>
+docker run &ndash;name docker_nginx -d -p 80:80 <br>
+-v /zzz/mynginx/nginx/log:/var/log/nginx<br>
+-v /zzz/mynginx/nginx/conf:/etc/nginx/conf.d<br>
+-v /zzz/mynginx/nginx/nginx.conf:/etc/nginx/nginx/conf<br>
+-v /zzz/mynginx/nginx/html:/lx/html<br>
+nginx<br>
+第一个-v:挂载日志目录<br>
+第二个-v:挂载配置目录<br>
+第三个-v:干脆把配置文件直接挂出来，不推荐<br>
+第四个-v:挂载项目目录<br>
 <strong>进入容器(类似登录Linux)</strong><br>
 docker exec -it 容器名/容器ID  bash<br>
 <strong>查看已经运行的容器</strong><br>

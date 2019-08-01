@@ -10,7 +10,6 @@
   <meta name="keywords" content="Hugo, theme, den" />
 
 <link rel="canonical" href="https://guyawei.top/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" />
-<link rel="alternate" href="https://guyawei.top/zh-tw/2018/03/03/%E7%AD%86%E8%A8%98-1/" hreflang="zh-tw">
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
@@ -34,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-05-29T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-05-29T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="350">
+<meta itemprop="wordCount" content="394">
 
 
 
@@ -134,13 +133,7 @@
               <a href="https://guyawei.top/zh-cn/tag/notes/">notes</a>
           </p>
         
-        <div class="clearfix"></div>
-<p class="float-right translations">
-    <i class="fas fa-language" aria-hidden="true"></i>
-    翻译： 
-    <a href="https://guyawei.top/zh-tw/2018/03/03/%E7%AD%86%E8%A8%98-1/">ZH-TW</a>
-</p>
-
+        
 
       </div>
     </div>
@@ -224,7 +217,7 @@ kill -9
 <pre><code>which docker
 </code></pre>
 
-<p>mv 指令可以文件或文件夹重命名</p>
+<p><strong>mv 指令可以文件或文件夹重命名</strong><br></p>
 
 <p>linux中快速清空文件内容的几种方法,需要的朋友可以参考下</p>
 
@@ -234,24 +227,30 @@ $ echo &ldquo;&rdquo; &gt; filename
 $ echo &gt; filename
 $ cat /dev/null &gt; filename</p>
 
-<p><strong>//重新运行环境变量文件</strong>
-source etc/profile</p>
+<p><strong>重新运行环境变量文件</strong><br></p>
 
-<p>实例1：从远处复制文件到本地目录
-命令：
-scp root@192.168.120.204:/opt/soft/nginx-0.5.38.tar.gz /opt/soft/</p>
+<pre><code>source etc/profile
+</code></pre>
 
-<p>实例2：从远处复制到本地
-命令：
-scp -r root@192.168.120.204:/opt/soft/mongodb /opt/soft/</p>
+<p><strong>远程复制文件</strong><br></p>
 
-<p>实例3：上传本地文件到远程机器指定目录
-命令：
-scp /opt/soft/nginx-0.5.38.tar.gz root@192.168.120.204:/opt/soft/scptest</p>
+<pre><code>实例1：从远处复制文件到本地目录&lt;br&gt;
 
-<p>实例4：上传本地目录到远程机器指定目录
 命令：
-scp -r /opt/soft/mongodb root@192.168.120.204:/opt/soft/scptest</p>
+scp root@192.168.120.204:/opt/soft/nginx-0.5.38.tar.gz /opt/soft/
+
+实例2：从远处复制到本地&lt;br&gt;
+命令：
+scp -r root@192.168.120.204:/opt/soft/mongodb /opt/soft/
+
+实例3：上传本地文件到远程机器指定目录&lt;br&gt;
+命令：
+scp /opt/soft/nginx-0.5.38.tar.gz root@192.168.120.204:/opt/soft/scptest
+
+实例4：上传本地目录到远程机器指定目录&lt;br&gt;
+命令：
+scp -r /opt/soft/mongodb root@192.168.120.204:/opt/soft/scptest
+</code></pre>
 
   </article>
 

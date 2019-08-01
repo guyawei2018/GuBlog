@@ -20,5 +20,14 @@
       <description>Linux常用指令 授权文件 chmod +x 文件名/文件夹 将端口加入到Linux防火墙 firewall-cmd --permanent --add-port=80/tcp 跳过认证直接连接mysql数据库 mysqld_safe --skip-grant-tables 启动，停止，重启，状态 service mysqld</description>
     </item>
     
+    <item>
+      <title>webservice详解</title>
+      <link>https://guyawei.top/zh-cn/2019/05/29/webservice%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/05/29/webservice%E8%AF%A6%E8%A7%A3/</guid>
+      <description>webservice详解 Schema约束 1. namespace 相当于schema文件的id 2. targetNamespace属性 用来指定schema文件的nam</description>
+    </item>
+    
   </channel>
 </rss>

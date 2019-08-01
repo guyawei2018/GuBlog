@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>webservice详解 · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="webservice详解 Schema约束 1. namespace 相当于schema文件的id 2. targetNamespace属性 用来指定schema文件的nam" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/05/29/webservice%E8%AF%A6%E8%A7%A3/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="webservice详解" />
+<meta property="og:description" content="webservice详解 Schema约束 1. namespace 相当于schema文件的id 2. targetNamespace属性 用来指定schema文件的nam" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/05/29/webservice%E8%AF%A6%E8%A7%A3/" />
+<meta property="article:published_time" content="2019-05-29T16:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-05-29T16:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="webservice详解">
+<meta itemprop="description" content="webservice详解 Schema约束 1. namespace 相当于schema文件的id 2. targetNamespace属性 用来指定schema文件的nam">
+
+
+<meta itemprop="datePublished" content="2019-05-29T16:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-05-29T16:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="2963">
+
+
+
+<meta itemprop="keywords" content="notes," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="webservice详解"/>
+<meta name="twitter:description" content="webservice详解 Schema约束 1. namespace 相当于schema文件的id 2. targetNamespace属性 用来指定schema文件的nam"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">webservice详解</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-05-29
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/notes/">notes</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h1>webservice详解</h1>
+
+<h2 id="schema约束">Schema约束</h2>
+
+<ul>
+<li>1.    namespace  相当于schema文件的id</li>
+<li>2.    targetNamespace属性 用来指定schema文件的namespace的值</li>
+<li>3.    xmlns属性   引入一个约束, 它的值是一个schema文件的namespace值</li>
+<li>4.    schemaLocation属性  用来指定引入的schema文件的位置</li>
+</ul>
+
+<h2 id="schema规范">schema规范:</h2>
+
+<ul>
+<li>1. 所有标签和属性都需要有schema文件来定义</li>
+<li>2. 所有的schema文件都需要有一个id, 但在这里它叫namespace,</li>
+<li>3. namespace的值由什么来指定?
+    由targetNamespace属性来指定, 它的值是一个url(很有可能不存在)</li>
+<li>4. 如何引入一个Schema约束?
+    属性? : 用xmlns属性
+    属性值: 对应的schema文件的id(namespace值)</li>
+<li>5. 如果引入的schema不是w3c组织定义, 必须指定schema文件的位置</li>
+<li>6. schema文件的位置由什么属性来指定?
+    属性? : schemaLocation
+    属性值: namespace path</li>
+<li>7. 如果引入了N个约束, 需要给n-1个取别名</li>
+</ul>
+
+<h2 id="提出2个问题">提出2个问题</h2>
+
+<ul>
+<li>问题一:<br>
+ 谷歌、360网站主页都有天气信息，它们公司服务器的数据库中都保存了天气预报数据吗?如果没有, 那数据都存在哪了呢?这些网站是如何得到这些数据的呢?<br></li>
+<li>问题二:<br>
+ 各个门户网站显示的股票行情信息数据又是怎么来的呢?</li>
+</ul>
+
+<h2 id="面试问题">面试问题</h2>
+
+<ul>
+<li>1.webservice相当于HTTP+?+?<br>
+? : xml<br>
+? : schema<br></li>
+<li>2.wsdl是什么?<br>
+webservice定义语言, 对应.wsdl文档, 一个webservice会对应一个唯一的wsdl文档, 定义了客户端与服务端发送请求和响应的数据格式和过程<br></li>
+<li>3.    如何发布一个webservice?<br>
+定义SEI   @webservice @webMethod<br>
+定义SEI的实现<br>
+发布:  Endpoint.publish(url, SEIImplObject)<br></li>
+<li>4.如何请求一个webservice?
+
+<ol>
+<li>根据wsdl文档生成客户端代码  jdk/cxf</li>
+<li>根据生成的代码调用webService</li>
+</ol></li>
+</ul>
+
+<h2 id="关于web-service的几个问题">关于Web Service的几个问题</h2>
+
+<h3 id="web-service是什么">Web service是什么？</h3>
+
+<ul>
+<li>1. <font color=red><strong>基于Web的服务</strong></font>：服务器端整出一些资源让客户端应用访问（获取数据）<br></li>
+<li>2. 一个<font color=red><strong>跨语言</strong></font>、跨平台的规范（抽象）<br></li>
+<li>3. 多个跨平台、跨语言的<font color=red><strong>应用间通信整合的方案</strong></font>（实际）<br>
+以各个网站显示天气预报功能为例:<br>
+气象中心的管理系统将收集的天气信息并将数据暴露出来(通过WebService Server), 而各大站点的应用就去调用它们得到天气信息并以不同的样式去展示(WebServiceClient).
+网站提供了天气预报的服务，但其实它们什么也没有做，只是简单了调用了一下气象中心服务器上的一段代码而已</li>
+</ul>
+
+<h3 id="为什么要用web-service">为什么要用Web service？</h3>
+
+<pre><code>web service能解决:
+    跨平台调用 
+    跨语言调用
+    远程调用
+</code></pre>
+
+<h3 id="什么时候使用web-service">什么时候使用web Service？</h3>
+
+<pre><code>1. 同一家公司的新旧应用之间
+2. 不同公司的应用之间
+分析业务需求：天猫网与中通物流系统如何交互？
+3. 一些提供数据的内容聚合应用：天气预报、股票行情
+</code></pre>
+
+<h2 id="web-service中的几个重要术语">Web Service中的几个重要术语</h2>
+
+<h3 id="1-wsdl-web-service-definition-language">1.WSDL：web service definition language</h3>
+
+<pre><code>直译 : WebService定义语言
+1. 对应一种类型的文件.wsdl
+2. 定义了web service的服务器端与客户端应用交互传递请求和响应数据的格式和方式
+3. 一个web service对应一个唯一的wsdl文档
+</code></pre>
+
+<h3 id="2-soap-simple-object-access-protocal">2. SOAP：simple object  access protocal</h3>
+
+<pre><code>直译: 简单对象访问协议
+1.  是一种简单的、基于HTTP和XML的协议, 用于在WEB上交换结构化的数据
+2.  soap消息：请求消息和响应消息
+3.  http+xml片断
+</code></pre>
+
+<h3 id="3-sei-webservice-endpoint-interface">3. SEI：WebService EndPoint Interface</h3>
+
+<pre><code>直译: web service的终端接口，
+1.  就是WebService服务器端用来处理请求的接口
+    @Webservice
+    @WebMethod
+</code></pre>
+
+<h3 id="4-cxf-celtix-xfire">4.  CXF：Celtix + XFire</h3>
+
+<pre><code>一个apache的用于开发webservice服务器端和客户端的框架
+</code></pre>
+
+<h2 id="开发webservice">开发webservice</h2>
+
+<h3 id="1-概述">1. 概述</h3>
+
+<pre><code>•   开发手段：
+–   使用JDK开发(1.6及以上版本)
+–   使用CXF框架开发(工作中)
+•   组成：
+–   服务器端
+–   客户端
+</code></pre>
+
+<h3 id="2-使用jdk开发webservice">2. 使用JDK开发WebService</h3>
+
+<pre><code>1.  开发服务器端
+•   Web Service编码：
+–   @WebService( SEI和SEI的实现类)
+–   @WebMethod(SEI中的所有方法)
+•   发布Web Service：
+–   Endpoint(终端, 发布webservice)
+
+2.  开发客户端
+•   使用eclipse提供的web service浏览器访问
+–   查看对应的wsdl文档：…..?wsdl (一般浏览器)
+–   请求webService并查看请求和响应消息(webservice浏览器)
+
+•   创建客户端应用编码方式访问
+–   借助jdk的wsimort.exe工具生成客户端代码：
+    wsimport -keep url   //url为wsdl文件的路径
+–   借助生成的代码编写请求代码
+</code></pre>
+
+<h3 id="3-使用cxf开发web-service">3. 使用CXF开发web service</h3>
+
+<ul>
+<li><p>1.加入cxf的jar包</p>
+
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+    &lt;artifactId&gt;cxf-rt-transports-http-jetty&lt;/artifactId&gt;
+    &lt;version&gt;3.1.7&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+    &lt;artifactId&gt;cxf-rt-transports-http&lt;/artifactId&gt;
+    &lt;version&gt;3.1.7&lt;/version&gt;
+&lt;/dependency&gt;   
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+    &lt;artifactId&gt;cxf-rt-frontend-jaxws&lt;/artifactId&gt;
+    &lt;version&gt;3.1.7&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre></li>
+
+<li><p>2.在项目里注入服务终端SEI 配置spring-cxf.xml</p>
+
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+    xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+    xmlns:jaxws=&quot;http://cxf.apache.org/jaxws&quot; 
+    xsi:schemaLocation=&quot;
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://cxf.apache.org/jaxws 
+    http://cxf.apache.org/schemas/jaxws.xsd&quot;&gt;
+        
+
+    &lt;import resource=&quot;classpath:META-INF/cxf/cxf.xml&quot; /&gt;
+    &lt;import resource=&quot;classpath:META-INF/cxf/cxf-servlet.xml&quot; /&gt;
+    &lt;!--&lt;import resource=&quot;classpath:META-INF/cxf/cxf-extension-soap.xml&quot; /&gt; --&gt;
+        
+        
+    &lt;jaxws:endpoint  implementor=&quot;com.lanswon.qzsmk.service.commonService.impl.DockingInternetServiceImpl&quot; 
+        address=&quot;/dockingInternetService&quot;&gt;
+        &lt;jaxws:inInterceptors&gt;
+            &lt;bean class=&quot;com.lanswon.qzsmk.listener.SOAPAuthIntercepter&quot;/&gt;
+            &lt;bean class=&quot;org.apache.cxf.interceptor.LoggingInInterceptor&quot;/&gt;
+        &lt;/jaxws:inInterceptors&gt;
+        &lt;jaxws:outInterceptors&gt;
+        &lt;bean class=&quot;org.apache.cxf.interceptor.LoggingOutInterceptor&quot;/&gt;
+    &lt;/jaxws:outInterceptors&gt;
+    &lt;/jaxws:endpoint&gt;
+
+&lt;/beans&gt;
+</code></pre></li>
+
+<li><p>3.在web.xml配置CXFServlet</p>
+
+<pre><code>&lt;servlet&gt;
+&lt;servlet-name&gt;CXFService&lt;/servlet-name&gt;
+&lt;servlet-class&gt;org.apache.cxf.transport.servlet.CXFServlet&lt;/servlet-class&gt;
+&lt;init-param&gt;
+  &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+  &lt;param-value&gt;classpath:conf/spring-cxf.xml&lt;/param-value&gt;
+&lt;/init-param&gt;
+&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+&lt;servlet-name&gt;CXFService&lt;/servlet-name&gt;
+&lt;url-pattern&gt;/services/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</code></pre></li>
+
+<li><p>4.以上是服务端，在客户端引入jar包，将在服务端spring-cxf.xml中endpoint替换下面代码即可</p>
+
+<pre><code>&lt;jaxws:client id=&quot;qq&quot; serviceClass=&quot;com.lanswon.qzsmk.service.commonservice.impl.DockingInternetService&quot; address=&quot;http://123.123.123.123:3511/qzsmk_card/services/dockingInternetService&quot;&gt;
+&lt;jaxws:outInterceptors&gt;
+    &lt;bean class=&quot;org.apache.cxf.interceptor.LoggingOutInterceptor&quot;/&gt;
+    &lt;!-- &lt;bean class=&quot;org.apache.cxf.interceptor.LoggingInInterceptor&quot;/&gt; --&gt;
+    &lt;bean class=&quot;com.interceptors.CheckInterceptor&quot;&gt;&lt;/bean&gt;
+&lt;/jaxws:outInterceptors&gt; 
+&lt;jaxws:inInterceptors&gt;
+    &lt;bean class=&quot;org.apache.cxf.interceptor.LoggingInInterceptor&quot;/&gt;
+&lt;/jaxws:inInterceptors&gt; 
+&lt;/jaxws:client&gt;
+</code></pre>
+
+<h3 id="4-分析webservice的wsdl文档结构">4. 分析WebService的WSDL文档结构</h3></li>
+
+<li><p>实例
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-1.png" alt="图片" /></p></li>
+
+<li><p>wsdl文档结构</p>
+
+<pre><code>&lt;definitions&gt;
+&lt;types&gt;
+    &lt;schema&gt;
+        &lt;element&gt;
+&lt;/types&gt;
+&lt;message&gt;
+        &lt;part&gt;
+&lt;/message&gt;
+&lt;portType&gt;
+    &lt;operation&gt;
+        &lt;input&gt;
+        &lt;output&gt;
+&lt;/portType&gt;
+&lt;binding&gt;
+    &lt;operation&gt;
+        &lt;input&gt;
+        &lt;output&gt;
+&lt;/binding&gt;
+&lt;service&gt;
+    &lt;port&gt;
+        &lt;address&gt;
+&lt;/service&gt;
+&lt;/definitions&gt;
+
+</code></pre></li>
+</ul>
+
+<p><img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-2.png" alt="图片" /></p>
+
+<pre><code>•   types - 数据类型(标签)定义的容器，里面使用schema定义了一些标签结构供message引用 
+•   message - 通信消息的数据结构的抽象类型化定义。引用types中定义的标签
+•   operation - 对服务中所支持的操作的抽象描述，
+        一个operation描述了一个访问入口的请求消息与响应消息对。
+•   portType - 对于某个访问入口点类型所支持的操作的抽象集合，
+        这些操作可以由一个或多个服务访问点来支持。
+•   binding - 特定端口类型的具体协议和数据格式规范的绑定。
+•   service- 相关服务访问点的集合
+•   port - 定义为协议/数据格式绑定与具体Web访问地址组合的单个服务访问点。
+</code></pre>
+
+<h3 id="5-cxf框架的深入使用">5.  CXF框架的深入使用</h3>
+
+<pre><code>1.CXF的拦截器
+    •   为什么设计拦截器？
+    1.  为了在webservice请求过程中,能动态操作请求和响应数据, CXF设计了拦截器.
+    •   拦截器分类：
+    1.  按所处的位置分：服务器端拦截器，客户端拦截器
+    2.  按消息的方向分：入拦截器，出拦截器
+    3.  按定义者分：系统拦截器，自定义拦截器
+    Interceptor(拦截器接口)
+    AbstractPhaseInterceptor(自定义拦截器从此继承)
+    LoggingInInterceptor(系统日志入拦截器类)
+    LoggingOutInterceptor(系统日志出拦截器类)
+
+2.用CXF编写基于spring的web service
+    . 编码实现
+    1.  Server端
+    –   创建spring的配置文件beans.xml,在其中配置SEI
+    –   在web.xml中，配置上CXF的一些核心组件
+    2.  Client端
+    –   生成客户端代码
+    –   创建客户端的spring配置文件beans-client.xml,并配置
+    –   编写测试类请求web service
+
+    . 添加自定义拦截器
+    1.  Server端
+    –   在beans.xml中，在endpoint中配置上入拦截器
+    2.  Client端
+    –   通过Client对象设置出拦截器
+</code></pre>
+
+<h3 id="6-其它调用webservice的方式">6.  其它调用WebService的方式</h3>
+
+<ul>
+<li>Jquery调用WebService
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-3.png" alt="图片" /></li>
+
+<li><p>HttpURLConnection调用WebService
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-4.png" alt="图片" /></p>
+
+<h3 id="7-通过注解修改wsdl文档">7.通过注解修改wsdl文档</h3></li>
+
+<li><p>JDK中相关注解<br>
+<strong>@WebService</strong>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-5.png" alt="图片" />
+<strong>@WebMethod</strong>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-6.png" alt="图片" />
+<strong>@WebResult</strong>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-7.png" alt="图片" />
+<strong>@WebParam</strong>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-8.png" alt="图片" />
+<strong>@XmlElement</strong>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-9.png" alt="图片" /></p></li>
+</ul>
+
+<p><font color=red><strong>即使是没有修改源代码，只修改了注解，客户端的代码也必须要重新生成, 否则调用将会失败</strong></font></p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="http://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

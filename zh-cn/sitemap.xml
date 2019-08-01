@@ -78,6 +78,13 @@
   </url>
   
   <url>
+    <loc>https://guyawei.top/zh-cn/2019/05/29/webservice%E8%AF%A6%E8%A7%A3/</loc>
+    <lastmod>2019-05-29T16:01:23+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://guyawei.top/zh-cn/category/demos/</loc>
     <lastmod>2018-04-21T16:01:23+08:00</lastmod>
     <priority>0</priority>
@@ -99,6 +106,12 @@
   <url>
     <loc>https://guyawei.top/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3/</loc>
     <lastmod>2018-03-05T16:01:23+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/1/01/01/frp%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E7%A9%BF%E9%80%8F/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

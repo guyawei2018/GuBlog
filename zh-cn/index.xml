@@ -120,6 +120,17 @@ docker image ls /docker images&lt;br&gt;
 &lt;strong&gt;运行镜像&lt;/strong&gt;&lt;br&gt;
 docker run [options] imageName [TAG][COMMANP][ARG]&lt;br&gt;
 例: docker run -d -p 8080:8080 [-v xxxxxxxx]  tomcat《后台运行tomcat容器端口映射是8080，如果有-v可以用外部文件替代内部文件》&lt;br&gt;
+&lt;strong&gt;运行nginx&lt;/strong&gt;&lt;br&gt;
+docker run &amp;ndash;name docker_nginx -d -p 80:80 &lt;br&gt;
+-v /zzz/mynginx/nginx/log:/var/log/nginx&lt;br&gt;
+-v /zzz/mynginx/nginx/conf:/etc/nginx/conf.d&lt;br&gt;
+-v /zzz/mynginx/nginx/nginx.conf:/etc/nginx/nginx/conf&lt;br&gt;
+-v /zzz/mynginx/nginx/html:/lx/html&lt;br&gt;
+nginx&lt;br&gt;
+第一个-v:挂载日志目录&lt;br&gt;
+第二个-v:挂载配置目录&lt;br&gt;
+第三个-v:干脆把配置文件直接挂出来，不推荐&lt;br&gt;
+第四个-v:挂载项目目录&lt;br&gt;
 &lt;strong&gt;进入容器(类似登录Linux)&lt;/strong&gt;&lt;br&gt;
 docker exec -it 容器名/容器ID  bash&lt;br&gt;
 &lt;strong&gt;查看已经运行的容器&lt;/strong&gt;&lt;br&gt;
@@ -238,7 +249,7 @@ kill -9
 &lt;pre&gt;&lt;code&gt;which docker
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;mv 指令可以文件或文件夹重命名&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;mv 指令可以文件或文件夹重命名&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
 
 &lt;p&gt;linux中快速清空文件内容的几种方法,需要的朋友可以参考下&lt;/p&gt;
 
@@ -248,24 +259,30 @@ $ echo &amp;ldquo;&amp;rdquo; &amp;gt; filename
 $ echo &amp;gt; filename
 $ cat /dev/null &amp;gt; filename&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;//重新运行环境变量文件&lt;/strong&gt;
-source etc/profile&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;重新运行环境变量文件&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
 
-&lt;p&gt;实例1：从远处复制文件到本地目录
-命令：
-scp root@192.168.120.204:/opt/soft/nginx-0.5.38.tar.gz /opt/soft/&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;source etc/profile
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;实例2：从远处复制到本地
-命令：
-scp -r root@192.168.120.204:/opt/soft/mongodb /opt/soft/&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;远程复制文件&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
 
-&lt;p&gt;实例3：上传本地文件到远程机器指定目录
-命令：
-scp /opt/soft/nginx-0.5.38.tar.gz root@192.168.120.204:/opt/soft/scptest&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;实例1：从远处复制文件到本地目录&amp;lt;br&amp;gt;
 
-&lt;p&gt;实例4：上传本地目录到远程机器指定目录
 命令：
-scp -r /opt/soft/mongodb root@192.168.120.204:/opt/soft/scptest&lt;/p&gt;
+scp root@192.168.120.204:/opt/soft/nginx-0.5.38.tar.gz /opt/soft/
+
+实例2：从远处复制到本地&amp;lt;br&amp;gt;
+命令：
+scp -r root@192.168.120.204:/opt/soft/mongodb /opt/soft/
+
+实例3：上传本地文件到远程机器指定目录&amp;lt;br&amp;gt;
+命令：
+scp /opt/soft/nginx-0.5.38.tar.gz root@192.168.120.204:/opt/soft/scptest
+
+实例4：上传本地目录到远程机器指定目录&amp;lt;br&amp;gt;
+命令：
+scp -r /opt/soft/mongodb root@192.168.120.204:/opt/soft/scptest
+&lt;/code&gt;&lt;/pre&gt;
 </description>
       
     </item>
@@ -317,6 +334,357 @@ flushdb 清当前库 flushall 情况所有库&lt;br&gt;&lt;/p&gt;
     </item>
     
     <item>
+      <title>webservice详解</title>
+      <link>https://guyawei.top/zh-cn/2019/05/29/webservice%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/05/29/webservice%E8%AF%A6%E8%A7%A3/</guid>
+      
+        <description>
+
+&lt;h1&gt;webservice详解&lt;/h1&gt;
+
+&lt;h2 id=&#34;schema约束&#34;&gt;Schema约束&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1.    namespace  相当于schema文件的id&lt;/li&gt;
+&lt;li&gt;2.    targetNamespace属性 用来指定schema文件的namespace的值&lt;/li&gt;
+&lt;li&gt;3.    xmlns属性   引入一个约束, 它的值是一个schema文件的namespace值&lt;/li&gt;
+&lt;li&gt;4.    schemaLocation属性  用来指定引入的schema文件的位置&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;schema规范&#34;&gt;schema规范:&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1. 所有标签和属性都需要有schema文件来定义&lt;/li&gt;
+&lt;li&gt;2. 所有的schema文件都需要有一个id, 但在这里它叫namespace,&lt;/li&gt;
+&lt;li&gt;3. namespace的值由什么来指定?
+    由targetNamespace属性来指定, 它的值是一个url(很有可能不存在)&lt;/li&gt;
+&lt;li&gt;4. 如何引入一个Schema约束?
+    属性? : 用xmlns属性
+    属性值: 对应的schema文件的id(namespace值)&lt;/li&gt;
+&lt;li&gt;5. 如果引入的schema不是w3c组织定义, 必须指定schema文件的位置&lt;/li&gt;
+&lt;li&gt;6. schema文件的位置由什么属性来指定?
+    属性? : schemaLocation
+    属性值: namespace path&lt;/li&gt;
+&lt;li&gt;7. 如果引入了N个约束, 需要给n-1个取别名&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;提出2个问题&#34;&gt;提出2个问题&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;问题一:&lt;br&gt;
+ 谷歌、360网站主页都有天气信息，它们公司服务器的数据库中都保存了天气预报数据吗?如果没有, 那数据都存在哪了呢?这些网站是如何得到这些数据的呢?&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;问题二:&lt;br&gt;
+ 各个门户网站显示的股票行情信息数据又是怎么来的呢?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;面试问题&#34;&gt;面试问题&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1.webservice相当于HTTP+?+?&lt;br&gt;
+? : xml&lt;br&gt;
+? : schema&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;2.wsdl是什么?&lt;br&gt;
+webservice定义语言, 对应.wsdl文档, 一个webservice会对应一个唯一的wsdl文档, 定义了客户端与服务端发送请求和响应的数据格式和过程&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;3.    如何发布一个webservice?&lt;br&gt;
+定义SEI   @webservice @webMethod&lt;br&gt;
+定义SEI的实现&lt;br&gt;
+发布:  Endpoint.publish(url, SEIImplObject)&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;4.如何请求一个webservice?
+
+&lt;ol&gt;
+&lt;li&gt;根据wsdl文档生成客户端代码  jdk/cxf&lt;/li&gt;
+&lt;li&gt;根据生成的代码调用webService&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;关于web-service的几个问题&#34;&gt;关于Web Service的几个问题&lt;/h2&gt;
+
+&lt;h3 id=&#34;web-service是什么&#34;&gt;Web service是什么？&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1. &lt;font color=red&gt;&lt;strong&gt;基于Web的服务&lt;/strong&gt;&lt;/font&gt;：服务器端整出一些资源让客户端应用访问（获取数据）&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;2. 一个&lt;font color=red&gt;&lt;strong&gt;跨语言&lt;/strong&gt;&lt;/font&gt;、跨平台的规范（抽象）&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;3. 多个跨平台、跨语言的&lt;font color=red&gt;&lt;strong&gt;应用间通信整合的方案&lt;/strong&gt;&lt;/font&gt;（实际）&lt;br&gt;
+以各个网站显示天气预报功能为例:&lt;br&gt;
+气象中心的管理系统将收集的天气信息并将数据暴露出来(通过WebService Server), 而各大站点的应用就去调用它们得到天气信息并以不同的样式去展示(WebServiceClient).
+网站提供了天气预报的服务，但其实它们什么也没有做，只是简单了调用了一下气象中心服务器上的一段代码而已&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;为什么要用web-service&#34;&gt;为什么要用Web service？&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;web service能解决:
+    跨平台调用 
+    跨语言调用
+    远程调用
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;什么时候使用web-service&#34;&gt;什么时候使用web Service？&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;1. 同一家公司的新旧应用之间
+2. 不同公司的应用之间
+分析业务需求：天猫网与中通物流系统如何交互？
+3. 一些提供数据的内容聚合应用：天气预报、股票行情
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;web-service中的几个重要术语&#34;&gt;Web Service中的几个重要术语&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-wsdl-web-service-definition-language&#34;&gt;1.WSDL：web service definition language&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;直译 : WebService定义语言
+1. 对应一种类型的文件.wsdl
+2. 定义了web service的服务器端与客户端应用交互传递请求和响应数据的格式和方式
+3. 一个web service对应一个唯一的wsdl文档
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;2-soap-simple-object-access-protocal&#34;&gt;2. SOAP：simple object  access protocal&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;直译: 简单对象访问协议
+1.  是一种简单的、基于HTTP和XML的协议, 用于在WEB上交换结构化的数据
+2.  soap消息：请求消息和响应消息
+3.  http+xml片断
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;3-sei-webservice-endpoint-interface&#34;&gt;3. SEI：WebService EndPoint Interface&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;直译: web service的终端接口，
+1.  就是WebService服务器端用来处理请求的接口
+    @Webservice
+    @WebMethod
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;4-cxf-celtix-xfire&#34;&gt;4.  CXF：Celtix + XFire&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;一个apache的用于开发webservice服务器端和客户端的框架
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;开发webservice&#34;&gt;开发webservice&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-概述&#34;&gt;1. 概述&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;•   开发手段：
+–   使用JDK开发(1.6及以上版本)
+–   使用CXF框架开发(工作中)
+•   组成：
+–   服务器端
+–   客户端
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;2-使用jdk开发webservice&#34;&gt;2. 使用JDK开发WebService&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;1.  开发服务器端
+•   Web Service编码：
+–   @WebService( SEI和SEI的实现类)
+–   @WebMethod(SEI中的所有方法)
+•   发布Web Service：
+–   Endpoint(终端, 发布webservice)
+
+2.  开发客户端
+•   使用eclipse提供的web service浏览器访问
+–   查看对应的wsdl文档：…..?wsdl (一般浏览器)
+–   请求webService并查看请求和响应消息(webservice浏览器)
+
+•   创建客户端应用编码方式访问
+–   借助jdk的wsimort.exe工具生成客户端代码：
+    wsimport -keep url   //url为wsdl文件的路径
+–   借助生成的代码编写请求代码
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;3-使用cxf开发web-service&#34;&gt;3. 使用CXF开发web service&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;1.加入cxf的jar包&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.apache.cxf&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;cxf-rt-transports-http-jetty&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;3.1.7&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.apache.cxf&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;cxf-rt-transports-http&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;3.1.7&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;   
+&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.apache.cxf&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;cxf-rt-frontend-jaxws&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;3.1.7&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;2.在项目里注入服务终端SEI 配置spring-cxf.xml&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;
+&amp;lt;beans xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot;
+    xmlns:context=&amp;quot;http://www.springframework.org/schema/context&amp;quot;
+    xmlns=&amp;quot;http://www.springframework.org/schema/beans&amp;quot;
+    xmlns:jaxws=&amp;quot;http://cxf.apache.org/jaxws&amp;quot; 
+    xsi:schemaLocation=&amp;quot;
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://cxf.apache.org/jaxws 
+    http://cxf.apache.org/schemas/jaxws.xsd&amp;quot;&amp;gt;
+        
+
+    &amp;lt;import resource=&amp;quot;classpath:META-INF/cxf/cxf.xml&amp;quot; /&amp;gt;
+    &amp;lt;import resource=&amp;quot;classpath:META-INF/cxf/cxf-servlet.xml&amp;quot; /&amp;gt;
+    &amp;lt;!--&amp;lt;import resource=&amp;quot;classpath:META-INF/cxf/cxf-extension-soap.xml&amp;quot; /&amp;gt; --&amp;gt;
+        
+        
+    &amp;lt;jaxws:endpoint  implementor=&amp;quot;com.lanswon.qzsmk.service.commonService.impl.DockingInternetServiceImpl&amp;quot; 
+        address=&amp;quot;/dockingInternetService&amp;quot;&amp;gt;
+        &amp;lt;jaxws:inInterceptors&amp;gt;
+            &amp;lt;bean class=&amp;quot;com.lanswon.qzsmk.listener.SOAPAuthIntercepter&amp;quot;/&amp;gt;
+            &amp;lt;bean class=&amp;quot;org.apache.cxf.interceptor.LoggingInInterceptor&amp;quot;/&amp;gt;
+        &amp;lt;/jaxws:inInterceptors&amp;gt;
+        &amp;lt;jaxws:outInterceptors&amp;gt;
+        &amp;lt;bean class=&amp;quot;org.apache.cxf.interceptor.LoggingOutInterceptor&amp;quot;/&amp;gt;
+    &amp;lt;/jaxws:outInterceptors&amp;gt;
+    &amp;lt;/jaxws:endpoint&amp;gt;
+
+&amp;lt;/beans&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;3.在web.xml配置CXFServlet&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;servlet&amp;gt;
+&amp;lt;servlet-name&amp;gt;CXFService&amp;lt;/servlet-name&amp;gt;
+&amp;lt;servlet-class&amp;gt;org.apache.cxf.transport.servlet.CXFServlet&amp;lt;/servlet-class&amp;gt;
+&amp;lt;init-param&amp;gt;
+  &amp;lt;param-name&amp;gt;contextConfigLocation&amp;lt;/param-name&amp;gt;
+  &amp;lt;param-value&amp;gt;classpath:conf/spring-cxf.xml&amp;lt;/param-value&amp;gt;
+&amp;lt;/init-param&amp;gt;
+&amp;lt;load-on-startup&amp;gt;1&amp;lt;/load-on-startup&amp;gt;
+&amp;lt;/servlet&amp;gt;
+&amp;lt;servlet-mapping&amp;gt;
+&amp;lt;servlet-name&amp;gt;CXFService&amp;lt;/servlet-name&amp;gt;
+&amp;lt;url-pattern&amp;gt;/services/*&amp;lt;/url-pattern&amp;gt;
+&amp;lt;/servlet-mapping&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;4.以上是服务端，在客户端引入jar包，将在服务端spring-cxf.xml中endpoint替换下面代码即可&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;jaxws:client id=&amp;quot;qq&amp;quot; serviceClass=&amp;quot;com.lanswon.qzsmk.service.commonservice.impl.DockingInternetService&amp;quot; address=&amp;quot;http://123.123.123.123:3511/qzsmk_card/services/dockingInternetService&amp;quot;&amp;gt;
+&amp;lt;jaxws:outInterceptors&amp;gt;
+    &amp;lt;bean class=&amp;quot;org.apache.cxf.interceptor.LoggingOutInterceptor&amp;quot;/&amp;gt;
+    &amp;lt;!-- &amp;lt;bean class=&amp;quot;org.apache.cxf.interceptor.LoggingInInterceptor&amp;quot;/&amp;gt; --&amp;gt;
+    &amp;lt;bean class=&amp;quot;com.interceptors.CheckInterceptor&amp;quot;&amp;gt;&amp;lt;/bean&amp;gt;
+&amp;lt;/jaxws:outInterceptors&amp;gt; 
+&amp;lt;jaxws:inInterceptors&amp;gt;
+    &amp;lt;bean class=&amp;quot;org.apache.cxf.interceptor.LoggingInInterceptor&amp;quot;/&amp;gt;
+&amp;lt;/jaxws:inInterceptors&amp;gt; 
+&amp;lt;/jaxws:client&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;4-分析webservice的wsdl文档结构&#34;&gt;4. 分析WebService的WSDL文档结构&lt;/h3&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;实例
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-1.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;wsdl文档结构&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;definitions&amp;gt;
+&amp;lt;types&amp;gt;
+    &amp;lt;schema&amp;gt;
+        &amp;lt;element&amp;gt;
+&amp;lt;/types&amp;gt;
+&amp;lt;message&amp;gt;
+        &amp;lt;part&amp;gt;
+&amp;lt;/message&amp;gt;
+&amp;lt;portType&amp;gt;
+    &amp;lt;operation&amp;gt;
+        &amp;lt;input&amp;gt;
+        &amp;lt;output&amp;gt;
+&amp;lt;/portType&amp;gt;
+&amp;lt;binding&amp;gt;
+    &amp;lt;operation&amp;gt;
+        &amp;lt;input&amp;gt;
+        &amp;lt;output&amp;gt;
+&amp;lt;/binding&amp;gt;
+&amp;lt;service&amp;gt;
+    &amp;lt;port&amp;gt;
+        &amp;lt;address&amp;gt;
+&amp;lt;/service&amp;gt;
+&amp;lt;/definitions&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-2.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;•   types - 数据类型(标签)定义的容器，里面使用schema定义了一些标签结构供message引用 
+•   message - 通信消息的数据结构的抽象类型化定义。引用types中定义的标签
+•   operation - 对服务中所支持的操作的抽象描述，
+        一个operation描述了一个访问入口的请求消息与响应消息对。
+•   portType - 对于某个访问入口点类型所支持的操作的抽象集合，
+        这些操作可以由一个或多个服务访问点来支持。
+•   binding - 特定端口类型的具体协议和数据格式规范的绑定。
+•   service- 相关服务访问点的集合
+•   port - 定义为协议/数据格式绑定与具体Web访问地址组合的单个服务访问点。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;5-cxf框架的深入使用&#34;&gt;5.  CXF框架的深入使用&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;1.CXF的拦截器
+    •   为什么设计拦截器？
+    1.  为了在webservice请求过程中,能动态操作请求和响应数据, CXF设计了拦截器.
+    •   拦截器分类：
+    1.  按所处的位置分：服务器端拦截器，客户端拦截器
+    2.  按消息的方向分：入拦截器，出拦截器
+    3.  按定义者分：系统拦截器，自定义拦截器
+    Interceptor(拦截器接口)
+    AbstractPhaseInterceptor(自定义拦截器从此继承)
+    LoggingInInterceptor(系统日志入拦截器类)
+    LoggingOutInterceptor(系统日志出拦截器类)
+
+2.用CXF编写基于spring的web service
+    . 编码实现
+    1.  Server端
+    –   创建spring的配置文件beans.xml,在其中配置SEI
+    –   在web.xml中，配置上CXF的一些核心组件
+    2.  Client端
+    –   生成客户端代码
+    –   创建客户端的spring配置文件beans-client.xml,并配置
+    –   编写测试类请求web service
+
+    . 添加自定义拦截器
+    1.  Server端
+    –   在beans.xml中，在endpoint中配置上入拦截器
+    2.  Client端
+    –   通过Client对象设置出拦截器
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;6-其它调用webservice的方式&#34;&gt;6.  其它调用WebService的方式&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Jquery调用WebService
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-3.png&#34; alt=&#34;图片&#34; /&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;HttpURLConnection调用WebService
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-4.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;7-通过注解修改wsdl文档&#34;&gt;7.通过注解修改wsdl文档&lt;/h3&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;JDK中相关注解&lt;br&gt;
+&lt;strong&gt;@WebService&lt;/strong&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-5.png&#34; alt=&#34;图片&#34; /&gt;
+&lt;strong&gt;@WebMethod&lt;/strong&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-6.png&#34; alt=&#34;图片&#34; /&gt;
+&lt;strong&gt;@WebResult&lt;/strong&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-7.png&#34; alt=&#34;图片&#34; /&gt;
+&lt;strong&gt;@WebParam&lt;/strong&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-8.png&#34; alt=&#34;图片&#34; /&gt;
+&lt;strong&gt;@XmlElement&lt;/strong&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/webservice/ws-9.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;font color=red&gt;&lt;strong&gt;即使是没有修改源代码，只修改了注解，客户端的代码也必须要重新生成, 否则调用将会失败&lt;/strong&gt;&lt;/font&gt;&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
       <title>浙江宁波游玩</title>
       <link>https://guyawei.top/zh-cn/2019/04/21/%E6%B5%99%E6%B1%9F%E5%AE%81%E6%B3%A2%E6%B8%B8%E7%8E%A9/</link>
       <pubDate>Sun, 21 Apr 2019 16:01:23 +0800</pubDate>
@@ -359,6 +727,160 @@ flushdb 清当前库 flushall 情况所有库&lt;br&gt;&lt;/p&gt;
       <guid>https://guyawei.top/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3/</guid>
       
         <description>&lt;p&gt;這是一個簡單的筆記。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>FRP内网服务穿透</title>
+      <link>https://guyawei.top/zh-cn/1/01/01/frp%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E7%A9%BF%E9%80%8F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/1/01/01/frp%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E7%A9%BF%E9%80%8F/</guid>
+      
+        <description>
+
+&lt;h1&gt;部署FRP服务 实现内网穿透&lt;/h1&gt;
+
+&lt;h2 id=&#34;先抛出几个问题&#34;&gt;先抛出几个问题&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;1.我们有在本地开发的某一个 B/S 程序，希望给客户直接在线演示，怎么办？
+2.程序在内部开发调试阶段，对于某一个具体的测试问题，我不想发布到生产，
+  只是想测试帮忙先看一下，OK 了后，我再发布，这样怎么办？
+3.微信公众号开发，现在这么火，烦人的，我需要调用微信公众号的接口，但微信的接口服务配置时，
+  只接受一个公网的认证链接，这时候，难道我真的要每开发一个很小的变动，调试时仍需要不停的与线上部署服务器进行改动同步，
+  就没有更简单的开发调试方法了吗？
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;现在来了，这些似乎难以搞定的事情，好像现在都有一定的共同性：&lt;/p&gt;
+
+&lt;p&gt;1.我的资源在内网环境，而且这样是为了方便我本人很好的修改，并对不同的需求进行快速的响应。&lt;br&gt;
+2.我需要将我本地的相关内容公开到公网环境去，方便相关的人直接查看到我本地的效果&lt;br&gt;
+3.与相关的第三方对接时，第三方只能识别公网上的相关资源，而不能穿透内网&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;什么是-frp&#34;&gt;什么是 frp&lt;/h2&gt;
+
+&lt;p&gt;frp 是一个高性能反向代理应用，可用于实现内网穿透，支持 TCP、UDP、HTTP、HTTPS 等协议，以此将内网资源对外网提供服务。
+  其中更详细的一些介绍，以及使用细节，官方的&lt;a href=&#34;https://github.com/fatedier/frp/blob/master/README_zh.md&#34;&gt;《中文文档》&lt;/a&gt; 有很详细的解释和说明，大家也可以直接参考。&lt;/p&gt;
+
+&lt;h2 id=&#34;准备&#34;&gt;准备&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1.拥有公网 IP 的服务器&lt;/li&gt;
+&lt;li&gt;2.备案的域名&lt;/li&gt;
+&lt;li&gt;3.一台个人PC&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;服务端环境搭建&#34;&gt;服务端环境搭建&lt;/h2&gt;
+
+&lt;p&gt;在网方的发布平台 &lt;a href=&#34;https://github.com/fatedier/frp/releases&#34;&gt;releases&lt;/a&gt;，我们下载最新的发布版本（当前最新的版本为 V0.27.0）。其中我们需要选择对应的版本，服务器常见的系统环境版本，一般为 linux 64 位，因此，我们一般情况选择：frp_0.27.0_linux_amd64.tar.gz。&lt;br&gt;
+  服务端解压目录机构，如下图。
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/FRP/frp-1.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;frp-配置&#34;&gt;frp 配置&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;[common]
+# 服务端控制面板访问账号和密码，不设置则默认admin
+#注意以及几个是我随便填写的，请根据自己的实际情况，自行修改。
+dashboard_user = admin
+dashboard_pwd = admin
+# 客户端连接令牌
+privilege_token = 12345678
+# 路由地址
+subdomain_host = xxxxguyawei.top
+
+###########下列配置默认即可，无需改动###############
+#穿透监听端口与地址(0.0.0.0表示允许任何地址)
+bind_addr = 0.0.0.0
+bind_port = 6009
+# udp协议监听端口
+#bind_udp_port = 7001
+#udp协议支持kcp模式。kcp的运行端口，不设置表示禁用。可以与&#39;bind_port&#39;端口一致
+#kcp_bind_port = 6009
+#虚拟主机穿透监听端口(指http与https的访问端口)
+vhost_http_port = 6010
+#vhost_https_port = 443
+#服务端控制面板访问端口
+dashboard_addr = 0.0.0.0
+dashboard_port = 6008
+# frp日志记录路径
+log_file = ./frps.log
+# 日志记录级别(trace, debug, info, warn, error)
+log_level = info
+# 日志记录滚动天数
+log_max_days = 3
+# 客户端与服务端连接心跳检测
+heartbeat_timeout = 90
+# 允许客户端使用的穿透端口，不设置则全部允许
+#allow_ports = 1000-100000
+# 穿透服务允许的连接数
+max_pool_count = 5
+# 单个客户端允许建立的穿透服务，0为不限制
+max_ports_per_client = 0
+# 连接超时
+authentication_timeout = 900
+# tcp流多路复用(可以理解为优化传输) 
+tcp_mux = true
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;nginx-反向代理配置&#34;&gt;nginx 反向代理配置&lt;/h2&gt;
+
+&lt;p&gt;其中，因为我的服务器上有相关其他的程序共用，80 端口上交给了 nginx ，而在微信的接口配置时，只能是 80 or 443 端口，因此，这里我还借用了 nginx 的反向代理功能，配置如下：
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/FRP/frp-2.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这里启用了泛域名解析，考虑的是，这个服务开启后，我们可以通过这种方式提供给多人使用，不同的人员，可以启用一个对应的子域名，如：张三（zhangsan.guyawei.top）、李四（lisi.guyawei.top）&lt;/p&gt;
+
+&lt;h2 id=&#34;服务端启动&#34;&gt;服务端启动&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;# 常规启动
+./frps -c frps.ini
+# 或者，使用 nohup 方式，启用后台运行模式，这样就可以避免命令行工具关闭后，服务中断的情况
+nohup ./frps -c frps.ini &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;客户端环境搭建&#34;&gt;客户端环境搭建&lt;/h2&gt;
+
+&lt;p&gt;客户端在配置之前，同样的请在官方下载与自己系统对应的程序包，frp_0.27.0_windows_amd64.tar.gz
+解压出其中的客户端程序（frpc.exe）和配置文件（frpc.ini）&lt;/p&gt;
+
+&lt;h2 id=&#34;客户端环境配置&#34;&gt;客户端环境配置&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;[common]
+server_addr = 106.15.235.215
+# 与服务端配置信息 bind_port 相同
+server_port = 6009
+# 与服务端配置信息 privilege_token 相同
+privilege_token = 12345678
+
+[ssh]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 22
+remote_port = 6000
+
+[web1]
+
+type = http
+
+local_ip = 127.0.0.1
+
+local_port = 6010
+
+#remote_port = 7779
+subdomain = tunnel
+
+custom_domains = guyawei.top
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;客户端启动&#34;&gt;客户端启动&lt;/h2&gt;
+
+&lt;p&gt;.\frpc.exe -c frpc.ini
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/FRP/frp-3.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;font color=red&gt;&lt;strong&gt;启动本地6010端口程序，用域名访问即可&lt;/strong&gt;&lt;/font&gt;&lt;/p&gt;
 </description>
       
     </item>
