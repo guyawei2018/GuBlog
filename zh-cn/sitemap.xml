@@ -10,7 +10,44 @@
   
   <url>
     <loc>https://guyawei.top/zh-cn/categories/</loc>
-    <lastmod>2019-06-24T16:01:23+08:00</lastmod>
+    <lastmod>2019-09-16T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/2019/09/16/docker-%E9%83%A8%E7%BD%B2jenkins/</loc>
+    <lastmod>2019-09-16T16:01:23+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/</loc>
+    <lastmod>2019-09-16T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/category/java/</loc>
+    <lastmod>2019-09-16T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/posts/</loc>
+    <lastmod>2019-09-16T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/tags/</loc>
+    <lastmod>2019-09-16T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/tag/java/</loc>
+    <lastmod>2019-09-16T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -19,36 +56,6 @@
     <lastmod>2019-06-24T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/</loc>
-    <lastmod>2019-06-24T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/category/java/</loc>
-    <lastmod>2019-06-24T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/posts/</loc>
-    <lastmod>2019-06-24T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/tags/</loc>
-    <lastmod>2019-06-24T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/tag/java/</loc>
-    <lastmod>2019-06-24T16:01:23+08:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>

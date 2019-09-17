@@ -5,7 +5,7 @@
     <description>Recent content on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 24 Jun 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 16 Sep 2019 16:01:23 +0800</lastBuildDate>
     
         <atom:link href="https://guyawei.top/zh-cn/index.xml" rel="self" type="application/rss+xml" />
     
@@ -30,6 +30,178 @@
 &lt;/ul&gt;
 
 &lt;p&gt;了解並貢獻： &lt;a href=&#34;https://github.com/gohugoio&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Docker 部署jenkins</title>
+      <link>https://guyawei.top/zh-cn/2019/09/16/docker-%E9%83%A8%E7%BD%B2jenkins/</link>
+      <pubDate>Mon, 16 Sep 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/09/16/docker-%E9%83%A8%E7%BD%B2jenkins/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;docker-部署jenkins&#34;&gt;Docker 部署jenkins&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://hub.docker.com/_/jenkins&#34;&gt;https://hub.docker.com/_/jenkins&lt;/a&gt; 查看官方提供的部署信息&lt;br&gt;&lt;br&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;拉取镜像&lt;/p&gt;
+
+&lt;h3 id=&#34;docker-pull-jenkins-br&#34;&gt;docker pull jenkins&lt;br&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins1.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;运行镜像&lt;/p&gt;
+
+&lt;h3 id=&#34;docker-run-p-8080-8080-p-50000-50000-v-your-home-var-jenkins-home-jenkins-br&#34;&gt;docker run -p 8080:8080 -p 50000:50000 -v /your/home:/var/jenkins_home jenkins &lt;br&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;font color=red&gt;要注意宿主机的外挂文件权限必须是1000用户组，dockerfile有规定(chown -R 1000  /your/home)&lt;/font&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins2.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;初始化jenkins服务&lt;/p&gt;
+
+&lt;h3 id=&#34;jenkins一直卡着-显示正在启动-请稍后&#34;&gt;jenkins一直卡着 显示正在启动,请稍后&lt;/h3&gt;
+
+&lt;p&gt;进入上面宿主外置目录 /your/home 修改 &lt;font color=red&gt;hudson.model.UpdateCenter.xml&lt;/font&gt; 文件中的&amp;rdquo;url&amp;rdquo;标签&lt;a href=&#34;http://mirror.xmission.com/jenkins/updates/update-center.json&#34;&gt;http://mirror.xmission.com/jenkins/updates/update-center.json&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;jenkins插件安装失败处理方法&#34;&gt;Jenkins插件安装失败处理方法&lt;/h3&gt;
+
+&lt;p&gt;=================安装失败出现的环境========================
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins3.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
+1.网络或墙的问题导致插件下载安装失败 修改 &lt;font color=red&gt;hudson.model.UpdateCenter.xml&lt;/font&gt; 文件中的&amp;rdquo;url&amp;rdquo;标签即可解决&lt;br&gt;
+2.因为Jenkins版本太低导致插件不支持。如下报错
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins4.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;手动更新版本&#34;&gt;手动更新版本&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;1.在服务器中下载jenkins的最新war包：
+wget http://mirrors.jenkins.io/war/latest/jenkins.war
+2.将下载的war包cp至容器的usr/download目录中：
+docker cp jenkins.war ContainerId:/usr/download
+3.进入容器：
+docker exec -it -u root ContainerId bash
+4.查看容器中jenkins war包的位置，并备份原来的war包：
+whereis jenkins
+cd /usr/share/jenkins
+cp jenkins.war jenkinsBAK.war
+5.将usr/dowanload下的包cp到/usr/share/jenkins下覆盖：
+cp /usr/download/jenkins.war /usr/share/jenkins
+6.重启jenkins，更新到新版本：
+http://yourIP:8080/restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;jenkins部分全局配置&#34;&gt;jenkins部分全局配置&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;配置jdk和maven，可以如下图自动下载配置，配置会在第一次构建job时生效&lt;br&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins5.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;构建项目配置邮件群发通知&lt;br&gt;
+&lt;font color=red&gt;在配置邮箱服务之前要先配置系统管理中jenkins location配置项&lt;/font&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins6.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SMTP server：SMTP服务器，比如腾讯企业邮箱的SMTP服务器为smtp.exmail.qq.com。
+
+Default Content Type：邮件内容格式，可选Plain text和HTML。
+
+Default Recipients：默认的收件人列表，用逗号分隔。抄送或密送某个收件人可以在其邮箱前面加上cc:或bcc:。
+
+Default Subject：默认的邮件标题。
+
+Default Content：默认的邮件内容。
+
+Enable Debug Mode：开启插件的Debug模式，我们会在日志里看到更多信息。
+
+其他配置保持默认即可。
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins7.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
+按钮高级设置，注意&lt;font color=red&gt;Default Triggers&lt;/font&gt;触发器设置
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins8.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;jenkins-项目构建配置&#34;&gt;jenkins 项目构建配置&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;项目构建不远程部署
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins9.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
+*springboot项目构建远程部署
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins11.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins10.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
+sh 脚本&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export BUILD_ID=dontkillme
+source /etc/profile
+#!/bin/bash
+echo &amp;quot;Restarting SpringBoot per_recharge  Application&amp;quot;
+pid=`ps -ef | grep per_recharge-0.0.1-SNAPSHOT.jar | grep -v grep | awk &#39;{print $2}&#39;`
+if [ -n &amp;quot;$pid&amp;quot; ]
+then
+kill -9 $pid
+echo &amp;quot;关闭进程：&amp;quot;$pid
+fi
+  
+echo &amp;quot;授予当前用户权限&amp;quot;
+chmod 777 /home/per_recharge-0.0.1-SNAPSHOT.jar
+echo &amp;quot;执行.....&amp;quot;
+#java -jar /usr/local/miniprogram/miniprogram.jar
+nohup java -jar -Dspring.profiles.active=test  per_recharge-0.0.1-SNAPSHOT.jar --server.port=8080 &amp;amp;
+pids=`ps -ef | grep per_recharge-0.0.1-SNAPSHOT.jar | grep -v grep | awk &#39;{print $2}&#39;`
+echo &amp;quot;新进程：&amp;quot;$pids
+echo &amp;quot;启动结束--------&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;war项目构建远程部署tomcat&lt;br&gt;
+在构建项目之前需要在tomcat服务端配置用户名和密码让jenkins访问并上传war&lt;br&gt;
+1.修改tomcat-uers.xml&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;role rolename=&amp;quot;tomcat&amp;quot;/&amp;gt;
+&amp;lt;role rolename=&amp;quot;role1&amp;quot;/&amp;gt;
+&amp;lt;role rolename=&amp;quot;manager-gui&amp;quot;/&amp;gt;
+&amp;lt;role rolename=&amp;quot;manager-script&amp;quot;/&amp;gt;
+&amp;lt;user username=&amp;quot;tomcat&amp;quot; password=&amp;quot;tomcat&amp;quot; roles=&amp;quot;tomcat&amp;quot;/&amp;gt;
+&amp;lt;user username=&amp;quot;both&amp;quot; password=&amp;quot;tomcat&amp;quot; roles=&amp;quot;tomcat,role1&amp;quot;/&amp;gt;
+&amp;lt;user username=&amp;quot;role1&amp;quot; password=&amp;quot;tomcat&amp;quot; roles=&amp;quot;role1&amp;quot;/&amp;gt;
+&amp;lt;user username=&amp;quot;both&amp;quot; password=&amp;quot;123456&amp;quot; roles=&amp;quot;tomcat,manager-gui,manager-script&amp;quot;/&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2.修改context.xml&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;Context antiResourceLocking=&amp;quot;true&amp;quot; antiJARLocking=&amp;quot;true&amp;quot;&amp;gt;
+&amp;lt;context&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在构建之前使用ssh执行脚本清除之前的war包，下面时简单的脚本&lt;br&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  #!/bin/sh
+  tomcat_home=/home/tomcat7/apache-tomcat-7.0.92
+
+  export JAVA_HOME=/usr/java/jdk1.7.0_79
+  export JRE_HOME=$JAVA_HOME/jre
+  export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+  export PATH=$PATH:$JAVA_HOME/bin
+
+  sh $tomcat_home/bin/shutdown.sh
+
+
+  rm -rf $tomcat_home/webapps/qzsmk_card
+
+  rm -rf $tomcat_home/webapps/qzsmk_card.war
+
+  sh $tomcat_home/bin/startup.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在系统管理新增ssh配置&lt;br&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins12.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins13.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
 </description>
       
     </item>

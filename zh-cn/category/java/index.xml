@@ -6,10 +6,19 @@
     <description>Recent content in Java on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 24 Jun 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 16 Sep 2019 16:01:23 +0800</lastBuildDate>
     
 	<atom:link href="https://guyawei.top/zh-cn/category/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Docker 部署jenkins</title>
+      <link>https://guyawei.top/zh-cn/2019/09/16/docker-%E9%83%A8%E7%BD%B2jenkins/</link>
+      <pubDate>Mon, 16 Sep 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/09/16/docker-%E9%83%A8%E7%BD%B2jenkins/</guid>
+      <description>Docker 部署jenkins https://hub.docker.com/_/jenkins 查看官方提供的部署信息 拉取镜像 docker pull jenkins 运行镜像 docker run -p 8080:8080 -p 50000:50000 -v /your/home:/var/jenkins_home jenkins 要注意宿主机的外挂文件权限必须是1000用户组，dock</description>
+    </item>
     
     <item>
       <title>Docker 入门</title>
