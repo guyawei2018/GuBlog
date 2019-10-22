@@ -1,15 +1,60 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Java on GUBlog</title>
+    <title>java on GUBlog</title>
     <link>https://guyawei.top/zh-cn/category/java/</link>
-    <description>Recent content in Java on GUBlog</description>
+    <description>Recent content in java on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 16 Sep 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 22 Oct 2019 16:01:23 +0800</lastBuildDate>
     
 	<atom:link href="https://guyawei.top/zh-cn/category/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Feign常见问题总结</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/feign%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/feign%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</guid>
+      <description>TIPS 本文基于Spring Clou Greenwich SR1，理论支持Spring Cloud Finchley及更高版本。 本文总结Feign常见问题及解决方案。 一、使用案例 如何使</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Alibaba-搭建生产可用的Nacos集群</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/spring-cloud-alibaba-%E6%90%AD%E5%BB%BA%E7%94%9F%E4%BA%A7%E5%8F%AF%E7%94%A8%E7%9A%84nacos%E9%9B%86%E7%BE%A4/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/spring-cloud-alibaba-%E6%90%AD%E5%BB%BA%E7%94%9F%E4%BA%A7%E5%8F%AF%E7%94%A8%E7%9A%84nacos%E9%9B%86%E7%BE%A4/</guid>
+      <description>搭建生产可用的Nacos集 本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭</description>
+    </item>
+    
+    <item>
+      <title>如何使用Feign构造多参数的请求</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8feign%E6%9E%84%E9%80%A0%E5%A4%9A%E5%8F%82%E6%95%B0%E7%9A%84%E8%AF%B7%E6%B1%82/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8feign%E6%9E%84%E9%80%A0%E5%A4%9A%E5%8F%82%E6%95%B0%E7%9A%84%E8%AF%B7%E6%B1%82/</guid>
+      <description>TIPS 本文基于Spring Cloud Greenwich SR1，理论上支持Finchley及更高版本。 本节来探讨如何使用Feign构造多参数的请求。笔者以GET及POST</description>
+    </item>
+    
+    <item>
+      <title>扩展Ribbon支持Nacos权重的三种方式</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81nacos%E6%9D%83%E9%87%8D%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81nacos%E6%9D%83%E9%87%8D%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
+      <description>Nacos支持权重配置，这是个比较实用的功能，例如： 把性能差的机器权重设低，性能好的机器权重设高，让请求优先打到性能高的机器上去； 某个实例出</description>
+    </item>
+    
+    <item>
+      <title>扩展Ribbon支持基于元数据的版本管理</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81%E5%9F%BA%E4%BA%8E%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81%E5%9F%BA%E4%BA%8E%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</guid>
+      <description>上一篇已经实现了： 优先调用同集群下的实例 实现基于权重配置的负载均衡 但实际项目，我们可能还会有这样的需求： 一个微服务在线上可能多版本共存，例如</description>
+    </item>
     
     <item>
       <title>Docker 部署jenkins</title>

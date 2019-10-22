@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>扩展Ribbon支持Nacos权重的三种方式 · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Nacos支持权重配置，这是个比较实用的功能，例如： 把性能差的机器权重设低，性能好的机器权重设高，让请求优先打到性能高的机器上去； 某个实例出" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81nacos%E6%9D%83%E9%87%8D%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="扩展Ribbon支持Nacos权重的三种方式" />
+<meta property="og:description" content="Nacos支持权重配置，这是个比较实用的功能，例如： 把性能差的机器权重设低，性能好的机器权重设高，让请求优先打到性能高的机器上去； 某个实例出" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81nacos%E6%9D%83%E9%87%8D%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/" />
+<meta property="article:published_time" content="2019-10-22T16:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-22T16:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="扩展Ribbon支持Nacos权重的三种方式">
+<meta itemprop="description" content="Nacos支持权重配置，这是个比较实用的功能，例如： 把性能差的机器权重设低，性能好的机器权重设高，让请求优先打到性能高的机器上去； 某个实例出">
+
+
+<meta itemprop="datePublished" content="2019-10-22T16:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-22T16:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="3076">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="扩展Ribbon支持Nacos权重的三种方式"/>
+<meta name="twitter:description" content="Nacos支持权重配置，这是个比较实用的功能，例如： 把性能差的机器权重设低，性能好的机器权重设高，让请求优先打到性能高的机器上去； 某个实例出"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">扩展Ribbon支持Nacos权重的三种方式</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-22
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h2 id="nacos支持权重配置-这是个比较实用的功能-例如">Nacos支持权重配置，这是个比较实用的功能，例如：</h2>
+
+<ul>
+<li><p>把性能差的机器权重设低，性能好的机器权重设高，让请求优先打到性能高的机器上去；</p></li>
+
+<li><p>某个实例出现异常时，把权重设低，排查问题，问题排查完再把权重恢复；</p></li>
+
+<li><p>想要下线某个实例时，可先将该实例的权重设为0，这样流量就不会打到该实例上了——此时再去关停该实例，这样就能实现优雅下线啦。当然这是为Nacos量身定制的优雅下线方案——Spring Cloud中，要想实现优雅下线还有很多姿势，详见：<a href="http://www.itmuch.com/spring-cloud-sum/how-to-unregister-service-in-eureka/">http://www.itmuch.com/spring-cloud-sum/how-to-unregister-service-in-eureka/</a> 。<br>
+<font color=blue>然而测试发现，Nacos权重配置对Spring Cloud Alibaba无效。也就是说，不管在Nacos控制台上如何配置，调用时都不管权重设置的。</font></p></li>
+</ul>
+
+<p>Spring Cloud Alibaba通过整合Ribbon的方式，实现了负载均衡。所使用的负载均衡规则是 ZoneAvoidanceRule 。</p>
+
+<p>本节来探讨如何扩展Ribbon，让其支持Nacos的权重配置，笔者总结了三种方案。</p>
+
+<h2 id="方案1-自己实现负载均衡规则">方案1：自己实现负载均衡规则</h2>
+
+<h3 id="思路-自己首先一个ribbon负载均衡规则就可以了">思路：自己首先一个Ribbon负载均衡规则就可以了。</h3>
+
+<ul>
+<li>权重配置啥的，都可以在实例信息中获取到。</li>
+
+<li><p>自己基于权重配置，计算出一个实例即可。
+代码：</p>
+
+<pre><code>@Slf4j
+public class NacosWeightRandomV1Rule extends AbstractLoadBalancerRule {
+@Override
+public void initWithNiwsConfig(IClientConfig iClientConfig) {
+}
+
+@Override
+public Server choose(Object key) {
+    List&lt;Server&gt; servers = this.getLoadBalancer().getReachableServers();
+
+    List&lt;InstanceWithWeight&gt; instanceWithWeights = servers.stream()
+            .map(server -&gt; {
+                // 注册中心只用Nacos，没同时用其他注册中心（例如Eureka），理论上不会实现
+                if (!(server instanceof NacosServer)) {
+                    log.error(&quot;参数非法，server = {}&quot;, server);
+                    throw new IllegalArgumentException(&quot;参数非法，不是NacosServer实例！&quot;);
+                }
+
+                NacosServer nacosServer = (NacosServer) server;
+                Instance instance = nacosServer.getInstance();
+                double weight = instance.getWeight();
+                return new InstanceWithWeight(
+                        server,
+                        Double.valueOf(weight).intValue()
+                );
+            })
+            .collect(Collectors.toList());
+
+    Server server = this.weightRandom(instanceWithWeights);
+
+    log.info(&quot;选中的server = {}&quot;, server);
+    return server;
+}
+</code></pre>
+
+<pre><code>@Data
+@AllArgsConstructor
+@NoArgsConstructor
+private class InstanceWithWeight {
+    private Server server;
+    private Integer weight;
+}
+</code></pre>
+
+<pre><code>/**
+ * 根据权重随机
+ * 算法参考 https://blog.csdn.net/u011627980/article/details/79401026
+ *
+ * @param list 实例列表
+ * @return 随机出来的结果
+ */
+private Server weightRandom(List&lt;InstanceWithWeight&gt; list) {
+    List&lt;Server&gt; instances = Lists.newArrayList();
+    for (InstanceWithWeight instanceWithWeight : list) {
+        int weight = instanceWithWeight.getWeight();
+        for (int i = 0; i &lt;= weight; i++) {
+            instances.add(instanceWithWeight.getServer());
+        }
+    }
+    int i = new Random().nextInt(instances.size());
+    return instances.get(i);
+}
+}
+</code></pre></li>
+</ul>
+
+<p><font color=red>WARNING</font></p>
+
+<p>本段代码存在优化空间，只是用来演示思考的过程，不建议用于生产，如打算使用本方案实现，请参考以下两点优化：</p>
+
+<p>简单起见，我直接把double型的权重(weight)，转成了integer计算了，存在精度丢失。<br>
+InstanceWithWeight太重了，在 weightRandom 还得再两层for循环，还挺吃内存的，建议百度其他权重随机算法优化。不过实际项目一个微服务一般也就三五个实例，所以其实内存消耗也能忍受。不优化问题也不大。</p>
+
+<h2 id="方案2-利用nacos-client的能力-推荐">方案2：利用Nacos Client的能力[推荐]</h2>
+
+<h3 id="思路">思路：</h3>
+
+<p>在阅读代码Nacos源码的过程中，发现Nacos Client本身就提供了负载均衡的能力，并且负载均衡算法正是我们想要的根据权重选择实例！</p>
+
+<p>代码在 com.alibaba.nacos.api.naming.NamingService#selectOneHealthyInstance ，只要想办法调用到这行代码，就可以实现我们想要的功能啦！</p>
+
+<p>代码：</p>
+
+<pre><code>@Slf4j
+public class NacosWeightRandomV2Rule extends AbstractLoadBalancerRule {
+    @Autowired
+    private NacosDiscoveryProperties discoveryProperties;
+
+    @Override
+    public Server choose(Object key) {
+        DynamicServerListLoadBalancer loadBalancer = (DynamicServerListLoadBalancer) getLoadBalancer();
+        String name = loadBalancer.getName();
+        try {
+            Instance instance = discoveryProperties.namingServiceInstance()
+                    .selectOneHealthyInstance(name);
+
+            log.info(&quot;选中的instance = {}&quot;, instance);
+
+            /*
+             * instance转server的逻辑参考自：
+             * org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList.instancesToServerList
+             */
+            return new NacosServer(instance);
+        } catch (NacosException e) {
+            log.error(&quot;发生异常&quot;, e);
+            return null;
+        }
+    }
+
+    @Override
+    public void initWithNiwsConfig(IClientConfig iClientConfig) {
+    }
+}
+</code></pre>
+
+<p>在最新的版本中naocs还实现了基于集群优先调用的权重策略</p>
+
+<pre><code>/**
+ * nacos同集群优先调用及整合nacos权重的负载均衡策略
+ * @Author GU-YW
+ * @Date 2019/10/11 20:24
+ */
+@Slf4j
+public class NacosClusterRule extends AbstractLoadBalancerRule {
+
+    @Autowired
+    private NacosDiscoveryProperties discoveryProperties;
+
+    @Override
+    public void initWithNiwsConfig(IClientConfig clientConfig) {
+
+    }
+
+    @Override
+    public Server choose(Object key) {
+        //获取集群名
+        String clusterName=discoveryProperties.getClusterName();
+
+        BaseLoadBalancer loadBalancer= (BaseLoadBalancer) this.getLoadBalancer();
+        //想要请求的微服务名称
+        String name =loadBalancer.getName();
+
+        NamingService namingService=discoveryProperties.namingServiceInstance();
+
+        try {
+            //配置了集群
+            if(StringUtils.isNotEmpty(clusterName)){
+                List&lt;String&gt; clusters=new ArrayList&lt;&gt;();
+                clusters.add(clusterName);
+//             ========================最新方法=======================
+
+                Instance instance=namingService.selectOneHealthyInstance(name,clusters, true);
+
+//             =====================以前版本手动添加==================
+//            //找到指定服务的所有实例 A
+//            List&lt;Instance&gt; instances= namingService.selectInstances(name,true);
+//            //过滤出相同集群下的微服务实例 B
+//            List&lt;Instance&gt; sameIntances=instances.stream()
+//                    .filter(instance -&gt; Objects.equals(instance.getClusterName(),clusterName))
+//                    .collect(Collectors.toList());
+//            //如果B是空，就用A
+//            List&lt;Instance&gt; toBeChose=new ArrayList&lt;&gt;();
+//            if(sameIntances.isEmpty()){
+//                toBeChose=instances;
+//            }else{
+//                toBeChose=sameIntances;
+//            }
+//            //基于权重的负载均衡算法，返回1个实例
+//            Instance instance=LoadBalancer.getHost(toBeChose);
+                log.debug(&quot;选择的instance:port={},instanceId={}&quot;,instance.getPort(),instance.getInstanceId());
+                return new NacosServer(instance);
+            }else{
+                Instance instance = namingService.selectOneHealthyInstance(name, true);
+                log.debug(&quot;选择的instance:port={},instanceId={}&quot;,instance.getPort(),instance.getInstanceId());
+                return new NacosServer(instance);
+            }
+
+        } catch (NacosException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    /**
+     * 调用权重负载均衡算法 原Balancer方法无法调用
+     */
+    static class LoadBalancer extends Balancer {
+        public static Instance getHost(List&lt;Instance&gt; hosts) {
+            return  getHostByRandomWeight( hosts);
+        }
+    }
+}
+</code></pre>
+
+<h2 id="方案3-最暴力的玩法">方案3：最暴力的玩法</h2>
+
+<h2 id="思路-1">思路：</h2>
+
+<p>在阅读源码的过程中，发现如下代码：</p>
+
+<p>// 来自：org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList#getServers</p>
+
+<pre><code>private List&lt;NacosServer&gt; getServers() {
+  try {
+    List&lt;Instance&gt; instances = discoveryProperties.namingServiceInstance()
+      .selectInstances(serviceId, true);
+    return instancesToServerList(instances);
+  }
+  catch (Exception e) {
+    throw new IllegalStateException(
+      &quot;Can not get service instances from nacos, serviceId=&quot; + serviceId,
+      e);
+  }
+}
+</code></pre>
+
+<p>这个NacosServerList 就是给Ribbon去做负载均衡的”数据源”！如果把这里的代码改成 com.alibaba.nacos.api.naming.NamingService#selectOneHealthyInstance 不也可以实现我们想要的功能吗？</p>
+
+<p>也就是说，交给Ribbon的List永远只有1个实例！这样不管Ribbon用什么负载均衡，都随他便了。</p>
+
+<p>代码：</p>
+
+<p>1 参考NacosServerList的代码，重写NacosRibbonServerList</p>
+
+<pre><code>/**
+ * 参考org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList
+ */
+@Slf4j
+public class NacosRibbonServerList extends AbstractServerList&lt;NacosServer&gt; {
+
+    private NacosDiscoveryProperties discoveryProperties;
+
+    private String serviceId;
+
+    public NacosRibbonServerList(NacosDiscoveryProperties discoveryProperties) {
+        this.discoveryProperties = discoveryProperties;
+    }
+
+    @Override
+    public List&lt;NacosServer&gt; getInitialListOfServers() {
+        return getServers();
+    }
+
+    @Override
+    public List&lt;NacosServer&gt; getUpdatedListOfServers() {
+        return getServers();
+    }
+
+    private List&lt;NacosServer&gt; getServers() {
+        try {
+            Instance instance = discoveryProperties.namingServiceInstance()
+                    .selectOneHealthyInstance(serviceId, true);
+            log.debug(&quot;选择的instance = {}&quot;, instance);
+            return instancesToServerList(
+                    Lists.newArrayList(instance)
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException(
+                    &quot;Can not get service instances from nacos, serviceId=&quot; + serviceId,
+                    e);
+        }
+    }
+
+    private List&lt;NacosServer&gt; instancesToServerList(List&lt;Instance&gt; instances) {
+        List&lt;NacosServer&gt; result = new ArrayList&lt;&gt;();
+        if (null == instances) {
+            return result;
+        }
+        for (Instance instance : instances) {
+            result.add(new NacosServer(instance));
+        }
+        return result;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    @Override
+    public void initWithNiwsConfig(IClientConfig iClientConfig) {
+        this.serviceId = iClientConfig.getClientName();
+    }
+}
+</code></pre>
+
+<p>2 编写配置类</p>
+
+<pre><code>/**
+ * 参考：org.springframework.cloud.alibaba.nacos.ribbon.NacosRibbonClientConfiguration
+ */
+@Configuration
+public class NacosRibbonClientExtendConfiguration {
+    @Bean
+    public ServerList&lt;?&gt; ribbonServerList(IClientConfig config, NacosDiscoveryProperties nacosDiscoveryProperties) {
+        NacosRibbonServerList serverList = new NacosRibbonServerList(nacosDiscoveryProperties);
+        serverList.initWithNiwsConfig(config);
+        return serverList;
+    }
+}
+</code></pre>
+
+<p>3 添加注解，让上面的NacosRibbonClientExtendConfiguration成为Ribbon的默认配置。</p>
+
+<pre><code>// ...其他注解
+@RibbonClients(defaultConfiguration = NacosRibbonClientExtendConfiguration.class)
+public class ConsumerMovieApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(ConsumerMovieApplication.class, args);
+  }
+}
+</code></pre>
+
+<p>注意 ：</p>
+
+<p>务必注意，将 NacosRibbonClientExtendConfiguration 放在ComponentScan上下文（默认是启动类所在包及其子包）以外！！！</p>
+
+<h2 id="总结与对比">总结与对比</h2>
+
+<ul>
+<li>方案1：是最容易想到的玩法。</li>
+<li>方案2：是个人目前最喜欢的方案。首先简单，并且都是复用Nacos/Ribbon现有的代码——而Ribbon/Nacos本身都是来自于大公司生产环境，经过严苛的生产考验。</li>
+
+<li><p>方案3：太暴力了，把Ribbon架空了。此方案中，扔给Ribbon做负载均衡选择时，List只有1个元素，不管用什么算法去算，最后总是会返回这个元素！</p>
+
+<h3 id="思考既然nacos-client已经有负载均衡的能力-spring-cloud-alibaba为什么还要去整合ribbon呢">思考既然Nacos Client已经有负载均衡的能力，Spring Cloud Alibaba为什么还要去整合Ribbon呢？</h3></li>
+
+<li><p>个人认为，这主要是为了符合Spring Cloud标准。Spring Cloud Commons有个子项目 spring-cloud-loadbalancer ，该项目制定了标准，用来适配各种客户端负载均衡器(虽然目前实现只有Ribbon，但Hoxton就会有替代的实现了)。</p></li>
+
+<li><p>Spring Cloud Alibaba遵循了这一标准，所以整合了Ribbon，而没有去使用Nacos Client提供的负载均衡能力。</p></li>
+</ul>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="http://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

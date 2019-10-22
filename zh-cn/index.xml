@@ -5,7 +5,7 @@
     <description>Recent content on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 16 Sep 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 22 Oct 2019 16:01:23 +0800</lastBuildDate>
     
         <atom:link href="https://guyawei.top/zh-cn/index.xml" rel="self" type="application/rss+xml" />
     
@@ -30,6 +30,1106 @@
 &lt;/ul&gt;
 
 &lt;p&gt;了解並貢獻： &lt;a href=&#34;https://github.com/gohugoio&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Feign常见问题总结</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/feign%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/feign%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</guid>
+      
+        <description>
+
+&lt;pre&gt;&lt;code&gt;TIPS
+
+本文基于Spring Clou Greenwich SR1，理论支持Spring Cloud Finchley及更高版本。
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;本文总结Feign常见问题及解决方案。&lt;/p&gt;
+
+&lt;h2 id=&#34;一-使用案例&#34;&gt;一、使用案例&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://www.itmuch.com/spring-cloud-sum/feign-multiple-params-2/&#34;&gt;如何使用Feign构造多参数的请求&lt;/a&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34; http://www.itmuch.com/spring-cloud-sum/spring-cloud-feign-upload/&#34;&gt;使用Spring Cloud Feign上传文件&lt;/a&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://www.itmuch.com/spring-cloud-sum/feign-form-params/&#34;&gt;使用Feign实现Form表单提交&lt;/a&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;二-feignclient接口如使用-pathvariable-必须指定value属性&#34;&gt;二、FeignClient接口如使用@PathVariable ，必须指定value属性&lt;/h2&gt;
+
+&lt;p&gt;代码示例：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@FeignClient(&amp;quot;microservice-provider-user&amp;quot;)
+public interface UserFeignClient {
+  @RequestMapping(value = &amp;quot;/simple/{id}&amp;quot;, method = RequestMethod.GET)
+  public User findById(@PathVariable(&amp;quot;id&amp;quot;) Long id);
+  ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在一些早期版本中，其中的@PathVariable(&amp;ldquo;id&amp;rdquo;) 中的&amp;rdquo;id&amp;rdquo;，也就是value属性，必须指定，不能省略。&lt;/p&gt;
+
+&lt;h2 id=&#34;三-java代码自定义feign-client的注意点与坑&#34;&gt;三、Java代码自定义Feign Client的注意点与坑&lt;/h2&gt;
+
+&lt;p&gt;代码示例：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;microservice-provider-user&amp;quot;, configuration = UserFeignConfig.class)
+public interface UserFeignClient {
+  @GetMapping(&amp;quot;/users/{id}&amp;quot;)
+  User findById(@PathVariable(&amp;quot;id&amp;quot;) Long id);
+}
+
+/**
+ * 该Feign Client的配置类，注意：
+ * 1. 该类可以独立出去；
+ * 2. 该类上也可添加@Configuration声明是一个配置类；
+ * 配置类上也可添加@Configuration注解，声明这是一个配置类；
+ * 但此时千万别将该放置在主应用程序上下文@ComponentScan所扫描的包中，
+ * 否则，该配置将会被所有Feign Client共享，无法实现细粒度配置！
+ * 个人建议：像我一样，不加@Configuration注解
+ *
+ * @author zhouli
+ */
+class UserFeignConfig {
+  @Bean
+  public Logger.Level logger() {
+    return Logger.Level.FULL;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;配置类上也可添加&lt;font color=red&gt;@Configuraiton&lt;/font&gt; 注解，声明这是一个配置类；但此时千万别将该放置在主应用程序上下文&lt;font color=red&gt;@ComponentScan&lt;/font&gt; 所扫描的包中，否则，该配置将会被所有Feign Client共享（相当于变成了通用配置，其实本质还是Spring父子上下文扫描包重叠导致的问题），无法实现细粒度配置！&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;个人建议：像我一样，不加@Configuration注解，省得进坑。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;最佳实践：尽量用配置属性自定义Feign的配置！！！&lt;a  href=&#34;http://www.itmuch.com/spring-cloud/finchley-10/&#34;&gt;详见：跟我学Spring Cloud（Finchley版）-10-Feign深入&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;四-feignclient-注解属性&#34;&gt;四、@FeignClient 注解属性&lt;/h2&gt;
+
+&lt;p&gt;@FeignClient(name = &amp;ldquo;microservice-provider-user&amp;rdquo;)
+在早期的Spring Cloud版本中，无需提供name属性，从Brixton版开始，@FeignClient必须提供name属性，否则应用将无法正常启动！&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;另外，name、url等属性支持占位符。例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;${feign.name}&amp;quot;, url = &amp;quot;${feign.url}&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;五-类级别的-requestmapping会被spring-mvc加载&#34;&gt;五、类级别的@RequestMapping会被Spring MVC加载&lt;/h2&gt;
+
+&lt;p&gt;@RequestMapping(&amp;ldquo;/users&amp;rdquo;)
+@FeignClient(name = &amp;ldquo;microservice-user&amp;rdquo;)
+public class TestFeignClient {
+    // &amp;hellip;
+}
+类上的@RequestMapping 注解也会被Spring MVC加载。该问题现已经被解决，早期的版本有两种解决方案：&lt;/p&gt;
+
+&lt;p&gt;方案1：不在类上加@RequestMapping 注解；&lt;/p&gt;
+
+&lt;p&gt;方案2：添加如下代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Configuration
+@ConditionalOnClass({ Feign.class })
+public class FeignMappingDefaultConfiguration {
+    @Bean
+    public WebMvcRegistrations feignWebRegistrations() {
+        return new WebMvcRegistrationsAdapter() {
+            @Override
+            public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
+                return new FeignFilterRequestMappingHandlerMapping();
+            }
+        };
+    }
+
+    private static class FeignFilterRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
+        @Override
+        protected boolean isHandler(Class&amp;lt;?&amp;gt; beanType) {
+            return super.isHandler(beanType) &amp;amp;&amp;amp; !beanType.isInterface();
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;相关Issue：&lt;a href=&#34;https://github.com/spring-cloud/spring-cloud-netflix/issues/466&#34;&gt;https://github.com/spring-cloud/spring-cloud-netflix/issues/466&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;六-首次请求失败&#34;&gt;六、首次请求失败&lt;/h2&gt;
+
+&lt;h3 id=&#34;造成该问题的原因&#34;&gt;造成该问题的原因&lt;/h3&gt;
+
+&lt;p&gt;Hystrix默认的超时时间是1秒，如果超过这个时间尚未响应，将会进入fallback代码。而首次请求往往会比较慢（由于Ribbon是懒加载的，在首次请求时，才会开始初始化相关类），这个响应时间可能就大于1秒了。知道原因后，我们来总结一下解决方案。以feign为例，解决方案有如下四种。&lt;br&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;方法一、将Hystrix超时设长&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;该配置是让Hystrix的超时时间改为5秒，这是最容易想到的办法，不过有点治标不治本。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;方法二、禁用Hystrix超时&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hystrix.command.default.execution.timeout.enabled: false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;该配置，用于禁用Hystrix的超时时间，一般不建议使用。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;方法三、为Feign禁用Hystrix
+全局禁用&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;feign.hystrix.enabled: false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;索性禁用feign的hystrix，该做法比较极端，除非一些特殊场景，不推荐使用。
+局部禁用 为名为microservice-provider-user 的Feign Client禁用Hystrix&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;microservice-provider-user&amp;quot;)
+public interface UserFeignClient {
+@GetMapping(&amp;quot;/users/{id}&amp;quot;)
+User findById(@PathVariable(&amp;quot;id&amp;quot;) Long id);
+}
+class FooConfiguration {
+@Bean
+@Scope(&amp;quot;prototype&amp;quot;)
+public Feign.Builder feignBuilder(){
+return Feign.builder();
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;方法四、Ribbon配置饥饿加载（最佳）
+从Dalston开始，Ribbon支持配置eager load实现在启动时就初始化Ribbon相关类。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ribbon:
+eager-load:
+enabled: true
+clients: client1, client2, client3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Dalson之前版本可以通过一些Hack的机制实现eager load，不过成本略高，不建议，这里就不贴了&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;七-如需产生hystrix-stream监控信息-需要做一些额外操作&#34;&gt;七、如需产生Hystrix Stream监控信息，需要做一些额外操作&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Feign本身已经整合了Hystrix，可直接使用@FeignClient(value = &amp;ldquo;microservice-provider-user&amp;rdquo;, fallback = XXX.class) 来指定fallback类，fallback类继承@FeignClient所标注的接口即可。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;但是假设如需使用Hystrix Stream进行监控，默认情况下，访问&lt;a href=&#34;http://IP:PORT/actuator/hystrix.stream&#34;&gt;http://IP:PORT/actuator/hystrix.stream&lt;/a&gt; 是会返回404，这是因为Feign虽然整合了Hystrix，但并没有整合Hystrix的监控。如何添加监控支持呢？需要以下几步：&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;第一步-添加依赖-示例&#34;&gt;第一步：添加依赖，示例：&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;!-- 整合hystrix，其实feign中自带了hystrix，引入该依赖主要是为了使用其中的hystrix-metrics-event-stream，用于dashboard --&amp;gt;
+&amp;lt;dependency&amp;gt;
+  &amp;lt;groupId&amp;gt;org.springframework.cloud&amp;lt;/groupId&amp;gt;
+  &amp;lt;artifactId&amp;gt;spring-cloud-starter-hystrix&amp;lt;/artifactId&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;第二步-在启动类上添加-enablecircuitbreaker-注解-示例&#34;&gt;第二步：在启动类上添加@EnableCircuitBreaker 注解，示例：&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;@SpringBootApplication
+@EnableFeignClients
+@EnableDiscoveryClient
+@EnableCircuitBreaker
+public class MovieFeignHystrixApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(MovieFeignHystrixApplication.class, args);
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;第三步-在application-yml中添加如下内容-暴露hystrix-stream端点&#34;&gt;第三步：在application.yml中添加如下内容，暴露hystrix.stream端点：&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;management:
+  endpoints:
+    web:
+      exposure:
+        include: &#39;hystrix.stream&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样，访问任意Feign Client接口的API后，再访问&lt;a href=&#34;http://IP:PORT/actuator/hystrix.stream&#34;&gt;http://IP:PORT/actuator/hystrix.stream&lt;/a&gt; ，就会展示一大堆Hystrix监控数据了。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Intellij IDEA中Mybatis Mapper自动注入警告的6种解决方案</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/intellij-idea%E4%B8%ADmybatis-mapper%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%85%A5%E8%AD%A6%E5%91%8A%E7%9A%846%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/intellij-idea%E4%B8%ADmybatis-mapper%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%85%A5%E8%AD%A6%E5%91%8A%E7%9A%846%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</guid>
+      
+        <description>
+
+&lt;p&gt;相信使用Mybaits的小伙伴们一定会经常编写类似如下的代码：&lt;br&gt;
+ &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/idea-mybatis.png&#34; alt=&#34;图片&#34; /&gt;
+ 可以看到 userMapper 下有个红色警告。虽然代码本身并没有问题，能正常运行，但有个警告总归有点恶心。本文分析原因，并列出解决该警告的几种方案。&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;原因-br&#34;&gt;原因&lt;br&gt;&lt;/h3&gt;
+
+&lt;p&gt;众所周知，IDEA是非常智能的，它可以理解Spring的上下文。然而 UserMapper 这个接口是Mybatis的，IDEA理解不了。&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;而 @Autowired 注解，默认情况下要求依赖对象（也就是 userMapper ）必须存在。而IDEA认为这个对象的实例/代理是个null，所以就友好地给个提示。&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;解决方案&#34;&gt;解决方案&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;方法1：为 @Autowired 注解设置required = false
+使用 @Autowired 注解时，若希望允许null值，可设置required = false，像这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Autowired(required = false)
+private UserMapper userMapper;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样就不会有警告了。原因很好理解：IDEA认为userMapper是个null，给了警告；加上required = false后，使用 @Autowired 注解不再去校验userMapper是否存在了。也就不会有警告了。&lt;br&gt;&lt;font color=blue&gt;总结：这种方式有点蛋疼。一个庞大的既有项目，可能到处都在引用Mapper，总不能到处都补上 required = false 吧……而且对于新手/新员工，很难一眼看懂加required = false属性只是为了解决IDEA的警告。&lt;/font&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;方法2：用 @Resource 替换 @Autowired
+像这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Resource
+private UserMapper userMapper;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样也不会再有讨厌的警告。如果你对原因感兴趣，不妨了解一下《@Autowired 与@Resource的区别》&lt;br&gt;&lt;font color=blue&gt;总结：这种方式挺赞，但如果一个项目已经大量使用@Autowired，然后为了个警告到处改成@Resource，也有点蛋疼。&lt;/font&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;方法3：在Mapper接口上加上@Repository注解
+像这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Repository
+public interface UserMapper extends Mapper&amp;lt;User&amp;gt; {
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样也能让你的&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Autowired
+private UserMapper userMapper;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不再报错。&lt;br&gt;当然，如果你用@Component替换@Repository也是可以的。原理大致：IDEA不是认为 userMapper 是个null嘛…加个@Repository注解骗一下IDEA就OK了……&lt;br&gt;&lt;font color=blue&gt;总结：这种方式比较赞，改动小，也简单，我比较喜欢。&lt;/font&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;方法4：用Lombok
+像这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class TestService {
+  private final UserMapper userMapper;
+  ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lombok生成的代码是这样的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Service
+public class TestService {
+  private final UserMapper userMapper;
+  @Autowired
+  public TestService(final UserMapper userMapper) {
+      this.userMapper = userMapper;
+  }
+  ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但如果自己手写成Lombok生成的代码，IDEA依然会给你报警告 。我猜，应该是IDEA的Lombok插件把IDEA搞懵逼了…所以不提示了…&lt;br&gt;&lt;font color=blue&gt; 总结 ：这是我目前最喜欢的方式。原因有2：&lt;/font&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1 Spring官方并不建议直接在类的field上使用@Autowired注解，原因详见：《Why field injection is evil》 ，用本方法可将field注入编程构造方法注入，Spring是比较推荐的。
+2 体现了Lombok的优势，简化了你的代码。而且你也不用在每个field上都加上@Autowired注解了。
+不过这种方式也有缺点：那就是如果你类之间的依赖关系比较复杂，特别是存在循环依赖(A引用B，B引用A，或者间接的循环引用)时，应用将会启动不起来……这其实是构造方法注入方式的缺点。
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;方法5：把IDEA的警告关闭掉
+个人没试过，也没有动力去试。没有提示的IDEA是没有灵魂的，我从来不去修改IDEA的任何警告设置。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;方法6：安装mybatis plugin
+安装mybatis plugin即可解决该问题。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;以上是解决问题的6种方法。问题本身其实比较简单，但其实隐藏的知识点其实挺多的，例如：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;font color=blue&gt;@Autowired和@Resource有什么区别&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font color=blue&gt;为什么Spring不建议使用field方式注入&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;&lt;font color=blue&gt;@Repository、@Componnt、@Controller、@Service有什么区别&lt;/font&gt;&lt;/li&gt;
+&lt;li&gt;总之，硬货有时候就隐藏在很low的问题之下，哈哈哈。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Spring Cloud Alibaba-搭建生产可用的Nacos集群</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/spring-cloud-alibaba-%E6%90%AD%E5%BB%BA%E7%94%9F%E4%BA%A7%E5%8F%AF%E7%94%A8%E7%9A%84nacos%E9%9B%86%E7%BE%A4/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/spring-cloud-alibaba-%E6%90%AD%E5%BB%BA%E7%94%9F%E4%BA%A7%E5%8F%AF%E7%94%A8%E7%9A%84nacos%E9%9B%86%E7%BE%A4/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;搭建生产可用的nacos集&#34;&gt;搭建生产可用的Nacos集&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭建Nacos集群。&lt;br&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;安装mysql数据库-br&#34;&gt;安装MySQL数据库&lt;br&gt;&lt;/h3&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;生产环境需使用MySQL作为后端存储，因此需要搭建MySQL。生产中，MySQL建议至少主备模式，高可用MySQL更佳。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;高可用MySQL的搭建可参考：&lt;a href=&#34;https://blog.csdn.net/jx_jy/article/details/80165584&#34;&gt;https://blog.csdn.net/jx_jy/article/details/80165584&lt;/a&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;font color=red&gt;注意：Nacos支持的MySQL版本为：5.6.5+&lt;/font&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;导入初始化脚本&#34;&gt;导入初始化脚本&lt;/h3&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;找到 &lt;font color=red&gt;conf/nacos-mysql.sql&lt;/font&gt; ，将其导入到数据库中。&lt;/p&gt;
+
+&lt;h3 id=&#34;配置数据库连接&#34;&gt;配置数据库连接&lt;/h3&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;找到 &lt;font color=red&gt;conf/application.properties&lt;/font&gt; ，添加如下内容：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 表明用MySQL作为后端存储
+spring.datasource.platform=mysql
+db.num=1
+
+# MySQL JDBC地址
+db.url.0=jdbc:mysql://127.0.0.1:3306/nacos?characterEncoding=utf8&amp;amp;connectTimeout=1000&amp;amp;socketTimeout=3000&amp;amp;autoReconnect=true
+# 数据库账号
+db.user=nacos
+# 数据库密码
+db.password=nacos
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;部署架构图&#34;&gt;部署架构图&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;下图是来自Nacos官方的部署架构图：&lt;br&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/spring_cloud_alibaba/nacos/nacos1.jpg&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;主机规划&#34;&gt;主机规划&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;节点&lt;/th&gt;
+&lt;th&gt;端口&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;127.0.0.1&lt;/td&gt;
+&lt;td&gt;8848&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;127.0.0.1&lt;/td&gt;
+&lt;td&gt;8849&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;127.0.0.1&lt;/td&gt;
+&lt;td&gt;8850&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br&gt;
+复制三份Nacos安装包，将 conf/application.properties 中的&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;server.port=8848
+改为
+server.port=8848
+server.port=8849
+server.port=8850
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;开始搭建&#34;&gt;开始搭建&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;找到 conf/cluster.conf.example ，将其改名为 conf/cluster.conf ，并将内容改为类似如下，即：以ip:端口 的形式列出Nacos集群中所有实例的地址列表&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# ip:port
+127.0.0.1:8848
+127.0.0.1:8849
+127.0.0.1:8850
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;启动所有Nacos实例&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;配置代理服务器&#34;&gt;配置代理服务器&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;安装NGINX并启动&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;为NGINX添加如下配置（对于Linux操作系统，如在安装NGINX时未自定义目录，则可在 /etc/nginx/conf.d 新建文件，命名为 nacos.conf ，内容如下；同时删除 default.conf 即可）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;upstream nacos {
+server 127.0.0.1:8848;
+server 127.0.0.1:8849;
+server 127.0.0.1:8850;
+}
+
+server {
+listen 80;
+server_name  localhost;
+location /nacos/ {
+proxy_pass http://nacos/nacos/;
+}
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;测试&#34;&gt;测试&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;访问 &lt;a href=&#34;http://localhost/nacos&#34;&gt;http://localhost/nacos&lt;/a&gt; 可看到Nacos的登录页，登录后即可正常使用Nacos。&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;优化-最佳实践&#34;&gt;优化&amp;amp;最佳实践&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;实际项目中，建议为Nacos绑定一个域名，这样即使未来有迁移Nacos的需求，客户端也无需修改配置&lt;/li&gt;
+&lt;li&gt;本文为了演示方便，将所有Nacos实例都部署在了一台机器中；实际项目中，请将Nacos部署在不同机器中，从而实现更好的容灾与隔离&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;参考文档&#34;&gt;参考文档&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://nacos.io/zh-cn/docs/cluster-mode-quick-start.html&#34;&gt;https://nacos.io/zh-cn/docs/cluster-mode-quick-start.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>如何使用Feign构造多参数的请求</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8feign%E6%9E%84%E9%80%A0%E5%A4%9A%E5%8F%82%E6%95%B0%E7%9A%84%E8%AF%B7%E6%B1%82/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8feign%E6%9E%84%E9%80%A0%E5%A4%9A%E5%8F%82%E6%95%B0%E7%9A%84%E8%AF%B7%E6%B1%82/</guid>
+      
+        <description>
+
+&lt;pre&gt;&lt;code&gt;TIPS
+
+本文基于Spring Cloud Greenwich SR1，理论上支持Finchley及更高版本。
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;本节来探讨如何使用Feign构造多参数的请求。笔者以GET及POST请求为例讲解，其他方式（例如DELETE、PUT等）的请求原理相通，读者可自行研究。&lt;/p&gt;
+
+&lt;h2 id=&#34;get请求多参数的url&#34;&gt;GET请求多参数的URL&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;假设需请求的URL包含多个参数，例如: &lt;a href=&#34;http://microservice-provider-user/get?id=1&amp;amp;username=张三&#34;&gt;http://microservice-provider-user/get?id=1&amp;amp;username=张三&lt;/a&gt; ，该如何使用Feign构造呢？&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;我们知道，Spring Cloud为Feign添加了Spring MVC的注解支持，那么我们不妨按照Spring MVC的写法尝试一下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@FeignClient(&amp;quot;microservice-provider-user&amp;quot;)
+public interface UserFeignClient {
+@RequestMapping(value = &amp;quot;/get&amp;quot;, method = RequestMethod.GET)
+public User get0(User user);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然而，这种写法并不正确，控制台会输出类似如下的异常。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;feign.FeignException: status 405 reading UserFeignClient#get0(User); content:
+{&amp;quot;timestamp&amp;quot;:1482676142940,&amp;quot;status&amp;quot;:405,&amp;quot;error&amp;quot;:&amp;quot;Method Not Allowed&amp;quot;,&amp;quot;exception&amp;quot;:&amp;quot;org.springframework.web.HttpRequestMethodNotSupportedException&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Request method &#39;POST&#39; not supported&amp;quot;,&amp;quot;path&amp;quot;:&amp;quot;/get&amp;quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;由异常可知，尽管我们指定了GET方法，Feign依然会使用POST方法发送请求。于是导致了异常。正确写法如下&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;方法一-推荐&#34;&gt;方法一[推荐]&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;@FeignClient(&amp;quot;microservice-provider-user&amp;quot;)
+public interface UserFeignClient {
+  @GetMapping(&amp;quot;/get&amp;quot;)
+  public User get0(@SpringQueryMap User user);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;方法二-推荐&#34;&gt;方法二[推荐]&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;microservice-provider-user&amp;quot;)
+public interface UserFeignClient {
+  @RequestMapping(value = &amp;quot;/get&amp;quot;, method = RequestMethod.GET)
+  public User get1(@RequestParam(&amp;quot;id&amp;quot;) Long id, @RequestParam(&amp;quot;username&amp;quot;) String username);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是最为直观的方式，URL有几个参数，Feign接口中的方法就有几个参数。使用@RequestParam注解指定请求的参数是什么。&lt;/p&gt;
+
+&lt;h3 id=&#34;方法三-不推荐&#34;&gt;方法三[不推荐]&lt;/h3&gt;
+
+&lt;p&gt;多参数的URL也可使用Map来构建。当目标URL参数非常多的时候，可使用这种方式简化Feign接口的编写。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;microservice-provider-user&amp;quot;)
+public interface UserFeignClient {
+  @RequestMapping(value = &amp;quot;/get&amp;quot;, method = RequestMethod.GET)
+  public User get2(@RequestParam Map&amp;lt;String, Object&amp;gt; map);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在调用时，可使用类似以下的代码。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public User get(String username, String password) {
+  HashMap&amp;lt;String, Object&amp;gt; map = Maps.newHashMap();
+  map.put(&amp;quot;id&amp;quot;, &amp;quot;1&amp;quot;);
+  map.put(&amp;quot;username&amp;quot;, &amp;quot;张三&amp;quot;);
+  return this.userFeignClient.get2(map);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;注意-这种方式不建议使用-主要是因为可读性不好-而且如果参数为空的时候会有一些问题-例如map-put-username-null-会导致microservice-provider-user-服务接收到的username是-而不是null&#34;&gt;注意：这种方式不建议使用。主要是因为可读性不好，而且如果参数为空的时候会有一些问题，例如map.put(&amp;ldquo;username&amp;rdquo;, null); 会导致microservice-provider-user 服务接收到的username是&amp;rdquo;&amp;rdquo; ，而不是null。&lt;/h4&gt;
+
+&lt;h2 id=&#34;post请求包含多个参数&#34;&gt;POST请求包含多个参数&lt;/h2&gt;
+
+&lt;p&gt;下面来讨论如何使用Feign构造包含多个参数的POST请求。假设服务提供者的Controller是这样编写的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@RestController
+public class UserController {
+  @PostMapping(&amp;quot;/post&amp;quot;)
+  public User post(@RequestBody User user) {
+    ...
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们要如何使用Feign去请求呢？答案非常简单，示例：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;microservice-provider-user&amp;quot;)
+public interface UserFeignClient {
+  @RequestMapping(value = &amp;quot;/post&amp;quot;, method = RequestMethod.POST)
+  public User post(@RequestBody User user);
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>扩展Ribbon支持Nacos权重的三种方式</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81nacos%E6%9D%83%E9%87%8D%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81nacos%E6%9D%83%E9%87%8D%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;nacos支持权重配置-这是个比较实用的功能-例如&#34;&gt;Nacos支持权重配置，这是个比较实用的功能，例如：&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;把性能差的机器权重设低，性能好的机器权重设高，让请求优先打到性能高的机器上去；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;某个实例出现异常时，把权重设低，排查问题，问题排查完再把权重恢复；&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;想要下线某个实例时，可先将该实例的权重设为0，这样流量就不会打到该实例上了——此时再去关停该实例，这样就能实现优雅下线啦。当然这是为Nacos量身定制的优雅下线方案——Spring Cloud中，要想实现优雅下线还有很多姿势，详见：&lt;a href=&#34;http://www.itmuch.com/spring-cloud-sum/how-to-unregister-service-in-eureka/&#34;&gt;http://www.itmuch.com/spring-cloud-sum/how-to-unregister-service-in-eureka/&lt;/a&gt; 。&lt;br&gt;
+&lt;font color=blue&gt;然而测试发现，Nacos权重配置对Spring Cloud Alibaba无效。也就是说，不管在Nacos控制台上如何配置，调用时都不管权重设置的。&lt;/font&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Spring Cloud Alibaba通过整合Ribbon的方式，实现了负载均衡。所使用的负载均衡规则是 ZoneAvoidanceRule 。&lt;/p&gt;
+
+&lt;p&gt;本节来探讨如何扩展Ribbon，让其支持Nacos的权重配置，笔者总结了三种方案。&lt;/p&gt;
+
+&lt;h2 id=&#34;方案1-自己实现负载均衡规则&#34;&gt;方案1：自己实现负载均衡规则&lt;/h2&gt;
+
+&lt;h3 id=&#34;思路-自己首先一个ribbon负载均衡规则就可以了&#34;&gt;思路：自己首先一个Ribbon负载均衡规则就可以了。&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;权重配置啥的，都可以在实例信息中获取到。&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;自己基于权重配置，计算出一个实例即可。
+代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Slf4j
+public class NacosWeightRandomV1Rule extends AbstractLoadBalancerRule {
+@Override
+public void initWithNiwsConfig(IClientConfig iClientConfig) {
+}
+
+@Override
+public Server choose(Object key) {
+    List&amp;lt;Server&amp;gt; servers = this.getLoadBalancer().getReachableServers();
+
+    List&amp;lt;InstanceWithWeight&amp;gt; instanceWithWeights = servers.stream()
+            .map(server -&amp;gt; {
+                // 注册中心只用Nacos，没同时用其他注册中心（例如Eureka），理论上不会实现
+                if (!(server instanceof NacosServer)) {
+                    log.error(&amp;quot;参数非法，server = {}&amp;quot;, server);
+                    throw new IllegalArgumentException(&amp;quot;参数非法，不是NacosServer实例！&amp;quot;);
+                }
+
+                NacosServer nacosServer = (NacosServer) server;
+                Instance instance = nacosServer.getInstance();
+                double weight = instance.getWeight();
+                return new InstanceWithWeight(
+                        server,
+                        Double.valueOf(weight).intValue()
+                );
+            })
+            .collect(Collectors.toList());
+
+    Server server = this.weightRandom(instanceWithWeights);
+
+    log.info(&amp;quot;选中的server = {}&amp;quot;, server);
+    return server;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;@Data
+@AllArgsConstructor
+@NoArgsConstructor
+private class InstanceWithWeight {
+    private Server server;
+    private Integer weight;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;/**
+ * 根据权重随机
+ * 算法参考 https://blog.csdn.net/u011627980/article/details/79401026
+ *
+ * @param list 实例列表
+ * @return 随机出来的结果
+ */
+private Server weightRandom(List&amp;lt;InstanceWithWeight&amp;gt; list) {
+    List&amp;lt;Server&amp;gt; instances = Lists.newArrayList();
+    for (InstanceWithWeight instanceWithWeight : list) {
+        int weight = instanceWithWeight.getWeight();
+        for (int i = 0; i &amp;lt;= weight; i++) {
+            instances.add(instanceWithWeight.getServer());
+        }
+    }
+    int i = new Random().nextInt(instances.size());
+    return instances.get(i);
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;font color=red&gt;WARNING&lt;/font&gt;&lt;/p&gt;
+
+&lt;p&gt;本段代码存在优化空间，只是用来演示思考的过程，不建议用于生产，如打算使用本方案实现，请参考以下两点优化：&lt;/p&gt;
+
+&lt;p&gt;简单起见，我直接把double型的权重(weight)，转成了integer计算了，存在精度丢失。&lt;br&gt;
+InstanceWithWeight太重了，在 weightRandom 还得再两层for循环，还挺吃内存的，建议百度其他权重随机算法优化。不过实际项目一个微服务一般也就三五个实例，所以其实内存消耗也能忍受。不优化问题也不大。&lt;/p&gt;
+
+&lt;h2 id=&#34;方案2-利用nacos-client的能力-推荐&#34;&gt;方案2：利用Nacos Client的能力[推荐]&lt;/h2&gt;
+
+&lt;h3 id=&#34;思路&#34;&gt;思路：&lt;/h3&gt;
+
+&lt;p&gt;在阅读代码Nacos源码的过程中，发现Nacos Client本身就提供了负载均衡的能力，并且负载均衡算法正是我们想要的根据权重选择实例！&lt;/p&gt;
+
+&lt;p&gt;代码在 com.alibaba.nacos.api.naming.NamingService#selectOneHealthyInstance ，只要想办法调用到这行代码，就可以实现我们想要的功能啦！&lt;/p&gt;
+
+&lt;p&gt;代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Slf4j
+public class NacosWeightRandomV2Rule extends AbstractLoadBalancerRule {
+    @Autowired
+    private NacosDiscoveryProperties discoveryProperties;
+
+    @Override
+    public Server choose(Object key) {
+        DynamicServerListLoadBalancer loadBalancer = (DynamicServerListLoadBalancer) getLoadBalancer();
+        String name = loadBalancer.getName();
+        try {
+            Instance instance = discoveryProperties.namingServiceInstance()
+                    .selectOneHealthyInstance(name);
+
+            log.info(&amp;quot;选中的instance = {}&amp;quot;, instance);
+
+            /*
+             * instance转server的逻辑参考自：
+             * org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList.instancesToServerList
+             */
+            return new NacosServer(instance);
+        } catch (NacosException e) {
+            log.error(&amp;quot;发生异常&amp;quot;, e);
+            return null;
+        }
+    }
+
+    @Override
+    public void initWithNiwsConfig(IClientConfig iClientConfig) {
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在最新的版本中naocs还实现了基于集群优先调用的权重策略&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/**
+ * nacos同集群优先调用及整合nacos权重的负载均衡策略
+ * @Author GU-YW
+ * @Date 2019/10/11 20:24
+ */
+@Slf4j
+public class NacosClusterRule extends AbstractLoadBalancerRule {
+
+    @Autowired
+    private NacosDiscoveryProperties discoveryProperties;
+
+    @Override
+    public void initWithNiwsConfig(IClientConfig clientConfig) {
+
+    }
+
+    @Override
+    public Server choose(Object key) {
+        //获取集群名
+        String clusterName=discoveryProperties.getClusterName();
+
+        BaseLoadBalancer loadBalancer= (BaseLoadBalancer) this.getLoadBalancer();
+        //想要请求的微服务名称
+        String name =loadBalancer.getName();
+
+        NamingService namingService=discoveryProperties.namingServiceInstance();
+
+        try {
+            //配置了集群
+            if(StringUtils.isNotEmpty(clusterName)){
+                List&amp;lt;String&amp;gt; clusters=new ArrayList&amp;lt;&amp;gt;();
+                clusters.add(clusterName);
+//             ========================最新方法=======================
+
+                Instance instance=namingService.selectOneHealthyInstance(name,clusters, true);
+
+//             =====================以前版本手动添加==================
+//            //找到指定服务的所有实例 A
+//            List&amp;lt;Instance&amp;gt; instances= namingService.selectInstances(name,true);
+//            //过滤出相同集群下的微服务实例 B
+//            List&amp;lt;Instance&amp;gt; sameIntances=instances.stream()
+//                    .filter(instance -&amp;gt; Objects.equals(instance.getClusterName(),clusterName))
+//                    .collect(Collectors.toList());
+//            //如果B是空，就用A
+//            List&amp;lt;Instance&amp;gt; toBeChose=new ArrayList&amp;lt;&amp;gt;();
+//            if(sameIntances.isEmpty()){
+//                toBeChose=instances;
+//            }else{
+//                toBeChose=sameIntances;
+//            }
+//            //基于权重的负载均衡算法，返回1个实例
+//            Instance instance=LoadBalancer.getHost(toBeChose);
+                log.debug(&amp;quot;选择的instance:port={},instanceId={}&amp;quot;,instance.getPort(),instance.getInstanceId());
+                return new NacosServer(instance);
+            }else{
+                Instance instance = namingService.selectOneHealthyInstance(name, true);
+                log.debug(&amp;quot;选择的instance:port={},instanceId={}&amp;quot;,instance.getPort(),instance.getInstanceId());
+                return new NacosServer(instance);
+            }
+
+        } catch (NacosException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    /**
+     * 调用权重负载均衡算法 原Balancer方法无法调用
+     */
+    static class LoadBalancer extends Balancer {
+        public static Instance getHost(List&amp;lt;Instance&amp;gt; hosts) {
+            return  getHostByRandomWeight( hosts);
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;方案3-最暴力的玩法&#34;&gt;方案3：最暴力的玩法&lt;/h2&gt;
+
+&lt;h2 id=&#34;思路-1&#34;&gt;思路：&lt;/h2&gt;
+
+&lt;p&gt;在阅读源码的过程中，发现如下代码：&lt;/p&gt;
+
+&lt;p&gt;// 来自：org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList#getServers&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;private List&amp;lt;NacosServer&amp;gt; getServers() {
+  try {
+    List&amp;lt;Instance&amp;gt; instances = discoveryProperties.namingServiceInstance()
+      .selectInstances(serviceId, true);
+    return instancesToServerList(instances);
+  }
+  catch (Exception e) {
+    throw new IllegalStateException(
+      &amp;quot;Can not get service instances from nacos, serviceId=&amp;quot; + serviceId,
+      e);
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个NacosServerList 就是给Ribbon去做负载均衡的”数据源”！如果把这里的代码改成 com.alibaba.nacos.api.naming.NamingService#selectOneHealthyInstance 不也可以实现我们想要的功能吗？&lt;/p&gt;
+
+&lt;p&gt;也就是说，交给Ribbon的List永远只有1个实例！这样不管Ribbon用什么负载均衡，都随他便了。&lt;/p&gt;
+
+&lt;p&gt;代码：&lt;/p&gt;
+
+&lt;p&gt;1 参考NacosServerList的代码，重写NacosRibbonServerList&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/**
+ * 参考org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList
+ */
+@Slf4j
+public class NacosRibbonServerList extends AbstractServerList&amp;lt;NacosServer&amp;gt; {
+
+    private NacosDiscoveryProperties discoveryProperties;
+
+    private String serviceId;
+
+    public NacosRibbonServerList(NacosDiscoveryProperties discoveryProperties) {
+        this.discoveryProperties = discoveryProperties;
+    }
+
+    @Override
+    public List&amp;lt;NacosServer&amp;gt; getInitialListOfServers() {
+        return getServers();
+    }
+
+    @Override
+    public List&amp;lt;NacosServer&amp;gt; getUpdatedListOfServers() {
+        return getServers();
+    }
+
+    private List&amp;lt;NacosServer&amp;gt; getServers() {
+        try {
+            Instance instance = discoveryProperties.namingServiceInstance()
+                    .selectOneHealthyInstance(serviceId, true);
+            log.debug(&amp;quot;选择的instance = {}&amp;quot;, instance);
+            return instancesToServerList(
+                    Lists.newArrayList(instance)
+            );
+        } catch (Exception e) {
+            throw new IllegalStateException(
+                    &amp;quot;Can not get service instances from nacos, serviceId=&amp;quot; + serviceId,
+                    e);
+        }
+    }
+
+    private List&amp;lt;NacosServer&amp;gt; instancesToServerList(List&amp;lt;Instance&amp;gt; instances) {
+        List&amp;lt;NacosServer&amp;gt; result = new ArrayList&amp;lt;&amp;gt;();
+        if (null == instances) {
+            return result;
+        }
+        for (Instance instance : instances) {
+            result.add(new NacosServer(instance));
+        }
+        return result;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    @Override
+    public void initWithNiwsConfig(IClientConfig iClientConfig) {
+        this.serviceId = iClientConfig.getClientName();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2 编写配置类&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/**
+ * 参考：org.springframework.cloud.alibaba.nacos.ribbon.NacosRibbonClientConfiguration
+ */
+@Configuration
+public class NacosRibbonClientExtendConfiguration {
+    @Bean
+    public ServerList&amp;lt;?&amp;gt; ribbonServerList(IClientConfig config, NacosDiscoveryProperties nacosDiscoveryProperties) {
+        NacosRibbonServerList serverList = new NacosRibbonServerList(nacosDiscoveryProperties);
+        serverList.initWithNiwsConfig(config);
+        return serverList;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3 添加注解，让上面的NacosRibbonClientExtendConfiguration成为Ribbon的默认配置。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// ...其他注解
+@RibbonClients(defaultConfiguration = NacosRibbonClientExtendConfiguration.class)
+public class ConsumerMovieApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(ConsumerMovieApplication.class, args);
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意 ：&lt;/p&gt;
+
+&lt;p&gt;务必注意，将 NacosRibbonClientExtendConfiguration 放在ComponentScan上下文（默认是启动类所在包及其子包）以外！！！&lt;/p&gt;
+
+&lt;h2 id=&#34;总结与对比&#34;&gt;总结与对比&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;方案1：是最容易想到的玩法。&lt;/li&gt;
+&lt;li&gt;方案2：是个人目前最喜欢的方案。首先简单，并且都是复用Nacos/Ribbon现有的代码——而Ribbon/Nacos本身都是来自于大公司生产环境，经过严苛的生产考验。&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;方案3：太暴力了，把Ribbon架空了。此方案中，扔给Ribbon做负载均衡选择时，List只有1个元素，不管用什么算法去算，最后总是会返回这个元素！&lt;/p&gt;
+
+&lt;h3 id=&#34;思考既然nacos-client已经有负载均衡的能力-spring-cloud-alibaba为什么还要去整合ribbon呢&#34;&gt;思考既然Nacos Client已经有负载均衡的能力，Spring Cloud Alibaba为什么还要去整合Ribbon呢？&lt;/h3&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;个人认为，这主要是为了符合Spring Cloud标准。Spring Cloud Commons有个子项目 spring-cloud-loadbalancer ，该项目制定了标准，用来适配各种客户端负载均衡器(虽然目前实现只有Ribbon，但Hoxton就会有替代的实现了)。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Spring Cloud Alibaba遵循了这一标准，所以整合了Ribbon，而没有去使用Nacos Client提供的负载均衡能力。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>扩展Ribbon支持基于元数据的版本管理</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81%E5%9F%BA%E4%BA%8E%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81%E5%9F%BA%E4%BA%8E%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;上一篇已经实现了&#34;&gt;上一篇已经实现了：&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;优先调用同集群下的实例&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;实现基于权重配置的负载均衡&lt;/p&gt;
+
+&lt;h2 id=&#34;但实际项目-我们可能还会有这样的需求&#34;&gt;但实际项目，我们可能还会有这样的需求：&lt;/h2&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;一个微服务在线上可能多版本共存，例如：&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;服务提供者有两个版本：v1、v2&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;服务消费者也有两个版本：v1、v2&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;v1/v2是不兼容的。服务消费者v1只能调用服务提供者v1；消费者v2只能调用提供者v2。如何实现呢？&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;下面围绕该场景-实现微服务之间的版本控制&#34;&gt;下面围绕该场景，实现微服务之间的版本控制。&lt;/h3&gt;
+
+&lt;p&gt;元数据
+元数据就是一堆的描述信息，以map存储。举个例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;spring:
+  cloud:
+    nacos:
+        metadata: 
+          # 自己这个实例的版本
+          version: v1
+          # 允许调用的提供者版本
+          target-version: v1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;需求分析，我们需要实现的有两点：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;优先选择同集群下，符合metadata的实例
+如果同集群加没有符合metadata的实例，就选择所有集群下，符合metadata的实例&lt;br&gt;
+写代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Slf4j
+public class NacosMetadataRule extends AbstractLoadBalancerRule {
+
+    @Autowired
+    private NacosDiscoveryProperties discoveryProperties;
+
+    @Override
+    public void initWithNiwsConfig(IClientConfig clientConfig) {
+
+    }
+
+    @Override
+    public Server choose(Object key) {
+        //--- 负载均衡规则：优先选择同集群下，符合metadata的实例,如果没有，就选择所有集群下，符合metadata的实例----
+
+        //获取服务集群
+        String clusterName=discoveryProperties.getClusterName();
+
+        //获取当前服务的原元数据
+        Map&amp;lt;String, String&amp;gt; metadata = discoveryProperties.getMetadata();
+        //当前服务可以调用的服务版本
+        String target_version=metadata.get(&amp;quot;target-version&amp;quot;);
+
+        BaseLoadBalancer loadBalancer= (BaseLoadBalancer) this.getLoadBalancer();
+        //想要请求的微服务名称
+        String name =loadBalancer.getName();
+
+        NamingService namingService=discoveryProperties.namingServiceInstance();
+
+        try {
+            //所有服务实例
+            List&amp;lt;Instance&amp;gt; instances = namingService.selectInstances(name, true);
+
+            List&amp;lt;Instance&amp;gt; metadataMatchInstances = instances;
+
+            //配置了元数据
+            if(StringUtils.isNotEmpty(target_version)){
+                metadataMatchInstances = instances.stream()
+                        .filter(instance -&amp;gt; Objects.equals(target_version, instance.getMetadata().get(&amp;quot;version&amp;quot;)))
+                        .collect(Collectors.toList());
+                if(CollectionUtils.isEmpty(metadataMatchInstances)){
+                    log.warn(&amp;quot;未找到元数据匹配的目标实例！请检查配置。targetVersion = {}, instance = {}&amp;quot;, target_version, instances);
+                    return null;
+                }
+            }
+
+            List&amp;lt;Instance&amp;gt; clusterMetadataMatchInstances = metadataMatchInstances;
+
+            //配置了服务集群
+            if(StringUtils.isNotEmpty(clusterName)){
+                clusterMetadataMatchInstances= metadataMatchInstances.stream().
+                        filter(instance -&amp;gt; Objects.equals(clusterName,instance.getClusterName())).
+                        collect(Collectors.toList());
+                if(CollectionUtils.isEmpty(clusterMetadataMatchInstances)){
+                    log.warn(&amp;quot;发生跨集群调用。clusterName = {}, targetVersion = {}, clusterMetadataMatchInstances = {}&amp;quot;, clusterName, target_version, clusterMetadataMatchInstances);
+                    clusterMetadataMatchInstances=metadataMatchInstances;
+                }
+            }
+
+            Instance instance=LoadBalancer.getHost(clusterMetadataMatchInstances);
+            log.debug(&amp;quot;选择的instance:port={},instanceId={}&amp;quot;,instance.getPort(),instance.getInstanceId());
+            return  new NacosServer(instance);
+
+        } catch (NacosException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+
+    }
+
+    /**
+     * 调用权重负载均衡算法 原Balancer方法无法调用
+     */
+    static class LoadBalancer extends Balancer {
+        public static Instance getHost(List&amp;lt;Instance&amp;gt; hosts) {
+            return  getHostByRandomWeight( hosts);
+        }
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
 </description>
       
     </item>
@@ -867,7 +1967,9 @@ webservice定义语言, 对应.wsdl文档, 一个webservice会对应一个唯一
 
 &lt;h1 id=&#34;浙江宁波游玩&#34;&gt;浙江宁波游玩&lt;/h1&gt;
 
-&lt;p&gt;&lt;p&gt;4月春暖花开，万物复苏的季节和家人来一场亲子游玩&lt;/p&gt;
+&lt;p&gt;&lt;p&gt;
+4月春暖花开，万物复苏的季节和家人来一场亲子游玩
+&lt;/p&gt;
     刚到杭州湾跨海大桥
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/zhejiang/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190601211933.jpg&#34; alt=&#34;图片&#34; /&gt;
     3D画

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>Spring Cloud Alibaba-搭建生产可用的Nacos集群 · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="搭建生产可用的Nacos集 本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/22/spring-cloud-alibaba-%E6%90%AD%E5%BB%BA%E7%94%9F%E4%BA%A7%E5%8F%AF%E7%94%A8%E7%9A%84nacos%E9%9B%86%E7%BE%A4/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="Spring Cloud Alibaba-搭建生产可用的Nacos集群" />
+<meta property="og:description" content="搭建生产可用的Nacos集 本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/22/spring-cloud-alibaba-%E6%90%AD%E5%BB%BA%E7%94%9F%E4%BA%A7%E5%8F%AF%E7%94%A8%E7%9A%84nacos%E9%9B%86%E7%BE%A4/" />
+<meta property="article:published_time" content="2019-10-22T16:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-22T16:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="Spring Cloud Alibaba-搭建生产可用的Nacos集群">
+<meta itemprop="description" content="搭建生产可用的Nacos集 本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭">
+
+
+<meta itemprop="datePublished" content="2019-10-22T16:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-22T16:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="726">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Cloud Alibaba-搭建生产可用的Nacos集群"/>
+<meta name="twitter:description" content="搭建生产可用的Nacos集 本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Spring Cloud Alibaba-搭建生产可用的Nacos集群</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-22
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h2 id="搭建生产可用的nacos集">搭建生产可用的Nacos集</h2>
+
+<ul>
+<li><p>本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭建Nacos集群。<br><br></p>
+
+<h3 id="安装mysql数据库-br">安装MySQL数据库<br></h3></li>
+
+<li><p>生产环境需使用MySQL作为后端存储，因此需要搭建MySQL。生产中，MySQL建议至少主备模式，高可用MySQL更佳。</p></li>
+
+<li><p>高可用MySQL的搭建可参考：<a href="https://blog.csdn.net/jx_jy/article/details/80165584">https://blog.csdn.net/jx_jy/article/details/80165584</a><br></p></li>
+
+<li><p><font color=red>注意：Nacos支持的MySQL版本为：5.6.5+</font></p>
+
+<h3 id="导入初始化脚本">导入初始化脚本</h3></li>
+
+<li><p>找到 <font color=red>conf/nacos-mysql.sql</font> ，将其导入到数据库中。</p>
+
+<h3 id="配置数据库连接">配置数据库连接</h3></li>
+
+<li><p>找到 <font color=red>conf/application.properties</font> ，添加如下内容：</p>
+
+<pre><code># 表明用MySQL作为后端存储
+spring.datasource.platform=mysql
+db.num=1
+
+# MySQL JDBC地址
+db.url.0=jdbc:mysql://127.0.0.1:3306/nacos?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true
+# 数据库账号
+db.user=nacos
+# 数据库密码
+db.password=nacos
+</code></pre></li>
+</ul>
+
+<h2 id="部署架构图">部署架构图</h2>
+
+<ul>
+<li><p>下图是来自Nacos官方的部署架构图：<br>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/spring_cloud_alibaba/nacos/nacos1.jpg" alt="图片" /><br></p>
+
+<h2 id="主机规划">主机规划</h2>
+
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>端口</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>127.0.0.1</td>
+<td>8848</td>
+</tr>
+
+<tr>
+<td>127.0.0.1</td>
+<td>8849</td>
+</tr>
+
+<tr>
+<td>127.0.0.1</td>
+<td>8850</td>
+</tr>
+</tbody>
+</table>
+
+<p><br>
+复制三份Nacos安装包，将 conf/application.properties 中的</p>
+
+<pre><code>server.port=8848
+改为
+server.port=8848
+server.port=8849
+server.port=8850
+
+</code></pre></li>
+</ul>
+
+<h2 id="开始搭建">开始搭建</h2>
+
+<ul>
+<li><p>找到 conf/cluster.conf.example ，将其改名为 conf/cluster.conf ，并将内容改为类似如下，即：以ip:端口 的形式列出Nacos集群中所有实例的地址列表</p>
+
+<pre><code># ip:port
+127.0.0.1:8848
+127.0.0.1:8849
+127.0.0.1:8850
+
+</code></pre></li>
+
+<li><p>启动所有Nacos实例<br></p></li>
+</ul>
+
+<h2 id="配置代理服务器">配置代理服务器</h2>
+
+<ul>
+<li>安装NGINX并启动</li>
+
+<li><p>为NGINX添加如下配置（对于Linux操作系统，如在安装NGINX时未自定义目录，则可在 /etc/nginx/conf.d 新建文件，命名为 nacos.conf ，内容如下；同时删除 default.conf 即可）：</p>
+
+<pre><code>upstream nacos {
+server 127.0.0.1:8848;
+server 127.0.0.1:8849;
+server 127.0.0.1:8850;
+}
+
+server {
+listen 80;
+server_name  localhost;
+location /nacos/ {
+proxy_pass http://nacos/nacos/;
+}
+}
+
+</code></pre></li>
+</ul>
+
+<h2 id="测试">测试</h2>
+
+<ul>
+<li>访问 <a href="http://localhost/nacos">http://localhost/nacos</a> 可看到Nacos的登录页，登录后即可正常使用Nacos。<br></li>
+</ul>
+
+<h2 id="优化-最佳实践">优化&amp;最佳实践</h2>
+
+<ul>
+<li>实际项目中，建议为Nacos绑定一个域名，这样即使未来有迁移Nacos的需求，客户端也无需修改配置</li>
+<li>本文为了演示方便，将所有Nacos实例都部署在了一台机器中；实际项目中，请将Nacos部署在不同机器中，从而实现更好的容灾与隔离</li>
+</ul>
+
+<h2 id="参考文档">参考文档</h2>
+
+<ul>
+<li><a href="https://nacos.io/zh-cn/docs/cluster-mode-quick-start.html">https://nacos.io/zh-cn/docs/cluster-mode-quick-start.html</a></li>
+</ul>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="http://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

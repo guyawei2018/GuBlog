@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>扩展Ribbon支持基于元数据的版本管理 · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="上一篇已经实现了： 优先调用同集群下的实例 实现基于权重配置的负载均衡 但实际项目，我们可能还会有这样的需求： 一个微服务在线上可能多版本共存，例如" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81%E5%9F%BA%E4%BA%8E%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="扩展Ribbon支持基于元数据的版本管理" />
+<meta property="og:description" content="上一篇已经实现了： 优先调用同集群下的实例 实现基于权重配置的负载均衡 但实际项目，我们可能还会有这样的需求： 一个微服务在线上可能多版本共存，例如" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81%E5%9F%BA%E4%BA%8E%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/" />
+<meta property="article:published_time" content="2019-10-22T16:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-22T16:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="扩展Ribbon支持基于元数据的版本管理">
+<meta itemprop="description" content="上一篇已经实现了： 优先调用同集群下的实例 实现基于权重配置的负载均衡 但实际项目，我们可能还会有这样的需求： 一个微服务在线上可能多版本共存，例如">
+
+
+<meta itemprop="datePublished" content="2019-10-22T16:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-22T16:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="797">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="扩展Ribbon支持基于元数据的版本管理"/>
+<meta name="twitter:description" content="上一篇已经实现了： 优先调用同集群下的实例 实现基于权重配置的负载均衡 但实际项目，我们可能还会有这样的需求： 一个微服务在线上可能多版本共存，例如"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">扩展Ribbon支持基于元数据的版本管理</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-22
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h2 id="上一篇已经实现了">上一篇已经实现了：</h2>
+
+<ul>
+<li><p>优先调用同集群下的实例</p></li>
+
+<li><p>实现基于权重配置的负载均衡</p>
+
+<h2 id="但实际项目-我们可能还会有这样的需求">但实际项目，我们可能还会有这样的需求：</h2></li>
+
+<li><p>一个微服务在线上可能多版本共存，例如：</p></li>
+
+<li><p>服务提供者有两个版本：v1、v2</p></li>
+
+<li><p>服务消费者也有两个版本：v1、v2</p></li>
+
+<li><p>v1/v2是不兼容的。服务消费者v1只能调用服务提供者v1；消费者v2只能调用提供者v2。如何实现呢？</p></li>
+</ul>
+
+<h3 id="下面围绕该场景-实现微服务之间的版本控制">下面围绕该场景，实现微服务之间的版本控制。</h3>
+
+<p>元数据
+元数据就是一堆的描述信息，以map存储。举个例子：</p>
+
+<pre><code>spring:
+  cloud:
+    nacos:
+        metadata: 
+          # 自己这个实例的版本
+          version: v1
+          # 允许调用的提供者版本
+          target-version: v1
+</code></pre>
+
+<ul>
+<li>需求分析，我们需要实现的有两点：</li>
+</ul>
+
+<p>优先选择同集群下，符合metadata的实例
+如果同集群加没有符合metadata的实例，就选择所有集群下，符合metadata的实例<br>
+写代码</p>
+
+<pre><code>@Slf4j
+public class NacosMetadataRule extends AbstractLoadBalancerRule {
+
+    @Autowired
+    private NacosDiscoveryProperties discoveryProperties;
+
+    @Override
+    public void initWithNiwsConfig(IClientConfig clientConfig) {
+
+    }
+
+    @Override
+    public Server choose(Object key) {
+        //--- 负载均衡规则：优先选择同集群下，符合metadata的实例,如果没有，就选择所有集群下，符合metadata的实例----
+
+        //获取服务集群
+        String clusterName=discoveryProperties.getClusterName();
+
+        //获取当前服务的原元数据
+        Map&lt;String, String&gt; metadata = discoveryProperties.getMetadata();
+        //当前服务可以调用的服务版本
+        String target_version=metadata.get(&quot;target-version&quot;);
+
+        BaseLoadBalancer loadBalancer= (BaseLoadBalancer) this.getLoadBalancer();
+        //想要请求的微服务名称
+        String name =loadBalancer.getName();
+
+        NamingService namingService=discoveryProperties.namingServiceInstance();
+
+        try {
+            //所有服务实例
+            List&lt;Instance&gt; instances = namingService.selectInstances(name, true);
+
+            List&lt;Instance&gt; metadataMatchInstances = instances;
+
+            //配置了元数据
+            if(StringUtils.isNotEmpty(target_version)){
+                metadataMatchInstances = instances.stream()
+                        .filter(instance -&gt; Objects.equals(target_version, instance.getMetadata().get(&quot;version&quot;)))
+                        .collect(Collectors.toList());
+                if(CollectionUtils.isEmpty(metadataMatchInstances)){
+                    log.warn(&quot;未找到元数据匹配的目标实例！请检查配置。targetVersion = {}, instance = {}&quot;, target_version, instances);
+                    return null;
+                }
+            }
+
+            List&lt;Instance&gt; clusterMetadataMatchInstances = metadataMatchInstances;
+
+            //配置了服务集群
+            if(StringUtils.isNotEmpty(clusterName)){
+                clusterMetadataMatchInstances= metadataMatchInstances.stream().
+                        filter(instance -&gt; Objects.equals(clusterName,instance.getClusterName())).
+                        collect(Collectors.toList());
+                if(CollectionUtils.isEmpty(clusterMetadataMatchInstances)){
+                    log.warn(&quot;发生跨集群调用。clusterName = {}, targetVersion = {}, clusterMetadataMatchInstances = {}&quot;, clusterName, target_version, clusterMetadataMatchInstances);
+                    clusterMetadataMatchInstances=metadataMatchInstances;
+                }
+            }
+
+            Instance instance=LoadBalancer.getHost(clusterMetadataMatchInstances);
+            log.debug(&quot;选择的instance:port={},instanceId={}&quot;,instance.getPort(),instance.getInstanceId());
+            return  new NacosServer(instance);
+
+        } catch (NacosException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+
+    }
+
+    /**
+     * 调用权重负载均衡算法 原Balancer方法无法调用
+     */
+    static class LoadBalancer extends Balancer {
+        public static Instance getHost(List&lt;Instance&gt; hosts) {
+            return  getHostByRandomWeight( hosts);
+        }
+    }
+}
+
+</code></pre>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="http://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

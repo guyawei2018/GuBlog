@@ -6,10 +6,19 @@
     <description>Recent content in notes on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 29 May 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 22 Oct 2019 16:01:23 +0800</lastBuildDate>
     
 	<atom:link href="https://guyawei.top/zh-cn/tag/notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Intellij IDEA中Mybatis Mapper自动注入警告的6种解决方案</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/intellij-idea%E4%B8%ADmybatis-mapper%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%85%A5%E8%AD%A6%E5%91%8A%E7%9A%846%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/intellij-idea%E4%B8%ADmybatis-mapper%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%85%A5%E8%AD%A6%E5%91%8A%E7%9A%846%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</guid>
+      <description>相信使用Mybaits的小伙伴们一定会经常编写类似如下的代码： 可以看到 userMapper 下有个红色警告。虽然代码本身并没有问题，能正常运行，但有个警告总归有</description>
+    </item>
     
     <item>
       <title>Linux常用指令</title>
