@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-10-22T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-10-22T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="797">
+<meta itemprop="wordCount" content="812">
 
 
 
@@ -168,17 +168,14 @@
 
 <p>元数据
 元数据就是一堆的描述信息，以map存储。举个例子：</p>
-
-<pre><code>spring:
-  cloud:
-    nacos:
-        metadata: 
-          # 自己这个实例的版本
-          version: v1
-          # 允许调用的提供者版本
-          target-version: v1
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>nacos<span class="p">:</span><span class="w">
+</span><span class="w">        </span>metadata<span class="p">:</span><span class="w"> 
+</span><span class="w">          </span><span class="c"># 自己这个实例的版本</span><span class="w">
+</span><span class="w">          </span>version<span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w">          </span><span class="c"># 允许调用的提供者版本</span><span class="w">
+</span><span class="w">          </span>target-version<span class="p">:</span><span class="w"> </span>v1</code></pre></div>
 <ul>
 <li>需求分析，我们需要实现的有两点：</li>
 </ul>
@@ -186,91 +183,87 @@
 <p>优先选择同集群下，符合metadata的实例
 如果同集群加没有符合metadata的实例，就选择所有集群下，符合metadata的实例<br>
 写代码</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Slf4j</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">NacosMetadataRule</span> <span class="kd">extends</span> <span class="n">AbstractLoadBalancerRule</span> <span class="o">{</span>
 
-<pre><code>@Slf4j
-public class NacosMetadataRule extends AbstractLoadBalancerRule {
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">NacosDiscoveryProperties</span> <span class="n">discoveryProperties</span><span class="o">;</span>
 
-    @Autowired
-    private NacosDiscoveryProperties discoveryProperties;
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">initWithNiwsConfig</span><span class="o">(</span><span class="n">IClientConfig</span> <span class="n">clientConfig</span><span class="o">)</span> <span class="o">{</span>
 
-    @Override
-    public void initWithNiwsConfig(IClientConfig clientConfig) {
+    <span class="o">}</span>
 
-    }
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Server</span> <span class="nf">choose</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//--- 负载均衡规则：优先选择同集群下，符合metadata的实例,如果没有，就选择所有集群下，符合metadata的实例----
+</span><span class="c1"></span>
+        <span class="c1">//获取服务集群
+</span><span class="c1"></span>        <span class="n">String</span> <span class="n">clusterName</span><span class="o">=</span><span class="n">discoveryProperties</span><span class="o">.</span><span class="na">getClusterName</span><span class="o">();</span>
 
-    @Override
-    public Server choose(Object key) {
-        //--- 负载均衡规则：优先选择同集群下，符合metadata的实例,如果没有，就选择所有集群下，符合metadata的实例----
+        <span class="c1">//获取当前服务的原元数据
+</span><span class="c1"></span>        <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">discoveryProperties</span><span class="o">.</span><span class="na">getMetadata</span><span class="o">();</span>
+        <span class="c1">//当前服务可以调用的服务版本
+</span><span class="c1"></span>        <span class="n">String</span> <span class="n">target_version</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&#34;target-version&#34;</span><span class="o">);</span>
 
-        //获取服务集群
-        String clusterName=discoveryProperties.getClusterName();
+        <span class="n">BaseLoadBalancer</span> <span class="n">loadBalancer</span><span class="o">=</span> <span class="o">(</span><span class="n">BaseLoadBalancer</span><span class="o">)</span> <span class="k">this</span><span class="o">.</span><span class="na">getLoadBalancer</span><span class="o">();</span>
+        <span class="c1">//想要请求的微服务名称
+</span><span class="c1"></span>        <span class="n">String</span> <span class="n">name</span> <span class="o">=</span><span class="n">loadBalancer</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
 
-        //获取当前服务的原元数据
-        Map&lt;String, String&gt; metadata = discoveryProperties.getMetadata();
-        //当前服务可以调用的服务版本
-        String target_version=metadata.get(&quot;target-version&quot;);
+        <span class="n">NamingService</span> <span class="n">namingService</span><span class="o">=</span><span class="n">discoveryProperties</span><span class="o">.</span><span class="na">namingServiceInstance</span><span class="o">();</span>
 
-        BaseLoadBalancer loadBalancer= (BaseLoadBalancer) this.getLoadBalancer();
-        //想要请求的微服务名称
-        String name =loadBalancer.getName();
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="c1">//所有服务实例
+</span><span class="c1"></span>            <span class="n">List</span><span class="o">&lt;</span><span class="n">Instance</span><span class="o">&gt;</span> <span class="n">instances</span> <span class="o">=</span> <span class="n">namingService</span><span class="o">.</span><span class="na">selectInstances</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
 
-        NamingService namingService=discoveryProperties.namingServiceInstance();
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">Instance</span><span class="o">&gt;</span> <span class="n">metadataMatchInstances</span> <span class="o">=</span> <span class="n">instances</span><span class="o">;</span>
 
-        try {
-            //所有服务实例
-            List&lt;Instance&gt; instances = namingService.selectInstances(name, true);
+            <span class="c1">//配置了元数据
+</span><span class="c1"></span>            <span class="k">if</span><span class="o">(</span><span class="n">StringUtils</span><span class="o">.</span><span class="na">isNotEmpty</span><span class="o">(</span><span class="n">target_version</span><span class="o">)){</span>
+                <span class="n">metadataMatchInstances</span> <span class="o">=</span> <span class="n">instances</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+                        <span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">instance</span> <span class="o">-&gt;</span> <span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">target_version</span><span class="o">,</span> <span class="n">instance</span><span class="o">.</span><span class="na">getMetadata</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="s">&#34;version&#34;</span><span class="o">)))</span>
+                        <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">CollectionUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">metadataMatchInstances</span><span class="o">)){</span>
+                    <span class="n">log</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;未找到元数据匹配的目标实例！请检查配置。targetVersion = {}, instance = {}&#34;</span><span class="o">,</span> <span class="n">target_version</span><span class="o">,</span> <span class="n">instances</span><span class="o">);</span>
+                    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
 
-            List&lt;Instance&gt; metadataMatchInstances = instances;
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">Instance</span><span class="o">&gt;</span> <span class="n">clusterMetadataMatchInstances</span> <span class="o">=</span> <span class="n">metadataMatchInstances</span><span class="o">;</span>
 
-            //配置了元数据
-            if(StringUtils.isNotEmpty(target_version)){
-                metadataMatchInstances = instances.stream()
-                        .filter(instance -&gt; Objects.equals(target_version, instance.getMetadata().get(&quot;version&quot;)))
-                        .collect(Collectors.toList());
-                if(CollectionUtils.isEmpty(metadataMatchInstances)){
-                    log.warn(&quot;未找到元数据匹配的目标实例！请检查配置。targetVersion = {}, instance = {}&quot;, target_version, instances);
-                    return null;
-                }
-            }
+            <span class="c1">//配置了服务集群
+</span><span class="c1"></span>            <span class="k">if</span><span class="o">(</span><span class="n">StringUtils</span><span class="o">.</span><span class="na">isNotEmpty</span><span class="o">(</span><span class="n">clusterName</span><span class="o">)){</span>
+                <span class="n">clusterMetadataMatchInstances</span><span class="o">=</span> <span class="n">metadataMatchInstances</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span>
+                        <span class="n">filter</span><span class="o">(</span><span class="n">instance</span> <span class="o">-&gt;</span> <span class="n">Objects</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">clusterName</span><span class="o">,</span><span class="n">instance</span><span class="o">.</span><span class="na">getClusterName</span><span class="o">())).</span>
+                        <span class="n">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">CollectionUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">clusterMetadataMatchInstances</span><span class="o">)){</span>
+                    <span class="n">log</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;发生跨集群调用。clusterName = {}, targetVersion = {}, clusterMetadataMatchInstances = {}&#34;</span><span class="o">,</span> <span class="n">clusterName</span><span class="o">,</span> <span class="n">target_version</span><span class="o">,</span> <span class="n">clusterMetadataMatchInstances</span><span class="o">);</span>
+                    <span class="n">clusterMetadataMatchInstances</span><span class="o">=</span><span class="n">metadataMatchInstances</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
 
-            List&lt;Instance&gt; clusterMetadataMatchInstances = metadataMatchInstances;
+            <span class="n">Instance</span> <span class="n">instance</span><span class="o">=</span><span class="n">LoadBalancer</span><span class="o">.</span><span class="na">getHost</span><span class="o">(</span><span class="n">clusterMetadataMatchInstances</span><span class="o">);</span>
+            <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&#34;选择的instance:port={},instanceId={}&#34;</span><span class="o">,</span><span class="n">instance</span><span class="o">.</span><span class="na">getPort</span><span class="o">(),</span><span class="n">instance</span><span class="o">.</span><span class="na">getInstanceId</span><span class="o">());</span>
+            <span class="k">return</span>  <span class="k">new</span> <span class="n">NacosServer</span><span class="o">(</span><span class="n">instance</span><span class="o">);</span>
 
-            //配置了服务集群
-            if(StringUtils.isNotEmpty(clusterName)){
-                clusterMetadataMatchInstances= metadataMatchInstances.stream().
-                        filter(instance -&gt; Objects.equals(clusterName,instance.getClusterName())).
-                        collect(Collectors.toList());
-                if(CollectionUtils.isEmpty(clusterMetadataMatchInstances)){
-                    log.warn(&quot;发生跨集群调用。clusterName = {}, targetVersion = {}, clusterMetadataMatchInstances = {}&quot;, clusterName, target_version, clusterMetadataMatchInstances);
-                    clusterMetadataMatchInstances=metadataMatchInstances;
-                }
-            }
-
-            Instance instance=LoadBalancer.getHost(clusterMetadataMatchInstances);
-            log.debug(&quot;选择的instance:port={},instanceId={}&quot;,instance.getPort(),instance.getInstanceId());
-            return  new NacosServer(instance);
-
-        } catch (NacosException e) {
-            e.printStackTrace();
-        }
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">NacosException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
 
 
-        return null;
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
 
-    }
+    <span class="o">}</span>
 
-    /**
-     * 调用权重负载均衡算法 原Balancer方法无法调用
-     */
-    static class LoadBalancer extends Balancer {
-        public static Instance getHost(List&lt;Instance&gt; hosts) {
-            return  getHostByRandomWeight( hosts);
-        }
-    }
-}
-
-</code></pre>
-
+    <span class="cm">/**
+</span><span class="cm">     * 调用权重负载均衡算法 原Balancer方法无法调用
+</span><span class="cm">     */</span>
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">LoadBalancer</span> <span class="kd">extends</span> <span class="n">Balancer</span> <span class="o">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Instance</span> <span class="nf">getHost</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Instance</span><span class="o">&gt;</span> <span class="n">hosts</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span>  <span class="n">getHostByRandomWeight</span><span class="o">(</span> <span class="n">hosts</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
   </article>
 
   

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>Alibaba Sentinel 配置项总结 · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文基于Sentinel 1.6.2编写，未来Sentinel发布新版本后，各位看官可按照本文中的“参考文档”，自行查阅新版本的配置项目。 Spring Cloud" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/23/alibaba-sentinel-%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%80%BB%E7%BB%93/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="Alibaba Sentinel 配置项总结" />
+<meta property="og:description" content="本文基于Sentinel 1.6.2编写，未来Sentinel发布新版本后，各位看官可按照本文中的“参考文档”，自行查阅新版本的配置项目。 Spring Cloud" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/23/alibaba-sentinel-%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%80%BB%E7%BB%93/" />
+<meta property="article:published_time" content="2019-10-23T16:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-23T16:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="Alibaba Sentinel 配置项总结">
+<meta itemprop="description" content="本文基于Sentinel 1.6.2编写，未来Sentinel发布新版本后，各位看官可按照本文中的“参考文档”，自行查阅新版本的配置项目。 Spring Cloud">
+
+
+<meta itemprop="datePublished" content="2019-10-23T16:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-23T16:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="1130">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Alibaba Sentinel 配置项总结"/>
+<meta name="twitter:description" content="本文基于Sentinel 1.6.2编写，未来Sentinel发布新版本后，各位看官可按照本文中的“参考文档”，自行查阅新版本的配置项目。 Spring Cloud"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Alibaba Sentinel 配置项总结</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-23
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<pre><code>本文基于Sentinel 1.6.2编写，未来Sentinel发布新版本后，各位看官可按照本文中的“参考文档”，自行查阅新版本的配置项目。
+</code></pre>
+
+<h2 id="spring-cloud-alibaba-sentienl相关配置项">Spring Cloud Alibaba Sentienl相关配置项</h2>
+
+<h3 id="参考文档-https-github-com-alibaba-spring-cloud-alibaba-blob-master-spring-cloud-alibaba-docs-src-main-asciidoc-zh-sentinel-adoc">参考文档：<a href="https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/sentinel.adoc">https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/sentinel.adoc</a></h3>
+
+<table>
+<thead>
+<tr>
+<th align="left">配置项</th>
+<th align="left">含义</th>
+<th align="left">默认值</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">spring.cloud.sentinel.enabled Sentinel</td>
+<td align="left">自动化配置是否生效</td>
+<td align="left">true</td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.eager</td>
+<td align="left">取消Sentinel控制台懒加载</td>
+<td align="left">false</td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.transport.port</td>
+<td align="left">应用与Sentinel控制台交互的端口，应用本地会起一个该端口占用的HttpServer</td>
+<td align="left">8719</td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.transport.dashboard</td>
+<td align="left">Sentinel 控制台地址</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.transport.heartbeat-interval-ms</td>
+<td align="left">应用与Sentinel控制台的心跳间隔时间</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.transport.client-ip</td>
+<td align="left">客户端IP</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.filter.order</td>
+<td align="left">Servlet Filter的加载顺序。Starter内部会构造这个filter</td>
+<td align="left">Integer.MIN_VALUE</td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.filter.url-patterns</td>
+<td align="left">数据类型是数组。表示Servlet Filter的url pattern集合</td>
+<td align="left">/*</td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.filter.enabled</td>
+<td align="left">Enable to instance CommonFilter</td>
+<td align="left">true</td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.metric.charset</td>
+<td align="left">metric文件字符集</td>
+<td align="left">UTF-8</td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.metric.file-single-size</td>
+<td align="left">Sentinel metric 单个文件的大小</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.metric.file-total-count</td>
+<td align="left">Sentinel metric 总文件数量</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.log.dir Sentinel</td>
+<td align="left">日志文件所在的目录</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.log.switch-pid</td>
+<td align="left">Sentinel 日志文件名是否需要带上pid</td>
+<td align="left">false</td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.servlet.block-page</td>
+<td align="left">自定义的跳转 URL，当请求被限流时会自动跳转至设定好的 URL</td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">spring.cloud.sentinel.flow.cold-factor</td>
+<td align="left">冷启动因子</td>
+<td align="left">3</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="alibaba-sentinel启动配置项">Alibaba Sentinel启动配置项</h2>
+
+<h3 id="参考文档-https-github-com-alibaba-sentinel-wiki-启动配置项">参考文档：<a href="https://github.com/alibaba/Sentinel/wiki/启动配置项">https://github.com/alibaba/Sentinel/wiki/启动配置项</a></h3>
+
+<h3 id="sentinel-core-配置项">sentinel-core 配置项</h3>
+
+<table>
+<thead>
+<tr>
+<th align="left">名称</th>
+<th align="left">含义</th>
+<th align="center">类型</th>
+<th align="center">默认值</th>
+<th align="center">是否必需</th>
+<th align="center"></th>
+<th align="left">备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">project.name</td>
+<td align="left">指定程序的名称</td>
+<td align="center">String</td>
+<td align="center">null</td>
+<td align="center">否</td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">csp.sentinel.app.type</td>
+<td align="left">指定程序的类型</td>
+<td align="center">int</td>
+<td align="center">0 (APP_TYPE_COMMON)</td>
+<td align="center">否</td>
+<td align="center"></td>
+<td align="left">1.6.0 引入</td>
+</tr>
+
+<tr>
+<td align="left">csp.sentinel.metric.file.single.size</td>
+<td align="left">单个监控文件的大小</td>
+<td align="center">long</td>
+<td align="center">52428800</td>
+<td align="center">否</td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">csp.sentinel.metric.file.total.count</td>
+<td align="left">监控文件的总数上限</td>
+<td align="center">int</td>
+<td align="center">6</td>
+<td align="center">否</td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+
+<tr>
+<td align="left">csp.sentinel.log.dir</td>
+<td align="left">Sentinel 日志文件目录</td>
+<td align="center">String</td>
+<td align="center">${user.home}/logs/csp/</td>
+<td align="center">否</td>
+<td align="center"></td>
+<td align="left">1.3.0 引入</td>
+</tr>
+
+<tr>
+<td align="left">csp.sentinel.log.use.pid</td>
+<td align="left">日志文件名中是否加入进程号，用于单机部署多个应用的情况</td>
+<td align="center">boolean</td>
+<td align="center">false</td>
+<td align="center">否</td>
+<td align="center"></td>
+<td align="left">1.3.0 引入</td>
+</tr>
+
+<tr>
+<td align="left">csp.sentinel.statistic.max.rt</td>
+<td align="left">最大的有效响应时长（ms），超出此值则按照此值记录</td>
+<td align="center">int</td>
+<td align="center">4900ms</td>
+<td align="center">否</td>
+<td align="center"></td>
+<td align="left">1.4.1 引入</td>
+</tr>
+</tbody>
+</table>
+
+<p>其中 project.name 项用于指定应用名（appName）。若未指定，则默认从 sun.java.command 中解析出对应的类名作为应用名。实际项目使用中建议指定应用名。</p>
+
+<h3 id="注意-若需要在单台机器上运行相同服务的多个实例-则需要加入-dcsp-sentinel-log-use-pid-true-来保证不同实例日志的独立性">注意：若需要在单台机器上运行相同服务的多个实例，则需要加入 -Dcsp.sentinel.log.use.pid=true 来保证不同实例日志的独立性。</h3>
+
+<h3 id="sentinel-transport-common-配置项">sentinel-transport-common 配置项</h3>
+
+<table>
+<thead>
+<tr>
+<th align="left">名称</th>
+<th align="left">含义</th>
+<th align="center">类型</th>
+<th align="center">默认值</th>
+<th align="center">是否必需</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">csp.sentinel.dashboard.server</td>
+<td align="left">控制台的地址，指定控制台后客户端会自动向该地址发送心跳包。地址格式为：hostIp:port</td>
+<td align="center">String</td>
+<td align="center">null</td>
+<td align="center">是</td>
+</tr>
+
+<tr>
+<td align="left">csp.sentinel.heartbeat.interval.ms</td>
+<td align="left">心跳包发送周期，单位毫秒</td>
+<td align="center">long</td>
+<td align="center">null</td>
+<td align="center">非必需，若不进行配置，则会从相应的 HeartbeatSender中提取默认值</td>
+</tr>
+
+<tr>
+<td align="left">csp.sentinel.api.port</td>
+<td align="left">本地启动 HTTP API Server 的端口号</td>
+<td align="center">int</td>
+<td align="center">null</td>
+<td align="center">是，且不可冲突</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="使用说明">使用说明</h3>
+
+<p>所有参数均可通过 JVM -D 参数指定。除 project.name 以及日志的配置项（如 csp.sentinel.log.dir）之外，其余参数还可通过 properties 文件指定，路径为 ${user_home}/logs/csp/${project.name}.properties。</p>
+
+<h2 id="优先级顺序-jvm-d-参数的优先级最高-若-properties-和-jvm-参数中有相同项的配置-以-jvm-d-参数配置的为准">优先级顺序：JVM -D 参数的优先级最高，若 properties 和 JVM 参数中有相同项的配置，以 JVM -D 参数配置的为准。</h2>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="http://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

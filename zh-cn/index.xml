@@ -5,7 +5,7 @@
     <description>Recent content on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 22 Oct 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 23 Oct 2019 16:01:23 +0800</lastBuildDate>
     
         <atom:link href="https://guyawei.top/zh-cn/index.xml" rel="self" type="application/rss+xml" />
     
@@ -30,6 +30,709 @@
 &lt;/ul&gt;
 
 &lt;p&gt;了解並貢獻： &lt;a href=&#34;https://github.com/gohugoio&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>@SentinelResource注解 属性总结</title>
+      <link>https://guyawei.top/zh-cn/2019/10/23/sentinelresource%E6%B3%A8%E8%A7%A3-%E5%B1%9E%E6%80%A7%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Wed, 23 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/23/sentinelresource%E6%B3%A8%E8%A7%A3-%E5%B1%9E%E6%80%A7%E6%80%BB%E7%BB%93/</guid>
+      
+        <description>
+
+&lt;pre&gt;&lt;code&gt;本文基于Sentinel 1.6.2，理论支持1.4.0+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;属性&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;作用&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;是否必须&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;value&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;资源名称&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;是&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;entryType&lt;/span&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;entry类型，标记流量的方向，取值IN/OUT，默认是OUT&lt;/span&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;否&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;blockHandler&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;处理BlockException的函数名称。函数要求：&lt;br&gt;1. 必须是 public &lt;br&gt;2.返回类型与原方法一致&lt;br&gt;3. 参数类型需要和原方法相匹配，并在最后加 BlockException 类型的参数。&lt;br&gt;4. 默认需和原方法在同一个类中。若希望使用其他类的函数，可配置 blockHandlerClass ，并指定blockHandlerClass里面的方法。&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;blockHandlerClass&lt;/span&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;存放blockHandler的类。对应的处理函数必须static修饰，否则无法解析，其他要求：同blockHandler。&lt;/span&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;否&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;fallback&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;用于在抛出异常的时候提供fallback处理逻辑。fallback函数可以针对所有类型的异常（除了 exceptionsToIgnore 里面排除掉的异常类型）进行处理。函数要求：&lt;br&gt;1. 返回类型与原方法一致&lt;br&gt;2. 参数类型需要和原方法相匹配，Sentinel 1.6开始，也可在方法最后加 Throwable 类型的参数。&lt;br&gt;3.默认需和原方法在同一个类中。若希望使用其他类的函数，可配置 fallbackClass ，并指定fallbackClass里面的方法。&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;fallbackClass【1.6】&lt;/span&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;存放fallback的类。对应的处理函数必须static修饰，否则无法解析，其他要求：同fallback。&lt;/span&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;否&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;defaultFallback【1.6】&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;用于通用的 fallback 逻辑。默认fallback函数可以针对所有类型的异常（除了 exceptionsToIgnore 里面排除掉的异常类型）进行处理。若同时配置了 fallback 和 defaultFallback，以fallback为准。函数要求：&lt;br&gt;1.返回类型与原方法一致&lt;br&gt;2.方法参数列表为空，或者有一个 Throwable 类型的参数&lt;br&gt;3. 默认需要和原方法在同一个类中。若希望使用其他类的函数，可配置 fallbackClass ，并指定 fallbackClass 里面的方法。&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;exceptionsToIgnore【1.6】&lt;/span&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;指定排除掉哪些异常。排除的异常不会计入异常统计，也不会进入fallback逻辑，而是原样抛出。&lt;/span&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;span style=&#34;background-color:#CCCCCC;&#34;&gt;否&lt;/span&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;exceptionsToTrace&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;需要trace的异常&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Throwable&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;tips&#34;&gt;TIPS&lt;/h3&gt;
+
+&lt;p&gt;1.6.0 之前的版本 fallback 函数只针对降级异常（DegradeException）进行处理，不能针对业务异常进行处理。&lt;br&gt;
+若 blockHandler 和 fallback 都进行了配置，则被限流降级而抛出 BlockException 时只会进入 blockHandler 处理逻辑。若未配置 blockHandler、fallback 和 defaultFallback，则被限流降级时会将 BlockException 直接抛出。&lt;br&gt;
+从 1.4.0 版本开始，注解方式定义资源支持自动统计业务异常，无需手动调用 Tracer.trace(ex) 来记录业务异常。Sentinel 1.4.0 以前的版本需要自行调用 Tracer.trace(ex) 来记录业务异常。&lt;/p&gt;
+
+&lt;h3 id=&#34;参考文档&#34;&gt;参考文档&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/alibaba/Sentinel/wiki/%E6%B3%A8%E8%A7%A3%E6%94%AF%E6%8C%81&#34;&gt;Sentinel 注解支持&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/alibaba/Sentinel/blob/1.6.2/sentinel-extension/sentinel-annotation-aspectj/src/test/java/com/alibaba/csp/sentinel/annotation/aspectj/integration/service/FooService.java&#34;&gt;官方代码示例&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Alibaba Sentinel 规则参数总结</title>
+      <link>https://guyawei.top/zh-cn/2019/10/23/alibaba-sentinel-%E8%A7%84%E5%88%99%E5%8F%82%E6%95%B0%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Wed, 23 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/23/alibaba-sentinel-%E8%A7%84%E5%88%99%E5%8F%82%E6%95%B0%E6%80%BB%E7%BB%93/</guid>
+      
+        <description>
+
+&lt;pre&gt;&lt;code&gt;本文总结了Alibaba Sentinel各种规则的参数。
+
+基于Sentinel 1.6.2编写，未来如果本文不再适用，可自行点击每一节 参考 一览的链接前往查看如何配置。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;一-流控规则&#34;&gt;一、流控规则&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-1-配置&#34;&gt;1.1 配置&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/spring_cloud_alibaba/sentinel/sentinel-1.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;1-2-参数&#34;&gt;1.2 参数&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Field&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;默认值&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;resource&lt;/td&gt;
+&lt;td&gt;资源名，资源名是限流规则的作用对象&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;count&lt;/td&gt;
+&lt;td&gt;限流阈值&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;grade&lt;/td&gt;
+&lt;td&gt;限流阈值类型，QPS 或线程数模式&lt;/td&gt;
+&lt;td&gt;QPS 模式&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;limitApp&lt;/td&gt;
+&lt;td&gt;流控针对的调用来源&lt;/td&gt;
+&lt;td&gt;default，代表不区分调用来源&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;strategy&lt;/td&gt;
+&lt;td&gt;判断的根据是资源自身，还是根据其它关联资源 (refResource)，还是根据链路入口&lt;/td&gt;
+&lt;td&gt;根据资源本身&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;controlBehavior&lt;/td&gt;
+&lt;td&gt;流控效果（直接拒绝 / 排队等待 / 慢启动模式）&lt;/td&gt;
+&lt;td&gt;直接拒绝&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;1-3-代码配置示例&#34;&gt;1.3 代码配置示例&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;initFlowQpsRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FlowRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rules&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;FlowRule&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FlowRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;resourceName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// set limit qps to 20
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setCount&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setGrade&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RuleConstant&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;FLOW_GRADE_QPS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setLimitApp&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;default&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;FlowRuleManager&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;loadRules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;1-4-参考-https-github-com-alibaba-sentinel-wiki-如何使用-流量控制规则-flowrule&#34;&gt;1.4 参考：&lt;a href=&#34;https://github.com/alibaba/Sentinel/wiki/如何使用#流量控制规则-flowrule&#34;&gt;https://github.com/alibaba/Sentinel/wiki/如何使用#流量控制规则-flowrule&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h3 id=&#34;1-5-参考-a-href-https-github-com-alibaba-sentinel-wiki-e6-b5-81-e9-87-8f-e6-8e-a7-e5-88-b6-流量控制-a&#34;&gt;1.5 参考：&lt;a href=&#34;https://github.com/alibaba/Sentinel/wiki/%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6&#34;&gt;流量控制&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h2 id=&#34;二-降级规则&#34;&gt;二、降级规则&lt;/h2&gt;
+
+&lt;h3 id=&#34;2-1-配置&#34;&gt;2.1 配置&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/spring_cloud_alibaba/sentinel/sentinel-2.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-2-参数&#34;&gt;2.2 参数&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Field&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;默认值&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;resource&lt;/td&gt;
+&lt;td&gt;资源名，即限流规则的作用对象&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;count&lt;/td&gt;
+&lt;td&gt;阈值&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;grade&lt;/td&gt;
+&lt;td&gt;降级模式，根据 RT 降级还是根据异常比例降级&lt;/td&gt;
+&lt;td&gt;RT&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;timeWindow&lt;/td&gt;
+&lt;td&gt;降级的时间，单位为 s&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;2-3-代码配置示例&#34;&gt;2.3 代码配置示例&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;initDegradeRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DegradeRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rules&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;DegradeRule&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DegradeRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setResource&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;KEY&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// set threshold RT, 10 ms
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setCount&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setGrade&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RuleConstant&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;DEGRADE_GRADE_RT&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setTimeWindow&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;DegradeRuleManager&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;loadRules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;2-4-参考-https-github-com-alibaba-sentinel-wiki-如何使用-熔断降级规则-degraderule&#34;&gt;2.4 参考：&lt;a href=&#34;https://github.com/alibaba/Sentinel/wiki/如何使用#熔断降级规则-degraderule&#34;&gt;https://github.com/alibaba/Sentinel/wiki/如何使用#熔断降级规则-degraderule&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h2 id=&#34;三-热点规则&#34;&gt;三、热点规则&lt;/h2&gt;
+
+&lt;h3 id=&#34;3-1-配置&#34;&gt;3.1 配置&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/spring_cloud_alibaba/sentinel/sentinel-3.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-参数&#34;&gt;3.2 参数&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Field&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;默认值&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;resource&lt;/td&gt;
+&lt;td&gt;资源名，必填&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;count&lt;/td&gt;
+&lt;td&gt;限流阈值，必填&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;grade&lt;/td&gt;
+&lt;td&gt;限流模式&lt;/td&gt;
+&lt;td&gt;QPS 模式&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;durationInSec&lt;/td&gt;
+&lt;td&gt;统计窗口时间长度（单位为秒），1.6.0 版本开始支持&lt;/td&gt;
+&lt;td&gt;1s&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;controlBehavior&lt;/td&gt;
+&lt;td&gt;流控效果（支持快速失败和匀速排队模式），1.6.0 版本开始支持&lt;/td&gt;
+&lt;td&gt;快速失败&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;maxQueueingTimeMs&lt;/td&gt;
+&lt;td&gt;最大排队等待时长（仅在匀速排队模式生效），1.6.0 版本开始支持&lt;/td&gt;
+&lt;td&gt;0ms&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;paramIdx&lt;/td&gt;
+&lt;td&gt;热点参数的索引，必填，对应 SphU.entry(xxx, args) 中的参数索引位置&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;paramFlowItemList&lt;/td&gt;
+&lt;td&gt;参数例外项，可以针对指定的参数值单独设置限流阈值，不受前面 count 阈值的限制。仅支持基本类型&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;clusterMode&lt;/td&gt;
+&lt;td&gt;是否是集群参数流控规则&lt;/td&gt;
+&lt;td&gt;false&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;clusterConfig&lt;/td&gt;
+&lt;td&gt;集群流控相关配置&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;3-3-代码配置示例&#34;&gt;3.3 代码配置示例&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;ParamFlowRule&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ParamFlowRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;resourceName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setParamIdx&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setCount&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;// 针对 int 类型的参数 PARAM_B，单独设置限流 QPS 阈值为 10，而不是全局的阈值 5.
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ParamFlowItem&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;item&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ParamFlowItem&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setObject&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;valueOf&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;PARAM_B&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setClassType&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setCount&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setParamFlowItemList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Collections&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;singletonList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;item&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;ParamFlowRuleManager&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;loadRules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Collections&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;singletonList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;3-4-参考-https-github-com-alibaba-sentinel-wiki-热点参数限流&#34;&gt;3.4 参考：&lt;a href=&#34;https://github.com/alibaba/Sentinel/wiki/热点参数限流&#34;&gt;https://github.com/alibaba/Sentinel/wiki/热点参数限流&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h2 id=&#34;四-系统规则&#34;&gt;四、系统规则&lt;/h2&gt;
+
+&lt;h3 id=&#34;4-1-配置&#34;&gt;4.1 配置&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/spring_cloud_alibaba/sentinel/sentinel-4.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;4-2-参数&#34;&gt;4.2 参数&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Field&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;默认值&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;highestSystemLoad&lt;/td&gt;
+&lt;td&gt;最大的 load1&lt;/td&gt;
+&lt;td&gt;-1 (不生效)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;avgRt&lt;/td&gt;
+&lt;td&gt;所有入口流量的平均响应时间&lt;/td&gt;
+&lt;td&gt;-1 (不生效)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;maxThread&lt;/td&gt;
+&lt;td&gt;入口流量的最大并发数&lt;/td&gt;
+&lt;td&gt;-1 (不生效)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;qps&lt;/td&gt;
+&lt;td&gt;所有入口资源的 QPS&lt;/td&gt;
+&lt;td&gt;-1 (不生效)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;4-3-代码配置示例&#34;&gt;4.3 代码配置示例&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;initSystemRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SystemRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rules&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;SystemRule&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SystemRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setHighestSystemLoad&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;SystemRuleManager&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;loadRules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;4-4-参考-https-github-com-alibaba-sentinel-wiki-如何使用-系统保护规则-systemrule&#34;&gt;4.4 参考：&lt;a href=&#34;https://github.com/alibaba/Sentinel/wiki/如何使用#系统保护规则-systemrule&#34;&gt;https://github.com/alibaba/Sentinel/wiki/如何使用#系统保护规则-systemrule&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h2 id=&#34;五-授权规则&#34;&gt;五、授权规则&lt;/h2&gt;
+
+&lt;h3 id=&#34;5-1-配置&#34;&gt;5.1 配置&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/spring_cloud_alibaba/sentinel/sentinel-5.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;5-2-参数&#34;&gt;5.2 参数&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Field&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;th&gt;默认值&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;resource&lt;/td&gt;
+&lt;td&gt;资源名，即限流规则的作用对象&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;limitApp&lt;/td&gt;
+&lt;td&gt;对应的黑名单/白名单，不同 origin 用 , 分隔，如 appA,appB&lt;/td&gt;
+&lt;td&gt;default，代表不区分调用来源&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;strategy&lt;/td&gt;
+&lt;td&gt;限制模式，AUTHORITY_WHITE 为白名单模式，AUTHORITY_BLACK 为黑名单模式，默认为白名单模式&lt;/td&gt;
+&lt;td&gt;AUTHORITY_WHITE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;5-3-代码配置示例&#34;&gt;5.3 代码配置示例&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;n&#34;&gt;AuthorityRule&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AuthorityRule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setResource&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;test&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setStrategy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RuleConstant&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;AUTHORITY_WHITE&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;setLimitApp&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;appA,appB&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;AuthorityRuleManager&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;loadRules&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Collections&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;singletonList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rule&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;5-4-参考-https-github-com-alibaba-sentinel-wiki-如何使用-访问控制规则-authorityrule&#34;&gt;5.4 参考：&lt;a href=&#34;https://github.com/alibaba/Sentinel/wiki/如何使用#访问控制规则-authorityrule&#34;&gt;https://github.com/alibaba/Sentinel/wiki/如何使用#访问控制规则-authorityrule&lt;/a&gt;&lt;/h3&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Alibaba Sentinel 配置项总结</title>
+      <link>https://guyawei.top/zh-cn/2019/10/23/alibaba-sentinel-%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Wed, 23 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/23/alibaba-sentinel-%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%80%BB%E7%BB%93/</guid>
+      
+        <description>
+
+&lt;pre&gt;&lt;code&gt;本文基于Sentinel 1.6.2编写，未来Sentinel发布新版本后，各位看官可按照本文中的“参考文档”，自行查阅新版本的配置项目。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;spring-cloud-alibaba-sentienl相关配置项&#34;&gt;Spring Cloud Alibaba Sentienl相关配置项&lt;/h2&gt;
+
+&lt;h3 id=&#34;参考文档-https-github-com-alibaba-spring-cloud-alibaba-blob-master-spring-cloud-alibaba-docs-src-main-asciidoc-zh-sentinel-adoc&#34;&gt;参考文档：&lt;a href=&#34;https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/sentinel.adoc&#34;&gt;https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/sentinel.adoc&lt;/a&gt;&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;配置项&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;含义&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;默认值&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.enabled Sentinel&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;自动化配置是否生效&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;true&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.eager&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;取消Sentinel控制台懒加载&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;false&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.transport.port&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;应用与Sentinel控制台交互的端口，应用本地会起一个该端口占用的HttpServer&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;8719&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.transport.dashboard&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Sentinel 控制台地址&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.transport.heartbeat-interval-ms&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;应用与Sentinel控制台的心跳间隔时间&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.transport.client-ip&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;客户端IP&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.filter.order&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Servlet Filter的加载顺序。Starter内部会构造这个filter&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Integer.MIN_VALUE&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.filter.url-patterns&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;数据类型是数组。表示Servlet Filter的url pattern集合&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;/*&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.filter.enabled&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Enable to instance CommonFilter&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;true&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.metric.charset&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;metric文件字符集&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;UTF-8&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.metric.file-single-size&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Sentinel metric 单个文件的大小&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.metric.file-total-count&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Sentinel metric 总文件数量&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.log.dir Sentinel&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;日志文件所在的目录&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.log.switch-pid&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Sentinel 日志文件名是否需要带上pid&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;false&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.servlet.block-page&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;自定义的跳转 URL，当请求被限流时会自动跳转至设定好的 URL&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;spring.cloud.sentinel.flow.cold-factor&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;冷启动因子&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;alibaba-sentinel启动配置项&#34;&gt;Alibaba Sentinel启动配置项&lt;/h2&gt;
+
+&lt;h3 id=&#34;参考文档-https-github-com-alibaba-sentinel-wiki-启动配置项&#34;&gt;参考文档：&lt;a href=&#34;https://github.com/alibaba/Sentinel/wiki/启动配置项&#34;&gt;https://github.com/alibaba/Sentinel/wiki/启动配置项&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h3 id=&#34;sentinel-core-配置项&#34;&gt;sentinel-core 配置项&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;名称&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;含义&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;类型&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;默认值&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;是否必需&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;备注&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;project.name&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;指定程序的名称&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;String&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;null&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;csp.sentinel.app.type&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;指定程序的类型&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;int&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;0 (APP_TYPE_COMMON)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;1.6.0 引入&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;csp.sentinel.metric.file.single.size&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;单个监控文件的大小&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;long&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;52428800&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;csp.sentinel.metric.file.total.count&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;监控文件的总数上限&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;int&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;csp.sentinel.log.dir&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Sentinel 日志文件目录&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;String&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;${user.home}/logs/csp/&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;1.3.0 引入&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;csp.sentinel.log.use.pid&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;日志文件名中是否加入进程号，用于单机部署多个应用的情况&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;boolean&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;false&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;1.3.0 引入&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;csp.sentinel.statistic.max.rt&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;最大的有效响应时长（ms），超出此值则按照此值记录&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;int&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;4900ms&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;否&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;1.4.1 引入&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;其中 project.name 项用于指定应用名（appName）。若未指定，则默认从 sun.java.command 中解析出对应的类名作为应用名。实际项目使用中建议指定应用名。&lt;/p&gt;
+
+&lt;h3 id=&#34;注意-若需要在单台机器上运行相同服务的多个实例-则需要加入-dcsp-sentinel-log-use-pid-true-来保证不同实例日志的独立性&#34;&gt;注意：若需要在单台机器上运行相同服务的多个实例，则需要加入 -Dcsp.sentinel.log.use.pid=true 来保证不同实例日志的独立性。&lt;/h3&gt;
+
+&lt;h3 id=&#34;sentinel-transport-common-配置项&#34;&gt;sentinel-transport-common 配置项&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;名称&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;含义&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;类型&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;默认值&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;是否必需&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;csp.sentinel.dashboard.server&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;控制台的地址，指定控制台后客户端会自动向该地址发送心跳包。地址格式为：hostIp:port&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;String&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;null&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;是&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;csp.sentinel.heartbeat.interval.ms&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;心跳包发送周期，单位毫秒&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;long&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;null&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;非必需，若不进行配置，则会从相应的 HeartbeatSender中提取默认值&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;csp.sentinel.api.port&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;本地启动 HTTP API Server 的端口号&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;int&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;null&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;是，且不可冲突&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;使用说明&#34;&gt;使用说明&lt;/h3&gt;
+
+&lt;p&gt;所有参数均可通过 JVM -D 参数指定。除 project.name 以及日志的配置项（如 csp.sentinel.log.dir）之外，其余参数还可通过 properties 文件指定，路径为 ${user_home}/logs/csp/${project.name}.properties。&lt;/p&gt;
+
+&lt;h2 id=&#34;优先级顺序-jvm-d-参数的优先级最高-若-properties-和-jvm-参数中有相同项的配置-以-jvm-d-参数配置的为准&#34;&gt;优先级顺序：JVM -D 参数的优先级最高，若 properties 和 JVM 参数中有相同项的配置，以 JVM -D 参数配置的为准。&lt;/h2&gt;
 </description>
       
     </item>
@@ -64,46 +767,40 @@
 &lt;h2 id=&#34;二-feignclient接口如使用-pathvariable-必须指定value属性&#34;&gt;二、FeignClient接口如使用@PathVariable ，必须指定value属性&lt;/h2&gt;
 
 &lt;p&gt;代码示例：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@FeignClient(&amp;quot;microservice-provider-user&amp;quot;)
-public interface UserFeignClient {
-  @RequestMapping(value = &amp;quot;/simple/{id}&amp;quot;, method = RequestMethod.GET)
-  public User findById(@PathVariable(&amp;quot;id&amp;quot;) Long id);
-  ...
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@FeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;microservice-provider-user&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserFeignClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;/simple/{id}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;method&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RequestMethod&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;GET&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;findById&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@PathVariable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;在一些早期版本中，其中的@PathVariable(&amp;ldquo;id&amp;rdquo;) 中的&amp;rdquo;id&amp;rdquo;，也就是value属性，必须指定，不能省略。&lt;/p&gt;
 
 &lt;h2 id=&#34;三-java代码自定义feign-client的注意点与坑&#34;&gt;三、Java代码自定义Feign Client的注意点与坑&lt;/h2&gt;
 
 &lt;p&gt;代码示例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@FeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;microservice-provider-user&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;configuration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UserFeignConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserFeignClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/users/{id}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;findById&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@PathVariable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;microservice-provider-user&amp;quot;, configuration = UserFeignConfig.class)
-public interface UserFeignClient {
-  @GetMapping(&amp;quot;/users/{id}&amp;quot;)
-  User findById(@PathVariable(&amp;quot;id&amp;quot;) Long id);
-}
-
-/**
- * 该Feign Client的配置类，注意：
- * 1. 该类可以独立出去；
- * 2. 该类上也可添加@Configuration声明是一个配置类；
- * 配置类上也可添加@Configuration注解，声明这是一个配置类；
- * 但此时千万别将该放置在主应用程序上下文@ComponentScan所扫描的包中，
- * 否则，该配置将会被所有Feign Client共享，无法实现细粒度配置！
- * 个人建议：像我一样，不加@Configuration注解
- *
- * @author zhouli
- */
-class UserFeignConfig {
-  @Bean
-  public Logger.Level logger() {
-    return Logger.Level.FULL;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;span class=&#34;cm&#34;&gt;/**
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; * 该Feign Client的配置类，注意：
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; * 1. 该类可以独立出去；
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; * 2. 该类上也可添加@Configuration声明是一个配置类；
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; * 配置类上也可添加@Configuration注解，声明这是一个配置类；
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; * 但此时千万别将该放置在主应用程序上下文@ComponentScan所扫描的包中，
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; * 否则，该配置将会被所有Feign Client共享，无法实现细粒度配置！
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; * 个人建议：像我一样，不加@Configuration注解
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; *
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; * @author zhouli
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; */&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserFeignConfig&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Level&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Logger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Level&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;FULL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;配置类上也可添加&lt;font color=red&gt;@Configuraiton&lt;/font&gt; 注解，声明这是一个配置类；但此时千万别将该放置在主应用程序上下文&lt;font color=red&gt;@ComponentScan&lt;/font&gt; 所扫描的包中，否则，该配置将会被所有Feign Client共享（相当于变成了通用配置，其实本质还是Spring父子上下文扫描包重叠导致的问题），无法实现细粒度配置！&lt;/p&gt;&lt;/li&gt;
 
@@ -118,45 +815,38 @@ class UserFeignConfig {
 &lt;/ul&gt;
 
 &lt;p&gt;另外，name、url等属性支持占位符。例如：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;${feign.name}&amp;quot;, url = &amp;quot;${feign.url}&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@FeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;${feign.name}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;url&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;${feign.url}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;五-类级别的-requestmapping会被spring-mvc加载&#34;&gt;五、类级别的@RequestMapping会被Spring MVC加载&lt;/h2&gt;
-
-&lt;p&gt;@RequestMapping(&amp;ldquo;/users&amp;rdquo;)
-@FeignClient(name = &amp;ldquo;microservice-user&amp;rdquo;)
-public class TestFeignClient {
-    // &amp;hellip;
-}
-类上的@RequestMapping 注解也会被Spring MVC加载。该问题现已经被解决，早期的版本有两种解决方案：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/users&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@FeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;microservice-user&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TestFeignClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// ...
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;类上的@RequestMapping 注解也会被Spring MVC加载。该问题现已经被解决，早期的版本有两种解决方案：&lt;/p&gt;
 
 &lt;p&gt;方案1：不在类上加@RequestMapping 注解；&lt;/p&gt;
 
 &lt;p&gt;方案2：添加如下代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@ConditionalOnClass&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;({&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Feign&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;})&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;FeignMappingDefaultConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;WebMvcRegistrations&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;feignWebRegistrations&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;WebMvcRegistrationsAdapter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+            &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RequestMappingHandlerMapping&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getRequestMappingHandlerMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;FeignFilterRequestMappingHandlerMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;};&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-&lt;pre&gt;&lt;code&gt;@Configuration
-@ConditionalOnClass({ Feign.class })
-public class FeignMappingDefaultConfiguration {
-    @Bean
-    public WebMvcRegistrations feignWebRegistrations() {
-        return new WebMvcRegistrationsAdapter() {
-            @Override
-            public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
-                return new FeignFilterRequestMappingHandlerMapping();
-            }
-        };
-    }
-
-    private static class FeignFilterRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
-        @Override
-        protected boolean isHandler(Class&amp;lt;?&amp;gt; beanType) {
-            return super.isHandler(beanType) &amp;amp;&amp;amp; !beanType.isInterface();
-        }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;FeignFilterRequestMappingHandlerMapping&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RequestMappingHandlerMapping&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;protected&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;boolean&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;isHandler&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;beanType&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;super&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isHandler&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;beanType&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;beanType&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isInterface&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;相关Issue：&lt;a href=&#34;https://github.com/spring-cloud/spring-cloud-netflix/issues/466&#34;&gt;https://github.com/spring-cloud/spring-cloud-netflix/issues/466&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;六-首次请求失败&#34;&gt;六、首次请求失败&lt;/h2&gt;
@@ -166,57 +856,45 @@ public class FeignMappingDefaultConfiguration {
 &lt;p&gt;Hystrix默认的超时时间是1秒，如果超过这个时间尚未响应，将会进入fallback代码。而首次请求往往会比较慢（由于Ribbon是懒加载的，在首次请求时，才会开始初始化相关类），这个响应时间可能就大于1秒了。知道原因后，我们来总结一下解决方案。以feign为例，解决方案有如下四种。&lt;br&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;方法一、将Hystrix超时设长&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;方法一、将Hystrix超时设长&lt;/li&gt;
 &lt;/ul&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;5000&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;该配置是让Hystrix的超时时间改为5秒，这是最容易想到的办法，不过有点治标不治本。&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;方法二、禁用Hystrix超时&lt;/p&gt;
+&lt;li&gt;方法二、禁用Hystrix超时&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;hystrix.command.default.execution.timeout.enabled&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;该配置，用于禁用Hystrix的超时时间，一般不建议使用。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;hystrix.command.default.execution.timeout.enabled: false
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;该配置，用于禁用Hystrix的超时时间，一般不建议使用。&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;方法三、为Feign禁用Hystrix
-全局禁用&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;feign.hystrix.enabled: false
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;ul&gt;
+&lt;li&gt;方法三、为Feign禁用Hystrix
+全局禁用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;feign.hystrix.enabled&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;索性禁用feign的hystrix，该做法比较极端，除非一些特殊场景，不推荐使用。
 局部禁用 为名为microservice-provider-user 的Feign Client禁用Hystrix&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;microservice-provider-user&amp;quot;)
-public interface UserFeignClient {
-@GetMapping(&amp;quot;/users/{id}&amp;quot;)
-User findById(@PathVariable(&amp;quot;id&amp;quot;) Long id);
-}
-class FooConfiguration {
-@Bean
-@Scope(&amp;quot;prototype&amp;quot;)
-public Feign.Builder feignBuilder(){
-return Feign.builder();
-}
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;方法四、Ribbon配置饥饿加载（最佳）
-从Dalston开始，Ribbon支持配置eager load实现在启动时就初始化Ribbon相关类。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ribbon:
-eager-load:
-enabled: true
-clients: client1, client2, client3
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Dalson之前版本可以通过一些Hack的机制实现eager load，不过成本略高，不建议，这里就不贴了&lt;/p&gt;&lt;/li&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@FeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;microservice-provider-user&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserFeignClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/users/{id}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;findById&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@PathVariable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;FooConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@Scope&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;prototype&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Feign&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Builder&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;feignBuilder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(){&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Feign&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;builder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;方法四、Ribbon配置饥饿加载（最佳）
+从Dalston开始，Ribbon支持配置eager load实现在启动时就初始化Ribbon相关类。&lt;/li&gt;
 &lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;ribbon&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;eager-load&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;enabled&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;clients&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;client1&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;client2&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;client3&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Dalson之前版本可以通过一些Hack的机制实现eager load，不过成本略高，不建议，这里就不贴了&lt;/p&gt;
 
 &lt;h2 id=&#34;七-如需产生hystrix-stream监控信息-需要做一些额外操作&#34;&gt;七、如需产生Hystrix Stream监控信息，需要做一些额外操作&lt;/h2&gt;
 
@@ -227,36 +905,27 @@ clients: client1, client2, client3
 &lt;/ul&gt;
 
 &lt;h3 id=&#34;第一步-添加依赖-示例&#34;&gt;第一步：添加依赖，示例：&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;!-- 整合hystrix，其实feign中自带了hystrix，引入该依赖主要是为了使用其中的hystrix-metrics-event-stream，用于dashboard --&amp;gt;
-&amp;lt;dependency&amp;gt;
-  &amp;lt;groupId&amp;gt;org.springframework.cloud&amp;lt;/groupId&amp;gt;
-  &amp;lt;artifactId&amp;gt;spring-cloud-starter-hystrix&amp;lt;/artifactId&amp;gt;
-&amp;lt;/dependency&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span class=&#34;c&#34;&gt;&amp;lt;!-- 整合hystrix，其实feign中自带了hystrix，引入该依赖主要是为了使用其中的hystrix-metrics-event-stream，用于dashboard --&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.springframework.cloud&lt;span class=&#34;nt&#34;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;spring-cloud-starter-hystrix&lt;span class=&#34;nt&#34;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;第二步-在启动类上添加-enablecircuitbreaker-注解-示例&#34;&gt;第二步：在启动类上添加@EnableCircuitBreaker 注解，示例：&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;@SpringBootApplication
-@EnableFeignClients
-@EnableDiscoveryClient
-@EnableCircuitBreaker
-public class MovieFeignHystrixApplication {
-  public static void main(String[] args) {
-    SpringApplication.run(MovieFeignHystrixApplication.class, args);
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@SpringBootApplication&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@EnableFeignClients&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@EnableDiscoveryClient&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@EnableCircuitBreaker&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;MovieFeignHystrixApplication&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MovieFeignHystrixApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;第三步-在application-yml中添加如下内容-暴露hystrix-stream端点&#34;&gt;第三步：在application.yml中添加如下内容，暴露hystrix.stream端点：&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;management:
-  endpoints:
-    web:
-      exposure:
-        include: &#39;hystrix.stream&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;management&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;endpoints&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;web&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;exposure&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;include&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;hystrix.stream&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这样，访问任意Feign Client接口的API后，再访问&lt;a href=&#34;http://IP:PORT/actuator/hystrix.stream&#34;&gt;http://IP:PORT/actuator/hystrix.stream&lt;/a&gt; ，就会展示一大堆Hystrix监控数据了。&lt;/p&gt;
 </description>
       
@@ -284,71 +953,61 @@ public class MovieFeignHystrixApplication {
 &lt;h3 id=&#34;解决方案&#34;&gt;解决方案&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;方法1：为 @Autowired 注解设置required = false
-使用 @Autowired 注解时，若希望允许null值，可设置required = false，像这样：&lt;/p&gt;
+&lt;li&gt;方法1：为 @Autowired 注解设置required = false
+使用 @Autowired 注解时，若希望允许null值，可设置required = false，像这样：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  &lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;required&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UserMapper&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;userMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这样就不会有警告了。原因很好理解：IDEA认为userMapper是个null，给了警告；加上required = false后，使用 @Autowired 注解不再去校验userMapper是否存在了。也就不会有警告了。&lt;br&gt;&lt;font color=blue&gt;总结：这种方式有点蛋疼。一个庞大的既有项目，可能到处都在引用Mapper，总不能到处都补上 required = false 吧……而且对于新手/新员工，很难一眼看懂加required = false属性只是为了解决IDEA的警告。&lt;/font&gt;&lt;br&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;@Autowired(required = false)
-private UserMapper userMapper;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;方法2：用 @Resource 替换 @Autowired
+像这样：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  &lt;span class=&#34;nd&#34;&gt;@Resource&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UserMapper&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;userMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这样也不会再有讨厌的警告。如果你对原因感兴趣，不妨了解一下《@Autowired 与@Resource的区别》&lt;br&gt;&lt;font color=blue&gt;总结：这种方式挺赞，但如果一个项目已经大量使用@Autowired，然后为了个警告到处改成@Resource，也有点蛋疼。&lt;/font&gt;&lt;br&gt;&lt;/p&gt;
 
-&lt;p&gt;这样就不会有警告了。原因很好理解：IDEA认为userMapper是个null，给了警告；加上required = false后，使用 @Autowired 注解不再去校验userMapper是否存在了。也就不会有警告了。&lt;br&gt;&lt;font color=blue&gt;总结：这种方式有点蛋疼。一个庞大的既有项目，可能到处都在引用Mapper，总不能到处都补上 required = false 吧……而且对于新手/新员工，很难一眼看懂加required = false属性只是为了解决IDEA的警告。&lt;/font&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;方法2：用 @Resource 替换 @Autowired
-像这样：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@Resource
-private UserMapper userMapper;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;这样也不会再有讨厌的警告。如果你对原因感兴趣，不妨了解一下《@Autowired 与@Resource的区别》&lt;br&gt;&lt;font color=blue&gt;总结：这种方式挺赞，但如果一个项目已经大量使用@Autowired，然后为了个警告到处改成@Resource，也有点蛋疼。&lt;/font&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;方法3：在Mapper接口上加上@Repository注解
-像这样：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@Repository
-public interface UserMapper extends Mapper&amp;lt;User&amp;gt; {
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;ul&gt;
+&lt;li&gt;方法3：在Mapper接口上加上@Repository注解
+像这样：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  &lt;span class=&#34;nd&#34;&gt;@Repository&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserMapper&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Mapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;User&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这样也能让你的&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  &lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UserMapper&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;userMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;不再报错。&lt;br&gt;当然，如果你用@Component替换@Repository也是可以的。原理大致：IDEA不是认为 userMapper 是个null嘛…加个@Repository注解骗一下IDEA就OK了……&lt;br&gt;&lt;font color=blue&gt;总结：这种方式比较赞，改动小，也简单，我比较喜欢。&lt;/font&gt;&lt;br&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;@Autowired
-private UserMapper userMapper;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;不再报错。&lt;br&gt;当然，如果你用@Component替换@Repository也是可以的。原理大致：IDEA不是认为 userMapper 是个null嘛…加个@Repository注解骗一下IDEA就OK了……&lt;br&gt;&lt;font color=blue&gt;总结：这种方式比较赞，改动小，也简单，我比较喜欢。&lt;/font&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;方法4：用Lombok
-像这样：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class TestService {
-  private final UserMapper userMapper;
-  ...
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;ul&gt;
+&lt;li&gt;方法4：用Lombok
+像这样：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  &lt;span class=&#34;nd&#34;&gt;@Service&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@RequiredArgsConstructor&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;onConstructor&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nd&#34;&gt;@__&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TestService&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UserMapper&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;userMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Lombok生成的代码是这样的：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@Service
-public class TestService {
-  private final UserMapper userMapper;
-  @Autowired
-  public TestService(final UserMapper userMapper) {
-      this.userMapper = userMapper;
-  }
-  ...
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;  &lt;span class=&#34;nd&#34;&gt;@Service&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;TestService&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UserMapper&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;userMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+      &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;TestService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;final&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UserMapper&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;userMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+          &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;userMapper&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;userMapper&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+      &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+      &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;但如果自己手写成Lombok生成的代码，IDEA依然会给你报警告 。我猜，应该是IDEA的Lombok插件把IDEA搞懵逼了…所以不提示了…&lt;br&gt;&lt;font color=blue&gt; 总结 ：这是我目前最喜欢的方式。原因有2：&lt;/font&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;1 Spring官方并不建议直接在类的field上使用@Autowired注解，原因详见：《Why field injection is evil》 ，用本方法可将field注入编程构造方法注入，Spring是比较推荐的。
 2 体现了Lombok的优势，简化了你的代码。而且你也不用在每个field上都加上@Autowired注解了。
 不过这种方式也有缺点：那就是如果你类之间的依赖关系比较复杂，特别是存在循环依赖(A引用B，B引用A，或者间接的循环引用)时，应用将会启动不起来……这其实是构造方法注入方式的缺点。
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
+&lt;ul&gt;
 &lt;li&gt;&lt;p&gt;方法5：把IDEA的警告关闭掉
 个人没试过，也没有动力去试。没有提示的IDEA是没有灵魂的，我从来不去修改IDEA的任何警告设置。&lt;/p&gt;&lt;/li&gt;
 
@@ -529,12 +1188,9 @@ proxy_pass http://nacos/nacos/;
       
         <description>
 
-&lt;pre&gt;&lt;code&gt;TIPS
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;TIPS
 
-本文基于Spring Cloud Greenwich SR1，理论上支持Finchley及更高版本。
-
-&lt;/code&gt;&lt;/pre&gt;
-
+本文基于Spring Cloud Greenwich SR1，理论上支持Finchley及更高版本。&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;本节来探讨如何使用Feign构造多参数的请求。笔者以GET及POST请求为例讲解，其他方式（例如DELETE、PUT等）的请求原理相通，读者可自行研究。&lt;/p&gt;
 
 &lt;h2 id=&#34;get请求多参数的url&#34;&gt;GET请求多参数的URL&lt;/h2&gt;
@@ -542,89 +1198,65 @@ proxy_pass http://nacos/nacos/;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;假设需请求的URL包含多个参数，例如: &lt;a href=&#34;http://microservice-provider-user/get?id=1&amp;amp;username=张三&#34;&gt;http://microservice-provider-user/get?id=1&amp;amp;username=张三&lt;/a&gt; ，该如何使用Feign构造呢？&lt;/p&gt;&lt;/li&gt;
 
-&lt;li&gt;&lt;p&gt;我们知道，Spring Cloud为Feign添加了Spring MVC的注解支持，那么我们不妨按照Spring MVC的写法尝试一下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@FeignClient(&amp;quot;microservice-provider-user&amp;quot;)
-public interface UserFeignClient {
-@RequestMapping(value = &amp;quot;/get&amp;quot;, method = RequestMethod.GET)
-public User get0(User user);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;然而，这种写法并不正确，控制台会输出类似如下的异常。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;feign.FeignException: status 405 reading UserFeignClient#get0(User); content:
-{&amp;quot;timestamp&amp;quot;:1482676142940,&amp;quot;status&amp;quot;:405,&amp;quot;error&amp;quot;:&amp;quot;Method Not Allowed&amp;quot;,&amp;quot;exception&amp;quot;:&amp;quot;org.springframework.web.HttpRequestMethodNotSupportedException&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;Request method &#39;POST&#39; not supported&amp;quot;,&amp;quot;path&amp;quot;:&amp;quot;/get&amp;quot;}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;由异常可知，尽管我们指定了GET方法，Feign依然会使用POST方法发送请求。于是导致了异常。正确写法如下&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;我们知道，Spring Cloud为Feign添加了Spring MVC的注解支持，那么我们不妨按照Spring MVC的写法尝试一下：&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@FeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;microservice-provider-user&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserFeignClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;/get&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;method&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RequestMethod&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;GET&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然而，这种写法并不正确，控制台会输出类似如下的异常。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-log&#34; data-lang=&#34;log&#34;&gt;feign.FeignException: status 405 reading UserFeignClient#get0(User); content:
+{&amp;#34;timestamp&amp;#34;:1482676142940,&amp;#34;status&amp;#34;:405,&amp;#34;error&amp;#34;:&amp;#34;Method Not Allowed&amp;#34;,&amp;#34;exception&amp;#34;:&amp;#34;org.springframework.web.HttpRequestMethodNotSupportedException&amp;#34;,&amp;#34;message&amp;#34;:&amp;#34;Request method &amp;#39;POST&amp;#39; not supported&amp;#34;,&amp;#34;path&amp;#34;:&amp;#34;/get&amp;#34;}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;由异常可知，尽管我们指定了GET方法，Feign依然会使用POST方法发送请求。于是导致了异常。正确写法如下&lt;/p&gt;
 
 &lt;h3 id=&#34;方法一-推荐&#34;&gt;方法一[推荐]&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;@FeignClient(&amp;quot;microservice-provider-user&amp;quot;)
-public interface UserFeignClient {
-  @GetMapping(&amp;quot;/get&amp;quot;)
-  public User get0(@SpringQueryMap User user);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@FeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;microservice-provider-user&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserFeignClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@GetMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/get&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@SpringQueryMap&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;方法二-推荐&#34;&gt;方法二[推荐]&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;microservice-provider-user&amp;quot;)
-public interface UserFeignClient {
-  @RequestMapping(value = &amp;quot;/get&amp;quot;, method = RequestMethod.GET)
-  public User get1(@RequestParam(&amp;quot;id&amp;quot;) Long id, @RequestParam(&amp;quot;username&amp;quot;) String username);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@FeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;microservice-provider-user&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserFeignClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;/get&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;method&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RequestMethod&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;GET&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@RequestParam&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nd&#34;&gt;@RequestParam&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;username&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这是最为直观的方式，URL有几个参数，Feign接口中的方法就有几个参数。使用@RequestParam注解指定请求的参数是什么。&lt;/p&gt;
 
 &lt;h3 id=&#34;方法三-不推荐&#34;&gt;方法三[不推荐]&lt;/h3&gt;
 
 &lt;p&gt;多参数的URL也可使用Map来构建。当目标URL参数非常多的时候，可使用这种方式简化Feign接口的编写。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;microservice-provider-user&amp;quot;)
-public interface UserFeignClient {
-  @RequestMapping(value = &amp;quot;/get&amp;quot;, method = RequestMethod.GET)
-  public User get2(@RequestParam Map&amp;lt;String, Object&amp;gt; map);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@FeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;microservice-provider-user&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserFeignClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;/get&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;method&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RequestMethod&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;GET&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@RequestParam&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;在调用时，可使用类似以下的代码。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;public User get(String username, String password) {
-  HashMap&amp;lt;String, Object&amp;gt; map = Maps.newHashMap();
-  map.put(&amp;quot;id&amp;quot;, &amp;quot;1&amp;quot;);
-  map.put(&amp;quot;username&amp;quot;, &amp;quot;张三&amp;quot;);
-  return this.userFeignClient.get2(map);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;username&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;password&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;HashMap&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;map&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Maps&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newHashMap&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;id&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;n&#34;&gt;map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;put&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;username&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;张三&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;userFeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h4 id=&#34;注意-这种方式不建议使用-主要是因为可读性不好-而且如果参数为空的时候会有一些问题-例如map-put-username-null-会导致microservice-provider-user-服务接收到的username是-而不是null&#34;&gt;注意：这种方式不建议使用。主要是因为可读性不好，而且如果参数为空的时候会有一些问题，例如map.put(&amp;ldquo;username&amp;rdquo;, null); 会导致microservice-provider-user 服务接收到的username是&amp;rdquo;&amp;rdquo; ，而不是null。&lt;/h4&gt;
 
 &lt;h2 id=&#34;post请求包含多个参数&#34;&gt;POST请求包含多个参数&lt;/h2&gt;
 
 &lt;p&gt;下面来讨论如何使用Feign构造包含多个参数的POST请求。假设服务提供者的Controller是这样编写的：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@RestController
-public class UserController {
-  @PostMapping(&amp;quot;/post&amp;quot;)
-  public User post(@RequestBody User user) {
-    ...
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@RestController&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserController&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@PostMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/post&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@RequestBody&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;我们要如何使用Feign去请求呢？答案非常简单，示例：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;@FeignClient(name = &amp;quot;microservice-provider-user&amp;quot;)
-public interface UserFeignClient {
-  @RequestMapping(value = &amp;quot;/post&amp;quot;, method = RequestMethod.POST)
-  public User post(@RequestBody User user);
-}
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@FeignClient&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;microservice-provider-user&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserFeignClient&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nd&#34;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;/post&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;method&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;RequestMethod&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;POST&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@RequestBody&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
       
     </item>
     
@@ -661,73 +1293,58 @@ public interface UserFeignClient {
 
 &lt;li&gt;&lt;p&gt;自己基于权重配置，计算出一个实例即可。
 代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Slf4j&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;NacosWeightRandomV1Rule&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AbstractLoadBalancerRule&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;initWithNiwsConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IClientConfig&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;iClientConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-&lt;pre&gt;&lt;code&gt;@Slf4j
-public class NacosWeightRandomV1Rule extends AbstractLoadBalancerRule {
-@Override
-public void initWithNiwsConfig(IClientConfig iClientConfig) {
-}
+&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Server&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;choose&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;servers&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLoadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getReachableServers&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
 
-@Override
-public Server choose(Object key) {
-    List&amp;lt;Server&amp;gt; servers = this.getLoadBalancer().getReachableServers();
+    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;InstanceWithWeight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instanceWithWeights&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;servers&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;stream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;c1&#34;&gt;// 注册中心只用Nacos，没同时用其他注册中心（例如Eureka），理论上不会实现
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;                &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(!(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;instanceof&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+                    &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;参数非法，server = {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+                    &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;参数非法，不是NacosServer实例！&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+                &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    List&amp;lt;InstanceWithWeight&amp;gt; instanceWithWeights = servers.stream()
-            .map(server -&amp;gt; {
-                // 注册中心只用Nacos，没同时用其他注册中心（例如Eureka），理论上不会实现
-                if (!(server instanceof NacosServer)) {
-                    log.error(&amp;quot;参数非法，server = {}&amp;quot;, server);
-                    throw new IllegalArgumentException(&amp;quot;参数非法，不是NacosServer实例！&amp;quot;);
-                }
+                &lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;nacosServer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;nacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getInstance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+                &lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;weight&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getWeight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InstanceWithWeight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;
+                        &lt;span class=&#34;n&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;
+                        &lt;span class=&#34;n&#34;&gt;Double&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;valueOf&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;weight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;intValue&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+                &lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;})&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;collect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Collectors&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
 
-                NacosServer nacosServer = (NacosServer) server;
-                Instance instance = nacosServer.getInstance();
-                double weight = instance.getWeight();
-                return new InstanceWithWeight(
-                        server,
-                        Double.valueOf(weight).intValue()
-                );
-            })
-            .collect(Collectors.toList());
+    &lt;span class=&#34;n&#34;&gt;Server&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;server&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;weightRandom&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instanceWithWeights&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
 
-    Server server = this.weightRandom(instanceWithWeights);
-
-    log.info(&amp;quot;选中的server = {}&amp;quot;, server);
-    return server;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;@Data
-@AllArgsConstructor
-@NoArgsConstructor
-private class InstanceWithWeight {
-    private Server server;
-    private Integer weight;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;/**
- * 根据权重随机
- * 算法参考 https://blog.csdn.net/u011627980/article/details/79401026
- *
- * @param list 实例列表
- * @return 随机出来的结果
- */
-private Server weightRandom(List&amp;lt;InstanceWithWeight&amp;gt; list) {
-    List&amp;lt;Server&amp;gt; instances = Lists.newArrayList();
-    for (InstanceWithWeight instanceWithWeight : list) {
-        int weight = instanceWithWeight.getWeight();
-        for (int i = 0; i &amp;lt;= weight; i++) {
-            instances.add(instanceWithWeight.getServer());
-        }
-    }
-    int i = new Random().nextInt(instances.size());
-    return instances.get(i);
-}
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
+    &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;选中的server = {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Data&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@AllArgsConstructor&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@NoArgsConstructor&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;InstanceWithWeight&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Server&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Integer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;weight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;//根据权重随机
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// 算法参考 https://blog.csdn.net/u011627980/article/details/79401026
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Server&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;weightRandom&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;InstanceWithWeight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;list&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Lists&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;InstanceWithWeight&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instanceWithWeight&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;list&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;weight&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instanceWithWeight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getWeight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;weight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;++)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instanceWithWeight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Random&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;nextInt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;size&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;font color=red&gt;WARNING&lt;/font&gt;&lt;/p&gt;
 
 &lt;p&gt;本段代码存在优化空间，只是用来演示思考的过程，不建议用于生产，如打算使用本方案实现，请参考以下两点优化：&lt;/p&gt;
@@ -744,119 +1361,113 @@ InstanceWithWeight太重了，在 weightRandom 还得再两层for循环，还挺
 &lt;p&gt;代码在 com.alibaba.nacos.api.naming.NamingService#selectOneHealthyInstance ，只要想办法调用到这行代码，就可以实现我们想要的功能啦！&lt;/p&gt;
 
 &lt;p&gt;代码：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Slf4j&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;NacosWeightRandomV2Rule&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AbstractLoadBalancerRule&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosDiscoveryProperties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
 
-&lt;pre&gt;&lt;code&gt;@Slf4j
-public class NacosWeightRandomV2Rule extends AbstractLoadBalancerRule {
-    @Autowired
-    private NacosDiscoveryProperties discoveryProperties;
+&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Server&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;choose&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;DynamicServerListLoadBalancer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;loadBalancer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DynamicServerListLoadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;getLoadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;loadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;namingServiceInstance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+                &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;selectOneHealthyInstance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
 
-    @Override
-    public Server choose(Object key) {
-        DynamicServerListLoadBalancer loadBalancer = (DynamicServerListLoadBalancer) getLoadBalancer();
-        String name = loadBalancer.getName();
-        try {
-            Instance instance = discoveryProperties.namingServiceInstance()
-                    .selectOneHealthyInstance(name);
+        &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;选中的instance = {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
 
-            log.info(&amp;quot;选中的instance = {}&amp;quot;, instance);
+        &lt;span class=&#34;cm&#34;&gt;/*
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;         * instance转server的逻辑参考自：
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;         * org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList.instancesToServerList
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;         */&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosException&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;发生异常&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-            /*
-             * instance转server的逻辑参考自：
-             * org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList.instancesToServerList
-             */
-            return new NacosServer(instance);
-        } catch (NacosException e) {
-            log.error(&amp;quot;发生异常&amp;quot;, e);
-            return null;
-        }
-    }
-
-    @Override
-    public void initWithNiwsConfig(IClientConfig iClientConfig) {
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
+&lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;initWithNiwsConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IClientConfig&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;iClientConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;在最新的版本中naocs还实现了基于集群优先调用的权重策略&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt; &lt;span class=&#34;c1&#34;&gt;//nacos同集群优先调用及整合nacos权重的负载均衡策略
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;//@Author GU-YW
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;//@Date 2019/10/11 20:24
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@Slf4j&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;NacosClusterRule&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AbstractLoadBalancerRule&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
 
-&lt;pre&gt;&lt;code&gt;/**
- * nacos同集群优先调用及整合nacos权重的负载均衡策略
- * @Author GU-YW
- * @Date 2019/10/11 20:24
- */
-@Slf4j
-public class NacosClusterRule extends AbstractLoadBalancerRule {
+    &lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosDiscoveryProperties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
 
-    @Autowired
-    private NacosDiscoveryProperties discoveryProperties;
+    &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;initWithNiwsConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IClientConfig&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clientConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
 
-    @Override
-    public void initWithNiwsConfig(IClientConfig clientConfig) {
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    }
+    &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Server&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;choose&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;//获取集群名
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clusterName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getClusterName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
 
-    @Override
-    public Server choose(Object key) {
-        //获取集群名
-        String clusterName=discoveryProperties.getClusterName();
+        &lt;span class=&#34;n&#34;&gt;BaseLoadBalancer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;loadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BaseLoadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLoadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;//想要请求的微服务名称
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;loadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
 
-        BaseLoadBalancer loadBalancer= (BaseLoadBalancer) this.getLoadBalancer();
-        //想要请求的微服务名称
-        String name =loadBalancer.getName();
+        &lt;span class=&#34;n&#34;&gt;NamingService&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;namingService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;namingServiceInstance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
 
-        NamingService namingService=discoveryProperties.namingServiceInstance();
+        &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;//配置了集群
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;StringUtils&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isNotEmpty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;clusterName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)){&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clusters&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;clusters&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;clusterName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;//             ========================最新方法=======================
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;namingService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;selectOneHealthyInstance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;clusters&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
 
-        try {
-            //配置了集群
-            if(StringUtils.isNotEmpty(clusterName)){
-                List&amp;lt;String&amp;gt; clusters=new ArrayList&amp;lt;&amp;gt;();
-                clusters.add(clusterName);
-//             ========================最新方法=======================
+&lt;span class=&#34;c1&#34;&gt;//             =====================以前版本手动添加==================
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            //找到指定服务的所有实例 A
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            List&amp;lt;Instance&amp;gt; instances= namingService.selectInstances(name,true);
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            //过滤出相同集群下的微服务实例 B
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            List&amp;lt;Instance&amp;gt; sameIntances=instances.stream()
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//                    .filter(instance -&amp;gt; Objects.equals(instance.getClusterName(),clusterName))
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//                    .collect(Collectors.toList());
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            //如果B是空，就用A
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            List&amp;lt;Instance&amp;gt; toBeChose=new ArrayList&amp;lt;&amp;gt;();
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            if(sameIntances.isEmpty()){
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//                toBeChose=instances;
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            }else{
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//                toBeChose=sameIntances;
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            }
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            //基于权重的负载均衡算法，返回1个实例
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;//            Instance instance=LoadBalancer.getHost(toBeChose);
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;                &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;选择的instance:port={},instanceId={}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getPort&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getInstanceId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;namingService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;selectOneHealthyInstance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;选择的instance:port={},instanceId={}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getPort&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getInstanceId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-                Instance instance=namingService.selectOneHealthyInstance(name,clusters, true);
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosException&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;printStackTrace&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-//             =====================以前版本手动添加==================
-//            //找到指定服务的所有实例 A
-//            List&amp;lt;Instance&amp;gt; instances= namingService.selectInstances(name,true);
-//            //过滤出相同集群下的微服务实例 B
-//            List&amp;lt;Instance&amp;gt; sameIntances=instances.stream()
-//                    .filter(instance -&amp;gt; Objects.equals(instance.getClusterName(),clusterName))
-//                    .collect(Collectors.toList());
-//            //如果B是空，就用A
-//            List&amp;lt;Instance&amp;gt; toBeChose=new ArrayList&amp;lt;&amp;gt;();
-//            if(sameIntances.isEmpty()){
-//                toBeChose=instances;
-//            }else{
-//                toBeChose=sameIntances;
-//            }
-//            //基于权重的负载均衡算法，返回1个实例
-//            Instance instance=LoadBalancer.getHost(toBeChose);
-                log.debug(&amp;quot;选择的instance:port={},instanceId={}&amp;quot;,instance.getPort(),instance.getInstanceId());
-                return new NacosServer(instance);
-            }else{
-                Instance instance = namingService.selectOneHealthyInstance(name, true);
-                log.debug(&amp;quot;选择的instance:port={},instanceId={}&amp;quot;,instance.getPort(),instance.getInstanceId());
-                return new NacosServer(instance);
-            }
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-        } catch (NacosException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-
-    /**
-     * 调用权重负载均衡算法 原Balancer方法无法调用
-     */
-    static class LoadBalancer extends Balancer {
-        public static Instance getHost(List&amp;lt;Instance&amp;gt; hosts) {
-            return  getHostByRandomWeight( hosts);
-        }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+    &lt;span class=&#34;cm&#34;&gt;/**
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;     * 调用权重负载均衡算法 原Balancer方法无法调用
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;     */&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;LoadBalancer&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Balancer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getHost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;hosts&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;getHostByRandomWeight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;hosts&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;方案3-最暴力的玩法&#34;&gt;方案3：最暴力的玩法&lt;/h2&gt;
 
 &lt;h2 id=&#34;思路-1&#34;&gt;思路：&lt;/h2&gt;
@@ -864,21 +1475,18 @@ public class NacosClusterRule extends AbstractLoadBalancerRule {
 &lt;p&gt;在阅读源码的过程中，发现如下代码：&lt;/p&gt;
 
 &lt;p&gt;// 来自：org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList#getServers&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;private List&amp;lt;NacosServer&amp;gt; getServers() {
-  try {
-    List&amp;lt;Instance&amp;gt; instances = discoveryProperties.namingServiceInstance()
-      .selectInstances(serviceId, true);
-    return instancesToServerList(instances);
-  }
-  catch (Exception e) {
-    throw new IllegalStateException(
-      &amp;quot;Can not get service instances from nacos, serviceId=&amp;quot; + serviceId,
-      e);
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getServers&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;namingServiceInstance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+      &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;selectInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;serviceId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instancesToServerList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IllegalStateException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;
+      &lt;span class=&#34;s&#34;&gt;&amp;#34;Can not get service instances from nacos, serviceId=&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;serviceId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;
+      &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;这个NacosServerList 就是给Ribbon去做负载均衡的”数据源”！如果把这里的代码改成 com.alibaba.nacos.api.naming.NamingService#selectOneHealthyInstance 不也可以实现我们想要的功能吗？&lt;/p&gt;
 
 &lt;p&gt;也就是说，交给Ribbon的List永远只有1个实例！这样不管Ribbon用什么负载均衡，都随他便了。&lt;/p&gt;
@@ -886,95 +1494,86 @@ public class NacosClusterRule extends AbstractLoadBalancerRule {
 &lt;p&gt;代码：&lt;/p&gt;
 
 &lt;p&gt;1 参考NacosServerList的代码，重写NacosRibbonServerList&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;cm&#34;&gt;/**
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; * 参考org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; */&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Slf4j&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;NacosRibbonServerList&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AbstractServerList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
 
-&lt;pre&gt;&lt;code&gt;/**
- * 参考org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList
- */
-@Slf4j
-public class NacosRibbonServerList extends AbstractServerList&amp;lt;NacosServer&amp;gt; {
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosDiscoveryProperties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
 
-    private NacosDiscoveryProperties discoveryProperties;
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;serviceId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
 
-    private String serviceId;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;NacosRibbonServerList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosDiscoveryProperties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;discoveryProperties&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    public NacosRibbonServerList(NacosDiscoveryProperties discoveryProperties) {
-        this.discoveryProperties = discoveryProperties;
-    }
+    &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getInitialListOfServers&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;getServers&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    @Override
-    public List&amp;lt;NacosServer&amp;gt; getInitialListOfServers() {
-        return getServers();
-    }
+    &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getUpdatedListOfServers&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;getServers&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    @Override
-    public List&amp;lt;NacosServer&amp;gt; getUpdatedListOfServers() {
-        return getServers();
-    }
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getServers&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;namingServiceInstance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+                    &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;selectOneHealthyInstance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;serviceId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;选择的instance = {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instancesToServerList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;
+                    &lt;span class=&#34;n&#34;&gt;Lists&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;newArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Exception&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IllegalStateException&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;
+                    &lt;span class=&#34;s&#34;&gt;&amp;#34;Can not get service instances from nacos, serviceId=&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;serviceId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;
+                    &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    private List&amp;lt;NacosServer&amp;gt; getServers() {
-        try {
-            Instance instance = discoveryProperties.namingServiceInstance()
-                    .selectOneHealthyInstance(serviceId, true);
-            log.debug(&amp;quot;选择的instance = {}&amp;quot;, instance);
-            return instancesToServerList(
-                    Lists.newArrayList(instance)
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException(
-                    &amp;quot;Can not get service instances from nacos, serviceId=&amp;quot; + serviceId,
-                    e);
-        }
-    }
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;instancesToServerList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ArrayList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;add&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;));&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    private List&amp;lt;NacosServer&amp;gt; instancesToServerList(List&amp;lt;Instance&amp;gt; instances) {
-        List&amp;lt;NacosServer&amp;gt; result = new ArrayList&amp;lt;&amp;gt;();
-        if (null == instances) {
-            return result;
-        }
-        for (Instance instance : instances) {
-            result.add(new NacosServer(instance));
-        }
-        return result;
-    }
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getServiceId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;serviceId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    public String getServiceId() {
-        return serviceId;
-    }
-
-    @Override
-    public void initWithNiwsConfig(IClientConfig iClientConfig) {
-        this.serviceId = iClientConfig.getClientName();
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+    &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;initWithNiwsConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IClientConfig&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;iClientConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;serviceId&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;iClientConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getClientName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;2 编写配置类&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/**
- * 参考：org.springframework.cloud.alibaba.nacos.ribbon.NacosRibbonClientConfiguration
- */
-@Configuration
-public class NacosRibbonClientExtendConfiguration {
-    @Bean
-    public ServerList&amp;lt;?&amp;gt; ribbonServerList(IClientConfig config, NacosDiscoveryProperties nacosDiscoveryProperties) {
-        NacosRibbonServerList serverList = new NacosRibbonServerList(nacosDiscoveryProperties);
-        serverList.initWithNiwsConfig(config);
-        return serverList;
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;cm&#34;&gt;/**
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; * 参考：org.springframework.cloud.alibaba.nacos.ribbon.NacosRibbonClientConfiguration
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt; */&lt;/span&gt;
+&lt;span class=&#34;nd&#34;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;NacosRibbonClientExtendConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nd&#34;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ServerList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ribbonServerList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IClientConfig&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;config&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosDiscoveryProperties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;nacosDiscoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;NacosRibbonServerList&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;serverList&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosRibbonServerList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;nacosDiscoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;serverList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;initWithNiwsConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;config&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;serverList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;3 添加注解，让上面的NacosRibbonClientExtendConfiguration成为Ribbon的默认配置。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// ...其他注解
-@RibbonClients(defaultConfiguration = NacosRibbonClientExtendConfiguration.class)
-public class ConsumerMovieApplication {
-  public static void main(String[] args) {
-    SpringApplication.run(ConsumerMovieApplication.class, args);
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// ...其他注解
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nd&#34;&gt;@RibbonClients&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;defaultConfiguration&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosRibbonClientExtendConfiguration&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;ConsumerMovieApplication&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;SpringApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;run&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ConsumerMovieApplication&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;注意 ：&lt;/p&gt;
 
 &lt;p&gt;务必注意，将 NacosRibbonClientExtendConfiguration 放在ComponentScan上下文（默认是启动类所在包及其子包）以外！！！&lt;/p&gt;
@@ -1028,17 +1627,14 @@ public class ConsumerMovieApplication {
 
 &lt;p&gt;元数据
 元数据就是一堆的描述信息，以map存储。举个例子：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;spring:
-  cloud:
-    nacos:
-        metadata: 
-          # 自己这个实例的版本
-          version: v1
-          # 允许调用的提供者版本
-          target-version: v1
-&lt;/code&gt;&lt;/pre&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;spring&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;cloud&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;nacos&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;metadata&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; 
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# 自己这个实例的版本&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;version&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;v1&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# 允许调用的提供者版本&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;target-version&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;v1&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
 &lt;li&gt;需求分析，我们需要实现的有两点：&lt;/li&gt;
 &lt;/ul&gt;
@@ -1046,91 +1642,87 @@ public class ConsumerMovieApplication {
 &lt;p&gt;优先选择同集群下，符合metadata的实例
 如果同集群加没有符合metadata的实例，就选择所有集群下，符合metadata的实例&lt;br&gt;
 写代码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;nd&#34;&gt;@Slf4j&lt;/span&gt;
+&lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;NacosMetadataRule&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AbstractLoadBalancerRule&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
 
-&lt;pre&gt;&lt;code&gt;@Slf4j
-public class NacosMetadataRule extends AbstractLoadBalancerRule {
+    &lt;span class=&#34;nd&#34;&gt;@Autowired&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosDiscoveryProperties&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
 
-    @Autowired
-    private NacosDiscoveryProperties discoveryProperties;
+    &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;initWithNiwsConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IClientConfig&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clientConfig&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
 
-    @Override
-    public void initWithNiwsConfig(IClientConfig clientConfig) {
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    }
+    &lt;span class=&#34;nd&#34;&gt;@Override&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Server&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;choose&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Object&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;//--- 负载均衡规则：优先选择同集群下，符合metadata的实例,如果没有，就选择所有集群下，符合metadata的实例----
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;//获取服务集群
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clusterName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getClusterName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
 
-    @Override
-    public Server choose(Object key) {
-        //--- 负载均衡规则：优先选择同集群下，符合metadata的实例,如果没有，就选择所有集群下，符合metadata的实例----
+        &lt;span class=&#34;c1&#34;&gt;//获取当前服务的原元数据
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;Map&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;metadata&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getMetadata&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;//当前服务可以调用的服务版本
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;target_version&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;target-version&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
 
-        //获取服务集群
-        String clusterName=discoveryProperties.getClusterName();
+        &lt;span class=&#34;n&#34;&gt;BaseLoadBalancer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;loadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BaseLoadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getLoadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;//想要请求的微服务名称
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;String&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;loadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
 
-        //获取当前服务的原元数据
-        Map&amp;lt;String, String&amp;gt; metadata = discoveryProperties.getMetadata();
-        //当前服务可以调用的服务版本
-        String target_version=metadata.get(&amp;quot;target-version&amp;quot;);
+        &lt;span class=&#34;n&#34;&gt;NamingService&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;namingService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;discoveryProperties&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;namingServiceInstance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
 
-        BaseLoadBalancer loadBalancer= (BaseLoadBalancer) this.getLoadBalancer();
-        //想要请求的微服务名称
-        String name =loadBalancer.getName();
+        &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;//所有服务实例
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;            &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;namingService&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;selectInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
 
-        NamingService namingService=discoveryProperties.namingServiceInstance();
+            &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;metadataMatchInstances&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
 
-        try {
-            //所有服务实例
-            List&amp;lt;Instance&amp;gt; instances = namingService.selectInstances(name, true);
+            &lt;span class=&#34;c1&#34;&gt;//配置了元数据
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;StringUtils&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isNotEmpty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;target_version&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)){&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;metadataMatchInstances&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;stream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
+                        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;filter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Objects&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;target_version&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getMetadata&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;get&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;version&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)))&lt;/span&gt;
+                        &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;collect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Collectors&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CollectionUtils&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isEmpty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;metadataMatchInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)){&lt;/span&gt;
+                    &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;warn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;未找到元数据匹配的目标实例！请检查配置。targetVersion = {}, instance = {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;target_version&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+                    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+                &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-            List&amp;lt;Instance&amp;gt; metadataMatchInstances = instances;
+            &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clusterMetadataMatchInstances&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;metadataMatchInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
 
-            //配置了元数据
-            if(StringUtils.isNotEmpty(target_version)){
-                metadataMatchInstances = instances.stream()
-                        .filter(instance -&amp;gt; Objects.equals(target_version, instance.getMetadata().get(&amp;quot;version&amp;quot;)))
-                        .collect(Collectors.toList());
-                if(CollectionUtils.isEmpty(metadataMatchInstances)){
-                    log.warn(&amp;quot;未找到元数据匹配的目标实例！请检查配置。targetVersion = {}, instance = {}&amp;quot;, target_version, instances);
-                    return null;
-                }
-            }
+            &lt;span class=&#34;c1&#34;&gt;//配置了服务集群
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;StringUtils&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isNotEmpty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;clusterName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)){&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;clusterMetadataMatchInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;metadataMatchInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;stream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;().&lt;/span&gt;
+                        &lt;span class=&#34;n&#34;&gt;filter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Objects&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;equals&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;clusterName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getClusterName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;())).&lt;/span&gt;
+                        &lt;span class=&#34;n&#34;&gt;collect&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Collectors&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;toList&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CollectionUtils&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;isEmpty&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;clusterMetadataMatchInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)){&lt;/span&gt;
+                    &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;warn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;发生跨集群调用。clusterName = {}, targetVersion = {}, clusterMetadataMatchInstances = {}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clusterName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;target_version&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clusterMetadataMatchInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+                    &lt;span class=&#34;n&#34;&gt;clusterMetadataMatchInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;metadataMatchInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
+                &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-            List&amp;lt;Instance&amp;gt; clusterMetadataMatchInstances = metadataMatchInstances;
+            &lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LoadBalancer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getHost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;clusterMetadataMatchInstances&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;选择的instance:port={},instanceId={}&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getPort&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(),&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;getInstanceId&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;());&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt;  &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NacosServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
 
-            //配置了服务集群
-            if(StringUtils.isNotEmpty(clusterName)){
-                clusterMetadataMatchInstances= metadataMatchInstances.stream().
-                        filter(instance -&amp;gt; Objects.equals(clusterName,instance.getClusterName())).
-                        collect(Collectors.toList());
-                if(CollectionUtils.isEmpty(clusterMetadataMatchInstances)){
-                    log.warn(&amp;quot;发生跨集群调用。clusterName = {}, targetVersion = {}, clusterMetadataMatchInstances = {}&amp;quot;, clusterName, target_version, clusterMetadataMatchInstances);
-                    clusterMetadataMatchInstances=metadataMatchInstances;
-                }
-            }
-
-            Instance instance=LoadBalancer.getHost(clusterMetadataMatchInstances);
-            log.debug(&amp;quot;选择的instance:port={},instanceId={}&amp;quot;,instance.getPort(),instance.getInstanceId());
-            return  new NacosServer(instance);
-
-        } catch (NacosException e) {
-            e.printStackTrace();
-        }
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;catch&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;NacosException&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;printStackTrace&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
 
-        return null;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;;&lt;/span&gt;
 
-    }
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 
-    /**
-     * 调用权重负载均衡算法 原Balancer方法无法调用
-     */
-    static class LoadBalancer extends Balancer {
-        public static Instance getHost(List&amp;lt;Instance&amp;gt; hosts) {
-            return  getHostByRandomWeight( hosts);
-        }
-    }
-}
-
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+    &lt;span class=&#34;cm&#34;&gt;/**
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;     * 调用权重负载均衡算法 原Balancer方法无法调用
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;     */&lt;/span&gt;
+    &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;LoadBalancer&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;extends&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Balancer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kd&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;getHost&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Instance&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;hosts&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;getHostByRandomWeight&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;hosts&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
       
     </item>
     
@@ -1178,51 +1770,44 @@ public class NacosMetadataRule extends AbstractLoadBalancerRule {
 2.因为Jenkins版本太低导致插件不支持。如下报错
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins4.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;手动更新版本&#34;&gt;手动更新版本&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;1.在服务器中下载jenkins的最新war包：
-wget http://mirrors.jenkins.io/war/latest/jenkins.war
-2.将下载的war包cp至容器的usr/download目录中：
-docker cp jenkins.war ContainerId:/usr/download
-3.进入容器：
-docker exec -it -u root ContainerId bash
-4.查看容器中jenkins war包的位置，并备份原来的war包：
-whereis jenkins
-cd /usr/share/jenkins
-cp jenkins.war jenkinsBAK.war
-5.将usr/dowanload下的包cp到/usr/share/jenkins下覆盖：
-cp /usr/download/jenkins.war /usr/share/jenkins
-6.重启jenkins，更新到新版本：
-http://yourIP:8080/restart
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;h3 id=&#34;手动更新版本&#34;&gt;手动更新版本&lt;/h3&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;1.在服务器中下载jenkins的最新war包：
+  wget http://mirrors.jenkins.io/war/latest/jenkins.war
+2.将下载的war包cp至容器的usr/download目录中：
+  docker cp jenkins.war ContainerId:/usr/download
+3.进入容器：
+  docker exec -it -u root ContainerId bash
+4.查看容器中jenkins war包的位置，并备份原来的war包：
+  whereis jenkins
+  cd /usr/share/jenkins
+  cp jenkins.war jenkinsBAK.war
+5.将usr/dowanload下的包cp到/usr/share/jenkins下覆盖：
+  cp /usr/download/jenkins.war /usr/share/jenkins
+6.重启jenkins，更新到新版本：
+  http://yourIP:8080/restart&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;jenkins部分全局配置&#34;&gt;jenkins部分全局配置&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;配置jdk和maven，可以如下图自动下载配置，配置会在第一次构建job时生效&lt;br&gt;
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins5.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;构建项目配置邮件群发通知&lt;br&gt;
+&lt;li&gt;构建项目配置邮件群发通知&lt;br&gt;
 &lt;font color=red&gt;在配置邮箱服务之前要先配置系统管理中jenkins location配置项&lt;/font&gt;
-&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins6.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;SMTP server：SMTP服务器，比如腾讯企业邮箱的SMTP服务器为smtp.exmail.qq.com。
-
-Default Content Type：邮件内容格式，可选Plain text和HTML。
-
-Default Recipients：默认的收件人列表，用逗号分隔。抄送或密送某个收件人可以在其邮箱前面加上cc:或bcc:。
-
-Default Subject：默认的邮件标题。
-
-Default Content：默认的邮件内容。
-
-Enable Debug Mode：开启插件的Debug模式，我们会在日志里看到更多信息。
-
-其他配置保持默认即可。
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins6.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/li&gt;
 &lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;  SMTP server：SMTP服务器，比如腾讯企业邮箱的SMTP服务器为smtp.exmail.qq.com。
 
+  Default Content Type：邮件内容格式，可选Plain text和HTML。
+
+  Default Recipients：默认的收件人列表，用逗号分隔。抄送或密送某个收件人可以在其邮箱前面加上cc:或bcc:。
+
+  Default Subject：默认的邮件标题。
+
+  Default Content：默认的邮件内容。
+
+  Enable Debug Mode：开启插件的Debug模式，我们会在日志里看到更多信息。
+
+  其他配置保持默认即可。&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins7.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
 按钮高级设置，注意&lt;font color=red&gt;Default Triggers&lt;/font&gt;触发器设置
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins8.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
@@ -1230,75 +1815,65 @@ Enable Debug Mode：开启插件的Debug模式，我们会在日志里看到更�
 &lt;h2 id=&#34;jenkins-项目构建配置&#34;&gt;jenkins 项目构建配置&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;项目构建不远程部署
+&lt;li&gt;项目构建不远程部署
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins9.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
 *springboot项目构建远程部署
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins11.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins10.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
-sh 脚本&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;export BUILD_ID=dontkillme
-source /etc/profile
-#!/bin/bash
-echo &amp;quot;Restarting SpringBoot per_recharge  Application&amp;quot;
-pid=`ps -ef | grep per_recharge-0.0.1-SNAPSHOT.jar | grep -v grep | awk &#39;{print $2}&#39;`
-if [ -n &amp;quot;$pid&amp;quot; ]
-then
-kill -9 $pid
-echo &amp;quot;关闭进程：&amp;quot;$pid
-fi
-  
-echo &amp;quot;授予当前用户权限&amp;quot;
-chmod 777 /home/per_recharge-0.0.1-SNAPSHOT.jar
-echo &amp;quot;执行.....&amp;quot;
-#java -jar /usr/local/miniprogram/miniprogram.jar
-nohup java -jar -Dspring.profiles.active=test  per_recharge-0.0.1-SNAPSHOT.jar --server.port=8080 &amp;amp;
-pids=`ps -ef | grep per_recharge-0.0.1-SNAPSHOT.jar | grep -v grep | awk &#39;{print $2}&#39;`
-echo &amp;quot;新进程：&amp;quot;$pids
-echo &amp;quot;启动结束--------&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;war项目构建远程部署tomcat&lt;br&gt;
-在构建项目之前需要在tomcat服务端配置用户名和密码让jenkins访问并上传war&lt;br&gt;
-1.修改tomcat-uers.xml&lt;br&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;role rolename=&amp;quot;tomcat&amp;quot;/&amp;gt;
-&amp;lt;role rolename=&amp;quot;role1&amp;quot;/&amp;gt;
-&amp;lt;role rolename=&amp;quot;manager-gui&amp;quot;/&amp;gt;
-&amp;lt;role rolename=&amp;quot;manager-script&amp;quot;/&amp;gt;
-&amp;lt;user username=&amp;quot;tomcat&amp;quot; password=&amp;quot;tomcat&amp;quot; roles=&amp;quot;tomcat&amp;quot;/&amp;gt;
-&amp;lt;user username=&amp;quot;both&amp;quot; password=&amp;quot;tomcat&amp;quot; roles=&amp;quot;tomcat,role1&amp;quot;/&amp;gt;
-&amp;lt;user username=&amp;quot;role1&amp;quot; password=&amp;quot;tomcat&amp;quot; roles=&amp;quot;role1&amp;quot;/&amp;gt;
-&amp;lt;user username=&amp;quot;both&amp;quot; password=&amp;quot;123456&amp;quot; roles=&amp;quot;tomcat,manager-gui,manager-script&amp;quot;/&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2.修改context.xml&lt;br&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;Context antiResourceLocking=&amp;quot;true&amp;quot; antiJARLocking=&amp;quot;true&amp;quot;&amp;gt;
-&amp;lt;context&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+sh 脚本&lt;/li&gt;
 &lt;/ul&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;  &lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;BUILD_ID&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;dontkillme
+  &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; /etc/profile
+  &lt;span class=&#34;cp&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Restarting SpringBoot per_recharge  Application&amp;#34;&lt;/span&gt;
+  &lt;span class=&#34;nv&#34;&gt;pid&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep per_recharge-0.0.1-SNAPSHOT.jar &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt; -n &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$pid&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;then&lt;/span&gt;
+    &lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; -9 &lt;span class=&#34;nv&#34;&gt;$pid&lt;/span&gt;
+    &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;关闭进程：&amp;#34;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$pid&lt;/span&gt;
+  &lt;span class=&#34;k&#34;&gt;fi&lt;/span&gt;
+  
+  &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;授予当前用户权限&amp;#34;&lt;/span&gt;
+  chmod &lt;span class=&#34;m&#34;&gt;777&lt;/span&gt; /home/per_recharge-0.0.1-SNAPSHOT.jar
+  &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;执行.....&amp;#34;&lt;/span&gt;
+  &lt;span class=&#34;c1&#34;&gt;#java -jar /usr/local/miniprogram/miniprogram.jar&lt;/span&gt;
+  nohup java -jar -Dspring.profiles.active&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt;  per_recharge-0.0.1-SNAPSHOT.jar --server.port&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8080&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;
+  &lt;span class=&#34;nv&#34;&gt;pids&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep per_recharge-0.0.1-SNAPSHOT.jar &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;
+  &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;新进程：&amp;#34;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$pids&lt;/span&gt;
+  &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;启动结束--------&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;war项目构建远程部署tomcat&lt;br&gt;
+在构建项目之前需要在tomcat服务端配置用户名和密码让jenkins访问并上传war&lt;br&gt;
+1.修改tomcat-uers.xml&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;lt;role&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;rolename=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;tomcat&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;role&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;rolename=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;role1&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;role&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;rolename=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;manager-gui&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;role&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;rolename=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;manager-script&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;user&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;username=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;tomcat&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;password=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;tomcat&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;roles=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;tomcat&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;user&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;username=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;both&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;password=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;tomcat&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;roles=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;tomcat,role1&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;user&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;username=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;role1&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;password=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;tomcat&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;roles=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;role1&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;user&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;username=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;both&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;password=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;123456&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;roles=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;tomcat,manager-gui,manager-script&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;2.修改context.xml&lt;br&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;lt;Context&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;antiResourceLocking=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;antiJARLocking=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;lt;context&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;在构建之前使用ssh执行脚本清除之前的war包，下面时简单的脚本&lt;br&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;  &lt;span class=&#34;cp&#34;&gt;#!/bin/sh
+&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;nv&#34;&gt;tomcat_home&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/home/tomcat7/apache-tomcat-7.0.92
 
-&lt;pre&gt;&lt;code&gt;  #!/bin/sh
-  tomcat_home=/home/tomcat7/apache-tomcat-7.0.92
+  &lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;JAVA_HOME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/usr/java/jdk1.7.0_79
+  &lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;JRE_HOME&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$JAVA_HOME&lt;/span&gt;/jre
+  &lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;CLASSPATH&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;.:&lt;span class=&#34;nv&#34;&gt;$JAVA_HOME&lt;/span&gt;/lib/dt.jar:&lt;span class=&#34;nv&#34;&gt;$JAVA_HOME&lt;/span&gt;/lib/tools.jar
+  &lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;PATH&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$PATH&lt;/span&gt;:&lt;span class=&#34;nv&#34;&gt;$JAVA_HOME&lt;/span&gt;/bin
 
-  export JAVA_HOME=/usr/java/jdk1.7.0_79
-  export JRE_HOME=$JAVA_HOME/jre
-  export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
-  export PATH=$PATH:$JAVA_HOME/bin
-
-  sh $tomcat_home/bin/shutdown.sh
+  sh &lt;span class=&#34;nv&#34;&gt;$tomcat_home&lt;/span&gt;/bin/shutdown.sh
 
 
-  rm -rf $tomcat_home/webapps/qzsmk_card
+  rm -rf &lt;span class=&#34;nv&#34;&gt;$tomcat_home&lt;/span&gt;/webapps/qzsmk_card
 
-  rm -rf $tomcat_home/webapps/qzsmk_card.war
+  rm -rf &lt;span class=&#34;nv&#34;&gt;$tomcat_home&lt;/span&gt;/webapps/qzsmk_card.war
 
-  sh $tomcat_home/bin/startup.sh
-&lt;/code&gt;&lt;/pre&gt;
-
+  sh &lt;span class=&#34;nv&#34;&gt;$tomcat_home&lt;/span&gt;/bin/startup.sh&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;在系统管理新增ssh配置&lt;br&gt;
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins12.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins13.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
@@ -2054,8 +2629,7 @@ webservice定义语言, 对应.wsdl文档, 一个webservice会对应一个唯一
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/FRP/frp-1.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;frp-配置&#34;&gt;frp 配置&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;[common]
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;[common]
 # 服务端控制面板访问账号和密码，不设置则默认admin
 #注意以及几个是我随便填写的，请根据自己的实际情况，自行修改。
 dashboard_user = admin
@@ -2071,7 +2645,7 @@ bind_addr = 0.0.0.0
 bind_port = 6009
 # udp协议监听端口
 #bind_udp_port = 7001
-#udp协议支持kcp模式。kcp的运行端口，不设置表示禁用。可以与&#39;bind_port&#39;端口一致
+#udp协议支持kcp模式。kcp的运行端口，不设置表示禁用。可以与&amp;#39;bind_port&amp;#39;端口一致
 #kcp_bind_port = 6009
 #虚拟主机穿透监听端口(指http与https的访问端口)
 vhost_http_port = 6010
@@ -2096,10 +2670,7 @@ max_ports_per_client = 0
 # 连接超时
 authentication_timeout = 900
 # tcp流多路复用(可以理解为优化传输) 
-tcp_mux = true
-
-&lt;/code&gt;&lt;/pre&gt;
-
+tcp_mux = true&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;nginx-反向代理配置&#34;&gt;nginx 反向代理配置&lt;/h2&gt;
 
 &lt;p&gt;其中，因为我的服务器上有相关其他的程序共用，80 端口上交给了 nginx ，而在微信的接口配置时，只能是 80 or 443 端口，因此，这里我还借用了 nginx 的反向代理功能，配置如下：
@@ -2121,8 +2692,7 @@ nohup ./frps -c frps.ini &amp;amp;
 解压出其中的客户端程序（frpc.exe）和配置文件（frpc.ini）&lt;/p&gt;
 
 &lt;h2 id=&#34;客户端环境配置&#34;&gt;客户端环境配置&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;[common]
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;[common]
 server_addr = 106.15.235.215
 # 与服务端配置信息 bind_port 相同
 server_port = 6009
@@ -2146,9 +2716,7 @@ local_port = 6010
 #remote_port = 7779
 subdomain = tunnel
 
-custom_domains = guyawei.top
-&lt;/code&gt;&lt;/pre&gt;
-
+custom_domains = guyawei.top&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;客户端启动&#34;&gt;客户端启动&lt;/h2&gt;
 
 &lt;p&gt;.\frpc.exe -c frpc.ini

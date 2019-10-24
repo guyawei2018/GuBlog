@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-09-16T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-09-16T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="1291">
+<meta itemprop="wordCount" content="1281">
 
 
 
@@ -181,51 +181,44 @@
 2.因为Jenkins版本太低导致插件不支持。如下报错
 <img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins4.png" alt="图片" /><br></p>
 
-<h3 id="手动更新版本">手动更新版本</h3>
-
-<pre><code>1.在服务器中下载jenkins的最新war包：
-wget http://mirrors.jenkins.io/war/latest/jenkins.war
-2.将下载的war包cp至容器的usr/download目录中：
-docker cp jenkins.war ContainerId:/usr/download
-3.进入容器：
-docker exec -it -u root ContainerId bash
-4.查看容器中jenkins war包的位置，并备份原来的war包：
-whereis jenkins
-cd /usr/share/jenkins
-cp jenkins.war jenkinsBAK.war
-5.将usr/dowanload下的包cp到/usr/share/jenkins下覆盖：
-cp /usr/download/jenkins.war /usr/share/jenkins
-6.重启jenkins，更新到新版本：
-http://yourIP:8080/restart
-</code></pre></li>
+<h3 id="手动更新版本">手动更新版本</h3></li>
 </ul>
-
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">1.在服务器中下载jenkins的最新war包：
+  wget http://mirrors.jenkins.io/war/latest/jenkins.war
+2.将下载的war包cp至容器的usr/download目录中：
+  docker cp jenkins.war ContainerId:/usr/download
+3.进入容器：
+  docker exec -it -u root ContainerId bash
+4.查看容器中jenkins war包的位置，并备份原来的war包：
+  whereis jenkins
+  cd /usr/share/jenkins
+  cp jenkins.war jenkinsBAK.war
+5.将usr/dowanload下的包cp到/usr/share/jenkins下覆盖：
+  cp /usr/download/jenkins.war /usr/share/jenkins
+6.重启jenkins，更新到新版本：
+  http://yourIP:8080/restart</code></pre></div>
 <h2 id="jenkins部分全局配置">jenkins部分全局配置</h2>
 
 <ul>
 <li>配置jdk和maven，可以如下图自动下载配置，配置会在第一次构建job时生效<br>
 <img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins5.png" alt="图片" /><br></li>
-
-<li><p>构建项目配置邮件群发通知<br>
+<li>构建项目配置邮件群发通知<br>
 <font color=red>在配置邮箱服务之前要先配置系统管理中jenkins location配置项</font>
-<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins6.png" alt="图片" /><br></p>
-
-<pre><code>SMTP server：SMTP服务器，比如腾讯企业邮箱的SMTP服务器为smtp.exmail.qq.com。
-
-Default Content Type：邮件内容格式，可选Plain text和HTML。
-
-Default Recipients：默认的收件人列表，用逗号分隔。抄送或密送某个收件人可以在其邮箱前面加上cc:或bcc:。
-
-Default Subject：默认的邮件标题。
-
-Default Content：默认的邮件内容。
-
-Enable Debug Mode：开启插件的Debug模式，我们会在日志里看到更多信息。
-
-其他配置保持默认即可。
-</code></pre></li>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins6.png" alt="图片" /><br></li>
 </ul>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">  SMTP server：SMTP服务器，比如腾讯企业邮箱的SMTP服务器为smtp.exmail.qq.com。
 
+  Default Content Type：邮件内容格式，可选Plain text和HTML。
+
+  Default Recipients：默认的收件人列表，用逗号分隔。抄送或密送某个收件人可以在其邮箱前面加上cc:或bcc:。
+
+  Default Subject：默认的邮件标题。
+
+  Default Content：默认的邮件内容。
+
+  Enable Debug Mode：开启插件的Debug模式，我们会在日志里看到更多信息。
+
+  其他配置保持默认即可。</code></pre></div>
 <p><img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins7.png" alt="图片" /><br>
 按钮高级设置，注意<font color=red>Default Triggers</font>触发器设置
 <img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins8.png" alt="图片" /><br></p>
@@ -233,75 +226,65 @@ Enable Debug Mode：开启插件的Debug模式，我们会在日志里看到更�
 <h2 id="jenkins-项目构建配置">jenkins 项目构建配置</h2>
 
 <ul>
-<li><p>项目构建不远程部署
+<li>项目构建不远程部署
 <img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins9.png" alt="图片" /><br>
 *springboot项目构建远程部署
 <img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins11.png" alt="图片" /><br>
 <img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins10.png" alt="图片" /><br>
-sh 脚本</p>
-
-<pre><code>export BUILD_ID=dontkillme
-source /etc/profile
-#!/bin/bash
-echo &quot;Restarting SpringBoot per_recharge  Application&quot;
-pid=`ps -ef | grep per_recharge-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}'`
-if [ -n &quot;$pid&quot; ]
-then
-kill -9 $pid
-echo &quot;关闭进程：&quot;$pid
-fi
-  
-echo &quot;授予当前用户权限&quot;
-chmod 777 /home/per_recharge-0.0.1-SNAPSHOT.jar
-echo &quot;执行.....&quot;
-#java -jar /usr/local/miniprogram/miniprogram.jar
-nohup java -jar -Dspring.profiles.active=test  per_recharge-0.0.1-SNAPSHOT.jar --server.port=8080 &amp;
-pids=`ps -ef | grep per_recharge-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}'`
-echo &quot;新进程：&quot;$pids
-echo &quot;启动结束--------&quot;
-</code></pre></li>
-
-<li><p>war项目构建远程部署tomcat<br>
-在构建项目之前需要在tomcat服务端配置用户名和密码让jenkins访问并上传war<br>
-1.修改tomcat-uers.xml<br></p>
-
-<pre><code>&lt;role rolename=&quot;tomcat&quot;/&gt;
-&lt;role rolename=&quot;role1&quot;/&gt;
-&lt;role rolename=&quot;manager-gui&quot;/&gt;
-&lt;role rolename=&quot;manager-script&quot;/&gt;
-&lt;user username=&quot;tomcat&quot; password=&quot;tomcat&quot; roles=&quot;tomcat&quot;/&gt;
-&lt;user username=&quot;both&quot; password=&quot;tomcat&quot; roles=&quot;tomcat,role1&quot;/&gt;
-&lt;user username=&quot;role1&quot; password=&quot;tomcat&quot; roles=&quot;role1&quot;/&gt;
-&lt;user username=&quot;both&quot; password=&quot;123456&quot; roles=&quot;tomcat,manager-gui,manager-script&quot;/&gt;
-</code></pre>
-
-<p>2.修改context.xml<br></p>
-
-<pre><code>&lt;Context antiResourceLocking=&quot;true&quot; antiJARLocking=&quot;true&quot;&gt;
-&lt;context&gt;
-</code></pre></li>
+sh 脚本</li>
 </ul>
-
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">  <span class="nb">export</span> <span class="nv">BUILD_ID</span><span class="o">=</span>dontkillme
+  <span class="nb">source</span> /etc/profile
+  <span class="cp">#!/bin/bash
+</span><span class="cp"></span>  <span class="nb">echo</span> <span class="s2">&#34;Restarting SpringBoot per_recharge  Application&#34;</span>
+  <span class="nv">pid</span><span class="o">=</span><span class="sb">`</span>ps -ef <span class="p">|</span> grep per_recharge-0.0.1-SNAPSHOT.jar <span class="p">|</span> grep -v grep <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span><span class="sb">`</span>
+  <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&#34;</span><span class="nv">$pid</span><span class="s2">&#34;</span> <span class="o">]</span>
+  <span class="k">then</span>
+    <span class="nb">kill</span> -9 <span class="nv">$pid</span>
+    <span class="nb">echo</span> <span class="s2">&#34;关闭进程：&#34;</span><span class="nv">$pid</span>
+  <span class="k">fi</span>
+  
+  <span class="nb">echo</span> <span class="s2">&#34;授予当前用户权限&#34;</span>
+  chmod <span class="m">777</span> /home/per_recharge-0.0.1-SNAPSHOT.jar
+  <span class="nb">echo</span> <span class="s2">&#34;执行.....&#34;</span>
+  <span class="c1">#java -jar /usr/local/miniprogram/miniprogram.jar</span>
+  nohup java -jar -Dspring.profiles.active<span class="o">=</span><span class="nb">test</span>  per_recharge-0.0.1-SNAPSHOT.jar --server.port<span class="o">=</span><span class="m">8080</span> <span class="p">&amp;</span>
+  <span class="nv">pids</span><span class="o">=</span><span class="sb">`</span>ps -ef <span class="p">|</span> grep per_recharge-0.0.1-SNAPSHOT.jar <span class="p">|</span> grep -v grep <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span><span class="sb">`</span>
+  <span class="nb">echo</span> <span class="s2">&#34;新进程：&#34;</span><span class="nv">$pids</span>
+  <span class="nb">echo</span> <span class="s2">&#34;启动结束--------&#34;</span></code></pre></div>
+<ul>
+<li>war项目构建远程部署tomcat<br>
+在构建项目之前需要在tomcat服务端配置用户名和密码让jenkins访问并上传war<br>
+1.修改tomcat-uers.xml<br></li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml">  <span class="nt">&lt;role</span> <span class="na">rolename=</span><span class="s">&#34;tomcat&#34;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;role</span> <span class="na">rolename=</span><span class="s">&#34;role1&#34;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;role</span> <span class="na">rolename=</span><span class="s">&#34;manager-gui&#34;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;role</span> <span class="na">rolename=</span><span class="s">&#34;manager-script&#34;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;user</span> <span class="na">username=</span><span class="s">&#34;tomcat&#34;</span> <span class="na">password=</span><span class="s">&#34;tomcat&#34;</span> <span class="na">roles=</span><span class="s">&#34;tomcat&#34;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;user</span> <span class="na">username=</span><span class="s">&#34;both&#34;</span> <span class="na">password=</span><span class="s">&#34;tomcat&#34;</span> <span class="na">roles=</span><span class="s">&#34;tomcat,role1&#34;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;user</span> <span class="na">username=</span><span class="s">&#34;role1&#34;</span> <span class="na">password=</span><span class="s">&#34;tomcat&#34;</span> <span class="na">roles=</span><span class="s">&#34;role1&#34;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;user</span> <span class="na">username=</span><span class="s">&#34;both&#34;</span> <span class="na">password=</span><span class="s">&#34;123456&#34;</span> <span class="na">roles=</span><span class="s">&#34;tomcat,manager-gui,manager-script&#34;</span><span class="nt">/&gt;</span></code></pre></div>
+<p>2.修改context.xml<br></p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml">  <span class="nt">&lt;Context</span> <span class="na">antiResourceLocking=</span><span class="s">&#34;true&#34;</span> <span class="na">antiJARLocking=</span><span class="s">&#34;true&#34;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;context&gt;</span></code></pre></div>
 <p>在构建之前使用ssh执行脚本清除之前的war包，下面时简单的脚本<br></p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">  <span class="cp">#!/bin/sh
+</span><span class="cp"></span>  <span class="nv">tomcat_home</span><span class="o">=</span>/home/tomcat7/apache-tomcat-7.0.92
 
-<pre><code>  #!/bin/sh
-  tomcat_home=/home/tomcat7/apache-tomcat-7.0.92
+  <span class="nb">export</span> <span class="nv">JAVA_HOME</span><span class="o">=</span>/usr/java/jdk1.7.0_79
+  <span class="nb">export</span> <span class="nv">JRE_HOME</span><span class="o">=</span><span class="nv">$JAVA_HOME</span>/jre
+  <span class="nb">export</span> <span class="nv">CLASSPATH</span><span class="o">=</span>.:<span class="nv">$JAVA_HOME</span>/lib/dt.jar:<span class="nv">$JAVA_HOME</span>/lib/tools.jar
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$JAVA_HOME</span>/bin
 
-  export JAVA_HOME=/usr/java/jdk1.7.0_79
-  export JRE_HOME=$JAVA_HOME/jre
-  export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
-  export PATH=$PATH:$JAVA_HOME/bin
-
-  sh $tomcat_home/bin/shutdown.sh
+  sh <span class="nv">$tomcat_home</span>/bin/shutdown.sh
 
 
-  rm -rf $tomcat_home/webapps/qzsmk_card
+  rm -rf <span class="nv">$tomcat_home</span>/webapps/qzsmk_card
 
-  rm -rf $tomcat_home/webapps/qzsmk_card.war
+  rm -rf <span class="nv">$tomcat_home</span>/webapps/qzsmk_card.war
 
-  sh $tomcat_home/bin/startup.sh
-</code></pre>
-
+  sh <span class="nv">$tomcat_home</span>/bin/startup.sh</code></pre></div>
 <p>在系统管理新增ssh配置<br>
 <img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins12.png" alt="图片" /><br>
 <img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins13.png" alt="图片" /><br></p>

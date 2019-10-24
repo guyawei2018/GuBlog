@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-10-22T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-10-22T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="2279">
+<meta itemprop="wordCount" content="2264">
 
 
 
@@ -167,46 +167,40 @@
 <h2 id="二-feignclient接口如使用-pathvariable-必须指定value属性">二、FeignClient接口如使用@PathVariable ，必须指定value属性</h2>
 
 <p>代码示例：</p>
-
-<pre><code>@FeignClient(&quot;microservice-provider-user&quot;)
-public interface UserFeignClient {
-  @RequestMapping(value = &quot;/simple/{id}&quot;, method = RequestMethod.GET)
-  public User findById(@PathVariable(&quot;id&quot;) Long id);
-  ...
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@FeignClient</span><span class="o">(</span><span class="s">&#34;microservice-provider-user&#34;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserFeignClient</span> <span class="o">{</span>
+  <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;/simple/{id}&#34;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">User</span> <span class="nf">findById</span><span class="o">(</span><span class="nd">@PathVariable</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span> <span class="n">Long</span> <span class="n">id</span><span class="o">);</span>
+  <span class="o">...</span>
+<span class="o">}</span></code></pre></div>
 <p>在一些早期版本中，其中的@PathVariable(&ldquo;id&rdquo;) 中的&rdquo;id&rdquo;，也就是value属性，必须指定，不能省略。</p>
 
 <h2 id="三-java代码自定义feign-client的注意点与坑">三、Java代码自定义Feign Client的注意点与坑</h2>
 
 <p>代码示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@FeignClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;microservice-provider-user&#34;</span><span class="o">,</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">UserFeignConfig</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserFeignClient</span> <span class="o">{</span>
+  <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">&#34;/users/{id}&#34;</span><span class="o">)</span>
+  <span class="n">User</span> <span class="nf">findById</span><span class="o">(</span><span class="nd">@PathVariable</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span> <span class="n">Long</span> <span class="n">id</span><span class="o">);</span>
+<span class="o">}</span>
 
-<pre><code>@FeignClient(name = &quot;microservice-provider-user&quot;, configuration = UserFeignConfig.class)
-public interface UserFeignClient {
-  @GetMapping(&quot;/users/{id}&quot;)
-  User findById(@PathVariable(&quot;id&quot;) Long id);
-}
-
-/**
- * 该Feign Client的配置类，注意：
- * 1. 该类可以独立出去；
- * 2. 该类上也可添加@Configuration声明是一个配置类；
- * 配置类上也可添加@Configuration注解，声明这是一个配置类；
- * 但此时千万别将该放置在主应用程序上下文@ComponentScan所扫描的包中，
- * 否则，该配置将会被所有Feign Client共享，无法实现细粒度配置！
- * 个人建议：像我一样，不加@Configuration注解
- *
- * @author zhouli
- */
-class UserFeignConfig {
-  @Bean
-  public Logger.Level logger() {
-    return Logger.Level.FULL;
-  }
-}
-</code></pre>
-
+<span class="cm">/**
+</span><span class="cm"> * 该Feign Client的配置类，注意：
+</span><span class="cm"> * 1. 该类可以独立出去；
+</span><span class="cm"> * 2. 该类上也可添加@Configuration声明是一个配置类；
+</span><span class="cm"> * 配置类上也可添加@Configuration注解，声明这是一个配置类；
+</span><span class="cm"> * 但此时千万别将该放置在主应用程序上下文@ComponentScan所扫描的包中，
+</span><span class="cm"> * 否则，该配置将会被所有Feign Client共享，无法实现细粒度配置！
+</span><span class="cm"> * 个人建议：像我一样，不加@Configuration注解
+</span><span class="cm"> *
+</span><span class="cm"> * @author zhouli
+</span><span class="cm"> */</span>
+<span class="kd">class</span> <span class="nc">UserFeignConfig</span> <span class="o">{</span>
+  <span class="nd">@Bean</span>
+  <span class="kd">public</span> <span class="n">Logger</span><span class="o">.</span><span class="na">Level</span> <span class="nf">logger</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">Logger</span><span class="o">.</span><span class="na">Level</span><span class="o">.</span><span class="na">FULL</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
 <ul>
 <li><p>配置类上也可添加<font color=red>@Configuraiton</font> 注解，声明这是一个配置类；但此时千万别将该放置在主应用程序上下文<font color=red>@ComponentScan</font> 所扫描的包中，否则，该配置将会被所有Feign Client共享（相当于变成了通用配置，其实本质还是Spring父子上下文扫描包重叠导致的问题），无法实现细粒度配置！</p></li>
 
@@ -221,45 +215,38 @@ class UserFeignConfig {
 </ul>
 
 <p>另外，name、url等属性支持占位符。例如：</p>
-
-<pre><code>@FeignClient(name = &quot;${feign.name}&quot;, url = &quot;${feign.url}&quot;)
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@FeignClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;${feign.name}&#34;</span><span class="o">,</span> <span class="n">url</span> <span class="o">=</span> <span class="s">&#34;${feign.url}&#34;</span><span class="o">)</span></code></pre></div>
 <h2 id="五-类级别的-requestmapping会被spring-mvc加载">五、类级别的@RequestMapping会被Spring MVC加载</h2>
-
-<p>@RequestMapping(&ldquo;/users&rdquo;)
-@FeignClient(name = &ldquo;microservice-user&rdquo;)
-public class TestFeignClient {
-    // &hellip;
-}
-类上的@RequestMapping 注解也会被Spring MVC加载。该问题现已经被解决，早期的版本有两种解决方案：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">&#34;/users&#34;</span><span class="o">)</span>
+<span class="nd">@FeignClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;microservice-user&#34;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestFeignClient</span> <span class="o">{</span>
+    <span class="c1">// ...
+</span><span class="c1"></span><span class="o">}</span></code></pre></div>
+<p>类上的@RequestMapping 注解也会被Spring MVC加载。该问题现已经被解决，早期的版本有两种解决方案：</p>
 
 <p>方案1：不在类上加@RequestMapping 注解；</p>
 
 <p>方案2：添加如下代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
+<span class="nd">@ConditionalOnClass</span><span class="o">({</span> <span class="n">Feign</span><span class="o">.</span><span class="na">class</span> <span class="o">})</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FeignMappingDefaultConfiguration</span> <span class="o">{</span>
+    <span class="nd">@Bean</span>
+    <span class="kd">public</span> <span class="n">WebMvcRegistrations</span> <span class="nf">feignWebRegistrations</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">WebMvcRegistrationsAdapter</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="n">RequestMappingHandlerMapping</span> <span class="nf">getRequestMappingHandlerMapping</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">FeignFilterRequestMappingHandlerMapping</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">};</span>
+    <span class="o">}</span>
 
-<pre><code>@Configuration
-@ConditionalOnClass({ Feign.class })
-public class FeignMappingDefaultConfiguration {
-    @Bean
-    public WebMvcRegistrations feignWebRegistrations() {
-        return new WebMvcRegistrationsAdapter() {
-            @Override
-            public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
-                return new FeignFilterRequestMappingHandlerMapping();
-            }
-        };
-    }
-
-    private static class FeignFilterRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
-        @Override
-        protected boolean isHandler(Class&lt;?&gt; beanType) {
-            return super.isHandler(beanType) &amp;&amp; !beanType.isInterface();
-        }
-    }
-}
-</code></pre>
-
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">FeignFilterRequestMappingHandlerMapping</span> <span class="kd">extends</span> <span class="n">RequestMappingHandlerMapping</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">isHandler</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">beanType</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">isHandler</span><span class="o">(</span><span class="n">beanType</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">beanType</span><span class="o">.</span><span class="na">isInterface</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
 <p>相关Issue：<a href="https://github.com/spring-cloud/spring-cloud-netflix/issues/466">https://github.com/spring-cloud/spring-cloud-netflix/issues/466</a></p>
 
 <h2 id="六-首次请求失败">六、首次请求失败</h2>
@@ -269,57 +256,45 @@ public class FeignMappingDefaultConfiguration {
 <p>Hystrix默认的超时时间是1秒，如果超过这个时间尚未响应，将会进入fallback代码。而首次请求往往会比较慢（由于Ribbon是懒加载的，在首次请求时，才会开始初始化相关类），这个响应时间可能就大于1秒了。知道原因后，我们来总结一下解决方案。以feign为例，解决方案有如下四种。<br></p>
 
 <ul>
-<li><p>方法一、将Hystrix超时设长</p>
-
-<pre><code>hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000
-
-</code></pre></li>
+<li>方法一、将Hystrix超时设长</li>
 </ul>
-
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds<span class="p">:</span><span class="w"> </span><span class="m">5000</span></code></pre></div>
 <p>该配置是让Hystrix的超时时间改为5秒，这是最容易想到的办法，不过有点治标不治本。</p>
 
 <ul>
-<li><p>方法二、禁用Hystrix超时</p>
+<li>方法二、禁用Hystrix超时</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">hystrix.command.default.execution.timeout.enabled<span class="p">:</span><span class="w"> </span><span class="kc">false</span></code></pre></div>
+<p>该配置，用于禁用Hystrix的超时时间，一般不建议使用。</p>
 
-<pre><code>hystrix.command.default.execution.timeout.enabled: false
-</code></pre>
-
-<p>该配置，用于禁用Hystrix的超时时间，一般不建议使用。</p></li>
-
-<li><p>方法三、为Feign禁用Hystrix
-全局禁用</p>
-
-<pre><code>feign.hystrix.enabled: false
-</code></pre>
-
+<ul>
+<li>方法三、为Feign禁用Hystrix
+全局禁用</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">feign.hystrix.enabled<span class="p">:</span><span class="w"> </span><span class="kc">false</span></code></pre></div>
 <p>索性禁用feign的hystrix，该做法比较极端，除非一些特殊场景，不推荐使用。
 局部禁用 为名为microservice-provider-user 的Feign Client禁用Hystrix</p>
-
-<pre><code>@FeignClient(name = &quot;microservice-provider-user&quot;)
-public interface UserFeignClient {
-@GetMapping(&quot;/users/{id}&quot;)
-User findById(@PathVariable(&quot;id&quot;) Long id);
-}
-class FooConfiguration {
-@Bean
-@Scope(&quot;prototype&quot;)
-public Feign.Builder feignBuilder(){
-return Feign.builder();
-}
-}
-</code></pre></li>
-
-<li><p>方法四、Ribbon配置饥饿加载（最佳）
-从Dalston开始，Ribbon支持配置eager load实现在启动时就初始化Ribbon相关类。</p>
-
-<pre><code>ribbon:
-eager-load:
-enabled: true
-clients: client1, client2, client3
-</code></pre>
-
-<p>Dalson之前版本可以通过一些Hack的机制实现eager load，不过成本略高，不建议，这里就不贴了</p></li>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@FeignClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;microservice-provider-user&#34;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserFeignClient</span> <span class="o">{</span>
+  <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">&#34;/users/{id}&#34;</span><span class="o">)</span>
+  <span class="n">User</span> <span class="nf">findById</span><span class="o">(</span><span class="nd">@PathVariable</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span> <span class="n">Long</span> <span class="n">id</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="kd">class</span> <span class="nc">FooConfiguration</span> <span class="o">{</span>
+  <span class="nd">@Bean</span>
+  <span class="nd">@Scope</span><span class="o">(</span><span class="s">&#34;prototype&#34;</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">Feign</span><span class="o">.</span><span class="na">Builder</span> <span class="nf">feignBuilder</span><span class="o">(){</span>
+    <span class="k">return</span> <span class="n">Feign</span><span class="o">.</span><span class="na">builder</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+<ul>
+<li>方法四、Ribbon配置饥饿加载（最佳）
+从Dalston开始，Ribbon支持配置eager load实现在启动时就初始化Ribbon相关类。</li>
 </ul>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">ribbon<span class="p">:</span><span class="w">
+</span><span class="w">  </span>eager-load<span class="p">:</span><span class="w">
+</span><span class="w">    </span>enabled<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">    </span>clients<span class="p">:</span><span class="w"> </span>client1<span class="p">,</span><span class="w"> </span>client2<span class="p">,</span><span class="w"> </span>client3</code></pre></div>
+<p>Dalson之前版本可以通过一些Hack的机制实现eager load，不过成本略高，不建议，这里就不贴了</p>
 
 <h2 id="七-如需产生hystrix-stream监控信息-需要做一些额外操作">七、如需产生Hystrix Stream监控信息，需要做一些额外操作</h2>
 
@@ -330,36 +305,27 @@ clients: client1, client2, client3
 </ul>
 
 <h3 id="第一步-添加依赖-示例">第一步：添加依赖，示例：</h3>
-
-<pre><code>&lt;!-- 整合hystrix，其实feign中自带了hystrix，引入该依赖主要是为了使用其中的hystrix-metrics-event-stream，用于dashboard --&gt;
-&lt;dependency&gt;
-  &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-  &lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- 整合hystrix，其实feign中自带了hystrix，引入该依赖主要是为了使用其中的hystrix-metrics-event-stream，用于dashboard --&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>org.springframework.cloud<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>spring-cloud-starter-hystrix<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span></code></pre></div>
 <h3 id="第二步-在启动类上添加-enablecircuitbreaker-注解-示例">第二步：在启动类上添加@EnableCircuitBreaker 注解，示例：</h3>
-
-<pre><code>@SpringBootApplication
-@EnableFeignClients
-@EnableDiscoveryClient
-@EnableCircuitBreaker
-public class MovieFeignHystrixApplication {
-  public static void main(String[] args) {
-    SpringApplication.run(MovieFeignHystrixApplication.class, args);
-  }
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@SpringBootApplication</span>
+<span class="nd">@EnableFeignClients</span>
+<span class="nd">@EnableDiscoveryClient</span>
+<span class="nd">@EnableCircuitBreaker</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MovieFeignHystrixApplication</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">SpringApplication</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">MovieFeignHystrixApplication</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
 <h3 id="第三步-在application-yml中添加如下内容-暴露hystrix-stream端点">第三步：在application.yml中添加如下内容，暴露hystrix.stream端点：</h3>
-
-<pre><code>management:
-  endpoints:
-    web:
-      exposure:
-        include: 'hystrix.stream'
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">management<span class="p">:</span><span class="w">
+</span><span class="w">  </span>endpoints<span class="p">:</span><span class="w">
+</span><span class="w">    </span>web<span class="p">:</span><span class="w">
+</span><span class="w">      </span>exposure<span class="p">:</span><span class="w">
+</span><span class="w">        </span>include<span class="p">:</span><span class="w"> </span><span class="s1">&#39;hystrix.stream&#39;</span></code></pre></div>
 <p>这样，访问任意Feign Client接口的API后，再访问<a href="http://IP:PORT/actuator/hystrix.stream">http://IP:PORT/actuator/hystrix.stream</a> ，就会展示一大堆Hystrix监控数据了。</p>
 
   </article>

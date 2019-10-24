@@ -159,71 +159,61 @@
 <h3 id="解决方案">解决方案</h3>
 
 <ul>
-<li><p>方法1：为 @Autowired 注解设置required = false
-使用 @Autowired 注解时，若希望允许null值，可设置required = false，像这样：</p>
+<li>方法1：为 @Autowired 注解设置required = false
+使用 @Autowired 注解时，若希望允许null值，可设置required = false，像这样：</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java">  <span class="nd">@Autowired</span><span class="o">(</span><span class="n">required</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span>
+  <span class="kd">private</span> <span class="n">UserMapper</span> <span class="n">userMapper</span><span class="o">;</span></code></pre></div>
+<p>这样就不会有警告了。原因很好理解：IDEA认为userMapper是个null，给了警告；加上required = false后，使用 @Autowired 注解不再去校验userMapper是否存在了。也就不会有警告了。<br><font color=blue>总结：这种方式有点蛋疼。一个庞大的既有项目，可能到处都在引用Mapper，总不能到处都补上 required = false 吧……而且对于新手/新员工，很难一眼看懂加required = false属性只是为了解决IDEA的警告。</font><br></p>
 
-<pre><code>@Autowired(required = false)
-private UserMapper userMapper;
-</code></pre>
+<ul>
+<li>方法2：用 @Resource 替换 @Autowired
+像这样：</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java">  <span class="nd">@Resource</span>
+  <span class="kd">private</span> <span class="n">UserMapper</span> <span class="n">userMapper</span><span class="o">;</span></code></pre></div>
+<p>这样也不会再有讨厌的警告。如果你对原因感兴趣，不妨了解一下《@Autowired 与@Resource的区别》<br><font color=blue>总结：这种方式挺赞，但如果一个项目已经大量使用@Autowired，然后为了个警告到处改成@Resource，也有点蛋疼。</font><br></p>
 
-<p>这样就不会有警告了。原因很好理解：IDEA认为userMapper是个null，给了警告；加上required = false后，使用 @Autowired 注解不再去校验userMapper是否存在了。也就不会有警告了。<br><font color=blue>总结：这种方式有点蛋疼。一个庞大的既有项目，可能到处都在引用Mapper，总不能到处都补上 required = false 吧……而且对于新手/新员工，很难一眼看懂加required = false属性只是为了解决IDEA的警告。</font><br></p></li>
-
-<li><p>方法2：用 @Resource 替换 @Autowired
-像这样：</p>
-
-<pre><code>@Resource
-private UserMapper userMapper;
-</code></pre>
-
-<p>这样也不会再有讨厌的警告。如果你对原因感兴趣，不妨了解一下《@Autowired 与@Resource的区别》<br><font color=blue>总结：这种方式挺赞，但如果一个项目已经大量使用@Autowired，然后为了个警告到处改成@Resource，也有点蛋疼。</font><br></p></li>
-
-<li><p>方法3：在Mapper接口上加上@Repository注解
-像这样：</p>
-
-<pre><code>@Repository
-public interface UserMapper extends Mapper&lt;User&gt; {
-}
-</code></pre>
-
+<ul>
+<li>方法3：在Mapper接口上加上@Repository注解
+像这样：</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java">  <span class="nd">@Repository</span>
+  <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserMapper</span> <span class="kd">extends</span> <span class="n">Mapper</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span> <span class="o">{</span>
+  <span class="o">}</span></code></pre></div>
 <p>这样也能让你的</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java">  <span class="nd">@Autowired</span>
+  <span class="kd">private</span> <span class="n">UserMapper</span> <span class="n">userMapper</span><span class="o">;</span></code></pre></div>
+<p>不再报错。<br>当然，如果你用@Component替换@Repository也是可以的。原理大致：IDEA不是认为 userMapper 是个null嘛…加个@Repository注解骗一下IDEA就OK了……<br><font color=blue>总结：这种方式比较赞，改动小，也简单，我比较喜欢。</font><br></p>
 
-<pre><code>@Autowired
-private UserMapper userMapper;
-</code></pre>
-
-<p>不再报错。<br>当然，如果你用@Component替换@Repository也是可以的。原理大致：IDEA不是认为 userMapper 是个null嘛…加个@Repository注解骗一下IDEA就OK了……<br><font color=blue>总结：这种方式比较赞，改动小，也简单，我比较喜欢。</font><br></p></li>
-
-<li><p>方法4：用Lombok
-像这样：</p>
-
-<pre><code>@Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class TestService {
-  private final UserMapper userMapper;
-  ...
-}
-</code></pre>
-
+<ul>
+<li>方法4：用Lombok
+像这样：</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java">  <span class="nd">@Service</span>
+  <span class="nd">@RequiredArgsConstructor</span><span class="o">(</span><span class="n">onConstructor</span> <span class="o">=</span> <span class="nd">@__</span><span class="o">(</span><span class="nd">@Autowired</span><span class="o">))</span>
+  <span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestService</span> <span class="o">{</span>
+      <span class="kd">private</span> <span class="kd">final</span> <span class="n">UserMapper</span> <span class="n">userMapper</span><span class="o">;</span>
+      <span class="o">...</span>
+  <span class="o">}</span></code></pre></div>
 <p>Lombok生成的代码是这样的：</p>
-
-<pre><code>@Service
-public class TestService {
-  private final UserMapper userMapper;
-  @Autowired
-  public TestService(final UserMapper userMapper) {
-      this.userMapper = userMapper;
-  }
-  ...
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java">  <span class="nd">@Service</span>
+  <span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestService</span> <span class="o">{</span>
+      <span class="kd">private</span> <span class="kd">final</span> <span class="n">UserMapper</span> <span class="n">userMapper</span><span class="o">;</span>
+      <span class="nd">@Autowired</span>
+      <span class="kd">public</span> <span class="nf">TestService</span><span class="o">(</span><span class="kd">final</span> <span class="n">UserMapper</span> <span class="n">userMapper</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">this</span><span class="o">.</span><span class="na">userMapper</span> <span class="o">=</span> <span class="n">userMapper</span><span class="o">;</span>
+      <span class="o">}</span>
+      <span class="o">...</span>
+  <span class="o">}</span></code></pre></div>
 <p>但如果自己手写成Lombok生成的代码，IDEA依然会给你报警告 。我猜，应该是IDEA的Lombok插件把IDEA搞懵逼了…所以不提示了…<br><font color=blue> 总结 ：这是我目前最喜欢的方式。原因有2：</font></p>
 
 <pre><code>1 Spring官方并不建议直接在类的field上使用@Autowired注解，原因详见：《Why field injection is evil》 ，用本方法可将field注入编程构造方法注入，Spring是比较推荐的。
 2 体现了Lombok的优势，简化了你的代码。而且你也不用在每个field上都加上@Autowired注解了。
 不过这种方式也有缺点：那就是如果你类之间的依赖关系比较复杂，特别是存在循环依赖(A引用B，B引用A，或者间接的循环引用)时，应用将会启动不起来……这其实是构造方法注入方式的缺点。
-</code></pre></li>
+</code></pre>
 
+<ul>
 <li><p>方法5：把IDEA的警告关闭掉
 个人没试过，也没有动力去试。没有提示的IDEA是没有灵魂的，我从来不去修改IDEA的任何警告设置。</p></li>
 

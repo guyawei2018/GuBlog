@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-10-22T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-10-22T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="905">
+<meta itemprop="wordCount" content="903">
 
 
 
@@ -146,12 +146,9 @@
   <article>
   
 
-<pre><code>TIPS
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">TIPS
 
-本文基于Spring Cloud Greenwich SR1，理论上支持Finchley及更高版本。
-
-</code></pre>
-
+本文基于Spring Cloud Greenwich SR1，理论上支持Finchley及更高版本。</code></pre></div>
 <p>本节来探讨如何使用Feign构造多参数的请求。笔者以GET及POST请求为例讲解，其他方式（例如DELETE、PUT等）的请求原理相通，读者可自行研究。</p>
 
 <h2 id="get请求多参数的url">GET请求多参数的URL</h2>
@@ -159,89 +156,65 @@
 <ul>
 <li><p>假设需请求的URL包含多个参数，例如: <a href="http://microservice-provider-user/get?id=1&amp;username=张三">http://microservice-provider-user/get?id=1&amp;username=张三</a> ，该如何使用Feign构造呢？</p></li>
 
-<li><p>我们知道，Spring Cloud为Feign添加了Spring MVC的注解支持，那么我们不妨按照Spring MVC的写法尝试一下：</p>
-
-<pre><code>@FeignClient(&quot;microservice-provider-user&quot;)
-public interface UserFeignClient {
-@RequestMapping(value = &quot;/get&quot;, method = RequestMethod.GET)
-public User get0(User user);
-}
-</code></pre>
-
-<p>然而，这种写法并不正确，控制台会输出类似如下的异常。</p>
-
-<pre><code>feign.FeignException: status 405 reading UserFeignClient#get0(User); content:
-{&quot;timestamp&quot;:1482676142940,&quot;status&quot;:405,&quot;error&quot;:&quot;Method Not Allowed&quot;,&quot;exception&quot;:&quot;org.springframework.web.HttpRequestMethodNotSupportedException&quot;,&quot;message&quot;:&quot;Request method 'POST' not supported&quot;,&quot;path&quot;:&quot;/get&quot;}
-</code></pre>
-
-<p>由异常可知，尽管我们指定了GET方法，Feign依然会使用POST方法发送请求。于是导致了异常。正确写法如下</p></li>
+<li><p>我们知道，Spring Cloud为Feign添加了Spring MVC的注解支持，那么我们不妨按照Spring MVC的写法尝试一下：</p></li>
 </ul>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@FeignClient</span><span class="o">(</span><span class="s">&#34;microservice-provider-user&#34;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserFeignClient</span> <span class="o">{</span>
+  <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;/get&#34;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">User</span> <span class="nf">get0</span><span class="o">(</span><span class="n">User</span> <span class="n">user</span><span class="o">);</span>
+<span class="o">}</span></code></pre></div>
+<p>然而，这种写法并不正确，控制台会输出类似如下的异常。</p>
+<div class="highlight"><pre class="chroma"><code class="language-log" data-lang="log">feign.FeignException: status 405 reading UserFeignClient#get0(User); content:
+{&#34;timestamp&#34;:1482676142940,&#34;status&#34;:405,&#34;error&#34;:&#34;Method Not Allowed&#34;,&#34;exception&#34;:&#34;org.springframework.web.HttpRequestMethodNotSupportedException&#34;,&#34;message&#34;:&#34;Request method &#39;POST&#39; not supported&#34;,&#34;path&#34;:&#34;/get&#34;}</code></pre></div>
+<p>由异常可知，尽管我们指定了GET方法，Feign依然会使用POST方法发送请求。于是导致了异常。正确写法如下</p>
 
 <h3 id="方法一-推荐">方法一[推荐]</h3>
-
-<pre><code>@FeignClient(&quot;microservice-provider-user&quot;)
-public interface UserFeignClient {
-  @GetMapping(&quot;/get&quot;)
-  public User get0(@SpringQueryMap User user);
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@FeignClient</span><span class="o">(</span><span class="s">&#34;microservice-provider-user&#34;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserFeignClient</span> <span class="o">{</span>
+  <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">&#34;/get&#34;</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">User</span> <span class="nf">get0</span><span class="o">(</span><span class="nd">@SpringQueryMap</span> <span class="n">User</span> <span class="n">user</span><span class="o">);</span>
+<span class="o">}</span></code></pre></div>
 <h3 id="方法二-推荐">方法二[推荐]</h3>
-
-<pre><code>@FeignClient(name = &quot;microservice-provider-user&quot;)
-public interface UserFeignClient {
-  @RequestMapping(value = &quot;/get&quot;, method = RequestMethod.GET)
-  public User get1(@RequestParam(&quot;id&quot;) Long id, @RequestParam(&quot;username&quot;) String username);
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@FeignClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;microservice-provider-user&#34;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserFeignClient</span> <span class="o">{</span>
+  <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;/get&#34;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">User</span> <span class="nf">get1</span><span class="o">(</span><span class="nd">@RequestParam</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span> <span class="n">Long</span> <span class="n">id</span><span class="o">,</span> <span class="nd">@RequestParam</span><span class="o">(</span><span class="s">&#34;username&#34;</span><span class="o">)</span> <span class="n">String</span> <span class="n">username</span><span class="o">);</span>
+<span class="o">}</span></code></pre></div>
 <p>这是最为直观的方式，URL有几个参数，Feign接口中的方法就有几个参数。使用@RequestParam注解指定请求的参数是什么。</p>
 
 <h3 id="方法三-不推荐">方法三[不推荐]</h3>
 
 <p>多参数的URL也可使用Map来构建。当目标URL参数非常多的时候，可使用这种方式简化Feign接口的编写。</p>
-
-<pre><code>@FeignClient(name = &quot;microservice-provider-user&quot;)
-public interface UserFeignClient {
-  @RequestMapping(value = &quot;/get&quot;, method = RequestMethod.GET)
-  public User get2(@RequestParam Map&lt;String, Object&gt; map);
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@FeignClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;microservice-provider-user&#34;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserFeignClient</span> <span class="o">{</span>
+  <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;/get&#34;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">User</span> <span class="nf">get2</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">map</span><span class="o">);</span>
+<span class="o">}</span></code></pre></div>
 <p>在调用时，可使用类似以下的代码。</p>
-
-<pre><code>public User get(String username, String password) {
-  HashMap&lt;String, Object&gt; map = Maps.newHashMap();
-  map.put(&quot;id&quot;, &quot;1&quot;);
-  map.put(&quot;username&quot;, &quot;张三&quot;);
-  return this.userFeignClient.get2(map);
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="n">User</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="n">Maps</span><span class="o">.</span><span class="na">newHashMap</span><span class="o">();</span>
+  <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">,</span> <span class="s">&#34;1&#34;</span><span class="o">);</span>
+  <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;username&#34;</span><span class="o">,</span> <span class="s">&#34;张三&#34;</span><span class="o">);</span>
+  <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">userFeignClient</span><span class="o">.</span><span class="na">get2</span><span class="o">(</span><span class="n">map</span><span class="o">);</span>
+<span class="o">}</span></code></pre></div>
 <h4 id="注意-这种方式不建议使用-主要是因为可读性不好-而且如果参数为空的时候会有一些问题-例如map-put-username-null-会导致microservice-provider-user-服务接收到的username是-而不是null">注意：这种方式不建议使用。主要是因为可读性不好，而且如果参数为空的时候会有一些问题，例如map.put(&ldquo;username&rdquo;, null); 会导致microservice-provider-user 服务接收到的username是&rdquo;&rdquo; ，而不是null。</h4>
 
 <h2 id="post请求包含多个参数">POST请求包含多个参数</h2>
 
 <p>下面来讨论如何使用Feign构造包含多个参数的POST请求。假设服务提供者的Controller是这样编写的：</p>
-
-<pre><code>@RestController
-public class UserController {
-  @PostMapping(&quot;/post&quot;)
-  public User post(@RequestBody User user) {
-    ...
-  }
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@RestController</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserController</span> <span class="o">{</span>
+  <span class="nd">@PostMapping</span><span class="o">(</span><span class="s">&#34;/post&#34;</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">User</span> <span class="nf">post</span><span class="o">(</span><span class="nd">@RequestBody</span> <span class="n">User</span> <span class="n">user</span><span class="o">)</span> <span class="o">{</span>
+    <span class="o">...</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
 <p>我们要如何使用Feign去请求呢？答案非常简单，示例：</p>
-
-<pre><code>@FeignClient(name = &quot;microservice-provider-user&quot;)
-public interface UserFeignClient {
-  @RequestMapping(value = &quot;/post&quot;, method = RequestMethod.POST)
-  public User post(@RequestBody User user);
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@FeignClient</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;microservice-provider-user&#34;</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserFeignClient</span> <span class="o">{</span>
+  <span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;/post&#34;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">User</span> <span class="nf">post</span><span class="o">(</span><span class="nd">@RequestBody</span> <span class="n">User</span> <span class="n">user</span><span class="o">);</span>
+<span class="o">}</span></code></pre></div>
   </article>
 
   

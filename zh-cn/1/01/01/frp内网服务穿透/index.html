@@ -31,7 +31,7 @@
 
 
 
-<meta itemprop="wordCount" content="1565">
+<meta itemprop="wordCount" content="1573">
 
 
 
@@ -184,8 +184,7 @@
 <img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/FRP/frp-1.png" alt="图片" /></p>
 
 <h2 id="frp-配置">frp 配置</h2>
-
-<pre><code>[common]
+<div class="highlight"><pre class="chroma"><code class="language-conf" data-lang="conf">[common]
 # 服务端控制面板访问账号和密码，不设置则默认admin
 #注意以及几个是我随便填写的，请根据自己的实际情况，自行修改。
 dashboard_user = admin
@@ -201,7 +200,7 @@ bind_addr = 0.0.0.0
 bind_port = 6009
 # udp协议监听端口
 #bind_udp_port = 7001
-#udp协议支持kcp模式。kcp的运行端口，不设置表示禁用。可以与'bind_port'端口一致
+#udp协议支持kcp模式。kcp的运行端口，不设置表示禁用。可以与&#39;bind_port&#39;端口一致
 #kcp_bind_port = 6009
 #虚拟主机穿透监听端口(指http与https的访问端口)
 vhost_http_port = 6010
@@ -226,10 +225,7 @@ max_ports_per_client = 0
 # 连接超时
 authentication_timeout = 900
 # tcp流多路复用(可以理解为优化传输) 
-tcp_mux = true
-
-</code></pre>
-
+tcp_mux = true</code></pre></div>
 <h2 id="nginx-反向代理配置">nginx 反向代理配置</h2>
 
 <p>其中，因为我的服务器上有相关其他的程序共用，80 端口上交给了 nginx ，而在微信的接口配置时，只能是 80 or 443 端口，因此，这里我还借用了 nginx 的反向代理功能，配置如下：
@@ -251,8 +247,7 @@ nohup ./frps -c frps.ini &amp;
 解压出其中的客户端程序（frpc.exe）和配置文件（frpc.ini）</p>
 
 <h2 id="客户端环境配置">客户端环境配置</h2>
-
-<pre><code>[common]
+<div class="highlight"><pre class="chroma"><code class="language-conf" data-lang="conf">[common]
 server_addr = 106.15.235.215
 # 与服务端配置信息 bind_port 相同
 server_port = 6009
@@ -276,9 +271,7 @@ local_port = 6010
 #remote_port = 7779
 subdomain = tunnel
 
-custom_domains = guyawei.top
-</code></pre>
-
+custom_domains = guyawei.top</code></pre></div>
 <h2 id="客户端启动">客户端启动</h2>
 
 <p>.\frpc.exe -c frpc.ini

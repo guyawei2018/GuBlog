@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-10-22T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-10-22T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="3076">
+<meta itemprop="wordCount" content="3042">
 
 
 
@@ -170,73 +170,58 @@
 
 <li><p>自己基于权重配置，计算出一个实例即可。
 代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Slf4j</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">NacosWeightRandomV1Rule</span> <span class="kd">extends</span> <span class="n">AbstractLoadBalancerRule</span> <span class="o">{</span>
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">initWithNiwsConfig</span><span class="o">(</span><span class="n">IClientConfig</span> <span class="n">iClientConfig</span><span class="o">)</span> <span class="o">{</span>
+<span class="o">}</span>
 
-<pre><code>@Slf4j
-public class NacosWeightRandomV1Rule extends AbstractLoadBalancerRule {
-@Override
-public void initWithNiwsConfig(IClientConfig iClientConfig) {
-}
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="n">Server</span> <span class="nf">choose</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Server</span><span class="o">&gt;</span> <span class="n">servers</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getLoadBalancer</span><span class="o">().</span><span class="na">getReachableServers</span><span class="o">();</span>
 
-@Override
-public Server choose(Object key) {
-    List&lt;Server&gt; servers = this.getLoadBalancer().getReachableServers();
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">InstanceWithWeight</span><span class="o">&gt;</span> <span class="n">instanceWithWeights</span> <span class="o">=</span> <span class="n">servers</span><span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+            <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">server</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="c1">// 注册中心只用Nacos，没同时用其他注册中心（例如Eureka），理论上不会实现
+</span><span class="c1"></span>                <span class="k">if</span> <span class="o">(!(</span><span class="n">server</span> <span class="k">instanceof</span> <span class="n">NacosServer</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="n">log</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;参数非法，server = {}&#34;</span><span class="o">,</span> <span class="n">server</span><span class="o">);</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="s">&#34;参数非法，不是NacosServer实例！&#34;</span><span class="o">);</span>
+                <span class="o">}</span>
 
-    List&lt;InstanceWithWeight&gt; instanceWithWeights = servers.stream()
-            .map(server -&gt; {
-                // 注册中心只用Nacos，没同时用其他注册中心（例如Eureka），理论上不会实现
-                if (!(server instanceof NacosServer)) {
-                    log.error(&quot;参数非法，server = {}&quot;, server);
-                    throw new IllegalArgumentException(&quot;参数非法，不是NacosServer实例！&quot;);
-                }
+                <span class="n">NacosServer</span> <span class="n">nacosServer</span> <span class="o">=</span> <span class="o">(</span><span class="n">NacosServer</span><span class="o">)</span> <span class="n">server</span><span class="o">;</span>
+                <span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">nacosServer</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+                <span class="kt">double</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="na">getWeight</span><span class="o">();</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">InstanceWithWeight</span><span class="o">(</span>
+                        <span class="n">server</span><span class="o">,</span>
+                        <span class="n">Double</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">weight</span><span class="o">).</span><span class="na">intValue</span><span class="o">()</span>
+                <span class="o">);</span>
+            <span class="o">})</span>
+            <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
 
-                NacosServer nacosServer = (NacosServer) server;
-                Instance instance = nacosServer.getInstance();
-                double weight = instance.getWeight();
-                return new InstanceWithWeight(
-                        server,
-                        Double.valueOf(weight).intValue()
-                );
-            })
-            .collect(Collectors.toList());
+    <span class="n">Server</span> <span class="n">server</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">weightRandom</span><span class="o">(</span><span class="n">instanceWithWeights</span><span class="o">);</span>
 
-    Server server = this.weightRandom(instanceWithWeights);
-
-    log.info(&quot;选中的server = {}&quot;, server);
-    return server;
-}
-</code></pre>
-
-<pre><code>@Data
-@AllArgsConstructor
-@NoArgsConstructor
-private class InstanceWithWeight {
-    private Server server;
-    private Integer weight;
-}
-</code></pre>
-
-<pre><code>/**
- * 根据权重随机
- * 算法参考 https://blog.csdn.net/u011627980/article/details/79401026
- *
- * @param list 实例列表
- * @return 随机出来的结果
- */
-private Server weightRandom(List&lt;InstanceWithWeight&gt; list) {
-    List&lt;Server&gt; instances = Lists.newArrayList();
-    for (InstanceWithWeight instanceWithWeight : list) {
-        int weight = instanceWithWeight.getWeight();
-        for (int i = 0; i &lt;= weight; i++) {
-            instances.add(instanceWithWeight.getServer());
-        }
-    }
-    int i = new Random().nextInt(instances.size());
-    return instances.get(i);
-}
-}
-</code></pre></li>
-</ul>
-
+    <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;选中的server = {}&#34;</span><span class="o">,</span> <span class="n">server</span><span class="o">);</span>
+    <span class="k">return</span> <span class="n">server</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Data</span>
+<span class="nd">@AllArgsConstructor</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="kd">private</span> <span class="kd">class</span> <span class="nc">InstanceWithWeight</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Server</span> <span class="n">server</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">Integer</span> <span class="n">weight</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">//根据权重随机
+</span><span class="c1">// 算法参考 https://blog.csdn.net/u011627980/article/details/79401026
+</span><span class="c1"></span><span class="kd">private</span> <span class="n">Server</span> <span class="nf">weightRandom</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">InstanceWithWeight</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Server</span><span class="o">&gt;</span> <span class="n">instances</span> <span class="o">=</span> <span class="n">Lists</span><span class="o">.</span><span class="na">newArrayList</span><span class="o">();</span>
+    <span class="k">for</span> <span class="o">(</span><span class="n">InstanceWithWeight</span> <span class="n">instanceWithWeight</span> <span class="o">:</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">instanceWithWeight</span><span class="o">.</span><span class="na">getWeight</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">weight</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">instances</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">instanceWithWeight</span><span class="o">.</span><span class="na">getServer</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">().</span><span class="na">nextInt</span><span class="o">(</span><span class="n">instances</span><span class="o">.</span><span class="na">size</span><span class="o">());</span>
+    <span class="k">return</span> <span class="n">instances</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="o">}</span></code></pre></div>
 <p><font color=red>WARNING</font></p>
 
 <p>本段代码存在优化空间，只是用来演示思考的过程，不建议用于生产，如打算使用本方案实现，请参考以下两点优化：</p>
@@ -253,119 +238,113 @@ InstanceWithWeight太重了，在 weightRandom 还得再两层for循环，还挺
 <p>代码在 com.alibaba.nacos.api.naming.NamingService#selectOneHealthyInstance ，只要想办法调用到这行代码，就可以实现我们想要的功能啦！</p>
 
 <p>代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Slf4j</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">NacosWeightRandomV2Rule</span> <span class="kd">extends</span> <span class="n">AbstractLoadBalancerRule</span> <span class="o">{</span>
+<span class="nd">@Autowired</span>
+<span class="kd">private</span> <span class="n">NacosDiscoveryProperties</span> <span class="n">discoveryProperties</span><span class="o">;</span>
 
-<pre><code>@Slf4j
-public class NacosWeightRandomV2Rule extends AbstractLoadBalancerRule {
-    @Autowired
-    private NacosDiscoveryProperties discoveryProperties;
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="n">Server</span> <span class="nf">choose</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">DynamicServerListLoadBalancer</span> <span class="n">loadBalancer</span> <span class="o">=</span> <span class="o">(</span><span class="n">DynamicServerListLoadBalancer</span><span class="o">)</span> <span class="n">getLoadBalancer</span><span class="o">();</span>
+    <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">loadBalancer</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">discoveryProperties</span><span class="o">.</span><span class="na">namingServiceInstance</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">selectOneHealthyInstance</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
 
-    @Override
-    public Server choose(Object key) {
-        DynamicServerListLoadBalancer loadBalancer = (DynamicServerListLoadBalancer) getLoadBalancer();
-        String name = loadBalancer.getName();
-        try {
-            Instance instance = discoveryProperties.namingServiceInstance()
-                    .selectOneHealthyInstance(name);
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;选中的instance = {}&#34;</span><span class="o">,</span> <span class="n">instance</span><span class="o">);</span>
 
-            log.info(&quot;选中的instance = {}&quot;, instance);
+        <span class="cm">/*
+</span><span class="cm">         * instance转server的逻辑参考自：
+</span><span class="cm">         * org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList.instancesToServerList
+</span><span class="cm">         */</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">NacosServer</span><span class="o">(</span><span class="n">instance</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">NacosException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;发生异常&#34;</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 
-            /*
-             * instance转server的逻辑参考自：
-             * org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList.instancesToServerList
-             */
-            return new NacosServer(instance);
-        } catch (NacosException e) {
-            log.error(&quot;发生异常&quot;, e);
-            return null;
-        }
-    }
-
-    @Override
-    public void initWithNiwsConfig(IClientConfig iClientConfig) {
-    }
-}
-</code></pre>
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">initWithNiwsConfig</span><span class="o">(</span><span class="n">IClientConfig</span> <span class="n">iClientConfig</span><span class="o">)</span> <span class="o">{</span>
+<span class="o">}</span>
+<span class="o">}</span></code></pre></div></li>
+</ul>
 
 <p>在最新的版本中naocs还实现了基于集群优先调用的权重策略</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"> <span class="c1">//nacos同集群优先调用及整合nacos权重的负载均衡策略
+</span><span class="c1"></span> <span class="c1">//@Author GU-YW
+</span><span class="c1"></span> <span class="c1">//@Date 2019/10/11 20:24
+</span><span class="c1"></span><span class="nd">@Slf4j</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">NacosClusterRule</span> <span class="kd">extends</span> <span class="n">AbstractLoadBalancerRule</span> <span class="o">{</span>
 
-<pre><code>/**
- * nacos同集群优先调用及整合nacos权重的负载均衡策略
- * @Author GU-YW
- * @Date 2019/10/11 20:24
- */
-@Slf4j
-public class NacosClusterRule extends AbstractLoadBalancerRule {
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">NacosDiscoveryProperties</span> <span class="n">discoveryProperties</span><span class="o">;</span>
 
-    @Autowired
-    private NacosDiscoveryProperties discoveryProperties;
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">initWithNiwsConfig</span><span class="o">(</span><span class="n">IClientConfig</span> <span class="n">clientConfig</span><span class="o">)</span> <span class="o">{</span>
 
-    @Override
-    public void initWithNiwsConfig(IClientConfig clientConfig) {
+    <span class="o">}</span>
 
-    }
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">Server</span> <span class="nf">choose</span><span class="o">(</span><span class="n">Object</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//获取集群名
+</span><span class="c1"></span>        <span class="n">String</span> <span class="n">clusterName</span><span class="o">=</span><span class="n">discoveryProperties</span><span class="o">.</span><span class="na">getClusterName</span><span class="o">();</span>
 
-    @Override
-    public Server choose(Object key) {
-        //获取集群名
-        String clusterName=discoveryProperties.getClusterName();
+        <span class="n">BaseLoadBalancer</span> <span class="n">loadBalancer</span><span class="o">=</span> <span class="o">(</span><span class="n">BaseLoadBalancer</span><span class="o">)</span> <span class="k">this</span><span class="o">.</span><span class="na">getLoadBalancer</span><span class="o">();</span>
+        <span class="c1">//想要请求的微服务名称
+</span><span class="c1"></span>        <span class="n">String</span> <span class="n">name</span> <span class="o">=</span><span class="n">loadBalancer</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
 
-        BaseLoadBalancer loadBalancer= (BaseLoadBalancer) this.getLoadBalancer();
-        //想要请求的微服务名称
-        String name =loadBalancer.getName();
+        <span class="n">NamingService</span> <span class="n">namingService</span><span class="o">=</span><span class="n">discoveryProperties</span><span class="o">.</span><span class="na">namingServiceInstance</span><span class="o">();</span>
 
-        NamingService namingService=discoveryProperties.namingServiceInstance();
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="c1">//配置了集群
+</span><span class="c1"></span>            <span class="k">if</span><span class="o">(</span><span class="n">StringUtils</span><span class="o">.</span><span class="na">isNotEmpty</span><span class="o">(</span><span class="n">clusterName</span><span class="o">)){</span>
+                <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">clusters</span><span class="o">=</span><span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+                <span class="n">clusters</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">clusterName</span><span class="o">);</span>
+<span class="c1">//             ========================最新方法=======================
+</span><span class="c1"></span>
+                <span class="n">Instance</span> <span class="n">instance</span><span class="o">=</span><span class="n">namingService</span><span class="o">.</span><span class="na">selectOneHealthyInstance</span><span class="o">(</span><span class="n">name</span><span class="o">,</span><span class="n">clusters</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
 
-        try {
-            //配置了集群
-            if(StringUtils.isNotEmpty(clusterName)){
-                List&lt;String&gt; clusters=new ArrayList&lt;&gt;();
-                clusters.add(clusterName);
-//             ========================最新方法=======================
+<span class="c1">//             =====================以前版本手动添加==================
+</span><span class="c1">//            //找到指定服务的所有实例 A
+</span><span class="c1">//            List&lt;Instance&gt; instances= namingService.selectInstances(name,true);
+</span><span class="c1">//            //过滤出相同集群下的微服务实例 B
+</span><span class="c1">//            List&lt;Instance&gt; sameIntances=instances.stream()
+</span><span class="c1">//                    .filter(instance -&gt; Objects.equals(instance.getClusterName(),clusterName))
+</span><span class="c1">//                    .collect(Collectors.toList());
+</span><span class="c1">//            //如果B是空，就用A
+</span><span class="c1">//            List&lt;Instance&gt; toBeChose=new ArrayList&lt;&gt;();
+</span><span class="c1">//            if(sameIntances.isEmpty()){
+</span><span class="c1">//                toBeChose=instances;
+</span><span class="c1">//            }else{
+</span><span class="c1">//                toBeChose=sameIntances;
+</span><span class="c1">//            }
+</span><span class="c1">//            //基于权重的负载均衡算法，返回1个实例
+</span><span class="c1">//            Instance instance=LoadBalancer.getHost(toBeChose);
+</span><span class="c1"></span>                <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&#34;选择的instance:port={},instanceId={}&#34;</span><span class="o">,</span><span class="n">instance</span><span class="o">.</span><span class="na">getPort</span><span class="o">(),</span><span class="n">instance</span><span class="o">.</span><span class="na">getInstanceId</span><span class="o">());</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">NacosServer</span><span class="o">(</span><span class="n">instance</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">namingService</span><span class="o">.</span><span class="na">selectOneHealthyInstance</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+                <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&#34;选择的instance:port={},instanceId={}&#34;</span><span class="o">,</span><span class="n">instance</span><span class="o">.</span><span class="na">getPort</span><span class="o">(),</span><span class="n">instance</span><span class="o">.</span><span class="na">getInstanceId</span><span class="o">());</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">NacosServer</span><span class="o">(</span><span class="n">instance</span><span class="o">);</span>
+            <span class="o">}</span>
 
-                Instance instance=namingService.selectOneHealthyInstance(name,clusters, true);
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">NacosException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
 
-//             =====================以前版本手动添加==================
-//            //找到指定服务的所有实例 A
-//            List&lt;Instance&gt; instances= namingService.selectInstances(name,true);
-//            //过滤出相同集群下的微服务实例 B
-//            List&lt;Instance&gt; sameIntances=instances.stream()
-//                    .filter(instance -&gt; Objects.equals(instance.getClusterName(),clusterName))
-//                    .collect(Collectors.toList());
-//            //如果B是空，就用A
-//            List&lt;Instance&gt; toBeChose=new ArrayList&lt;&gt;();
-//            if(sameIntances.isEmpty()){
-//                toBeChose=instances;
-//            }else{
-//                toBeChose=sameIntances;
-//            }
-//            //基于权重的负载均衡算法，返回1个实例
-//            Instance instance=LoadBalancer.getHost(toBeChose);
-                log.debug(&quot;选择的instance:port={},instanceId={}&quot;,instance.getPort(),instance.getInstanceId());
-                return new NacosServer(instance);
-            }else{
-                Instance instance = namingService.selectOneHealthyInstance(name, true);
-                log.debug(&quot;选择的instance:port={},instanceId={}&quot;,instance.getPort(),instance.getInstanceId());
-                return new NacosServer(instance);
-            }
+    <span class="o">}</span>
 
-        } catch (NacosException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-
-    /**
-     * 调用权重负载均衡算法 原Balancer方法无法调用
-     */
-    static class LoadBalancer extends Balancer {
-        public static Instance getHost(List&lt;Instance&gt; hosts) {
-            return  getHostByRandomWeight( hosts);
-        }
-    }
-}
-</code></pre>
-
+    <span class="cm">/**
+</span><span class="cm">     * 调用权重负载均衡算法 原Balancer方法无法调用
+</span><span class="cm">     */</span>
+    <span class="kd">static</span> <span class="kd">class</span> <span class="nc">LoadBalancer</span> <span class="kd">extends</span> <span class="n">Balancer</span> <span class="o">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Instance</span> <span class="nf">getHost</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Instance</span><span class="o">&gt;</span> <span class="n">hosts</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span>  <span class="n">getHostByRandomWeight</span><span class="o">(</span> <span class="n">hosts</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
 <h2 id="方案3-最暴力的玩法">方案3：最暴力的玩法</h2>
 
 <h2 id="思路-1">思路：</h2>
@@ -373,21 +352,18 @@ public class NacosClusterRule extends AbstractLoadBalancerRule {
 <p>在阅读源码的过程中，发现如下代码：</p>
 
 <p>// 来自：org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList#getServers</p>
-
-<pre><code>private List&lt;NacosServer&gt; getServers() {
-  try {
-    List&lt;Instance&gt; instances = discoveryProperties.namingServiceInstance()
-      .selectInstances(serviceId, true);
-    return instancesToServerList(instances);
-  }
-  catch (Exception e) {
-    throw new IllegalStateException(
-      &quot;Can not get service instances from nacos, serviceId=&quot; + serviceId,
-      e);
-  }
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">NacosServer</span><span class="o">&gt;</span> <span class="nf">getServers</span><span class="o">()</span> <span class="o">{</span>
+  <span class="k">try</span> <span class="o">{</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Instance</span><span class="o">&gt;</span> <span class="n">instances</span> <span class="o">=</span> <span class="n">discoveryProperties</span><span class="o">.</span><span class="na">namingServiceInstance</span><span class="o">()</span>
+      <span class="o">.</span><span class="na">selectInstances</span><span class="o">(</span><span class="n">serviceId</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+    <span class="k">return</span> <span class="n">instancesToServerList</span><span class="o">(</span><span class="n">instances</span><span class="o">);</span>
+  <span class="o">}</span>
+  <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span>
+      <span class="s">&#34;Can not get service instances from nacos, serviceId=&#34;</span> <span class="o">+</span> <span class="n">serviceId</span><span class="o">,</span>
+      <span class="n">e</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
 <p>这个NacosServerList 就是给Ribbon去做负载均衡的”数据源”！如果把这里的代码改成 com.alibaba.nacos.api.naming.NamingService#selectOneHealthyInstance 不也可以实现我们想要的功能吗？</p>
 
 <p>也就是说，交给Ribbon的List永远只有1个实例！这样不管Ribbon用什么负载均衡，都随他便了。</p>
@@ -395,95 +371,86 @@ public class NacosClusterRule extends AbstractLoadBalancerRule {
 <p>代码：</p>
 
 <p>1 参考NacosServerList的代码，重写NacosRibbonServerList</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="cm">/**
+</span><span class="cm"> * 参考org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList
+</span><span class="cm"> */</span>
+<span class="nd">@Slf4j</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">NacosRibbonServerList</span> <span class="kd">extends</span> <span class="n">AbstractServerList</span><span class="o">&lt;</span><span class="n">NacosServer</span><span class="o">&gt;</span> <span class="o">{</span>
 
-<pre><code>/**
- * 参考org.springframework.cloud.alibaba.nacos.ribbon.NacosServerList
- */
-@Slf4j
-public class NacosRibbonServerList extends AbstractServerList&lt;NacosServer&gt; {
+    <span class="kd">private</span> <span class="n">NacosDiscoveryProperties</span> <span class="n">discoveryProperties</span><span class="o">;</span>
 
-    private NacosDiscoveryProperties discoveryProperties;
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">serviceId</span><span class="o">;</span>
 
-    private String serviceId;
+    <span class="kd">public</span> <span class="nf">NacosRibbonServerList</span><span class="o">(</span><span class="n">NacosDiscoveryProperties</span> <span class="n">discoveryProperties</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">discoveryProperties</span> <span class="o">=</span> <span class="n">discoveryProperties</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    public NacosRibbonServerList(NacosDiscoveryProperties discoveryProperties) {
-        this.discoveryProperties = discoveryProperties;
-    }
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">NacosServer</span><span class="o">&gt;</span> <span class="nf">getInitialListOfServers</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">getServers</span><span class="o">();</span>
+    <span class="o">}</span>
 
-    @Override
-    public List&lt;NacosServer&gt; getInitialListOfServers() {
-        return getServers();
-    }
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">NacosServer</span><span class="o">&gt;</span> <span class="nf">getUpdatedListOfServers</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">getServers</span><span class="o">();</span>
+    <span class="o">}</span>
 
-    @Override
-    public List&lt;NacosServer&gt; getUpdatedListOfServers() {
-        return getServers();
-    }
+    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">NacosServer</span><span class="o">&gt;</span> <span class="nf">getServers</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Instance</span> <span class="n">instance</span> <span class="o">=</span> <span class="n">discoveryProperties</span><span class="o">.</span><span class="na">namingServiceInstance</span><span class="o">()</span>
+                    <span class="o">.</span><span class="na">selectOneHealthyInstance</span><span class="o">(</span><span class="n">serviceId</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+            <span class="n">log</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&#34;选择的instance = {}&#34;</span><span class="o">,</span> <span class="n">instance</span><span class="o">);</span>
+            <span class="k">return</span> <span class="n">instancesToServerList</span><span class="o">(</span>
+                    <span class="n">Lists</span><span class="o">.</span><span class="na">newArrayList</span><span class="o">(</span><span class="n">instance</span><span class="o">)</span>
+            <span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span>
+                    <span class="s">&#34;Can not get service instances from nacos, serviceId=&#34;</span> <span class="o">+</span> <span class="n">serviceId</span><span class="o">,</span>
+                    <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
 
-    private List&lt;NacosServer&gt; getServers() {
-        try {
-            Instance instance = discoveryProperties.namingServiceInstance()
-                    .selectOneHealthyInstance(serviceId, true);
-            log.debug(&quot;选择的instance = {}&quot;, instance);
-            return instancesToServerList(
-                    Lists.newArrayList(instance)
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException(
-                    &quot;Can not get service instances from nacos, serviceId=&quot; + serviceId,
-                    e);
-        }
-    }
+    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">NacosServer</span><span class="o">&gt;</span> <span class="nf">instancesToServerList</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Instance</span><span class="o">&gt;</span> <span class="n">instances</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">NacosServer</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="kc">null</span> <span class="o">==</span> <span class="n">instances</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">Instance</span> <span class="n">instance</span> <span class="o">:</span> <span class="n">instances</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">NacosServer</span><span class="o">(</span><span class="n">instance</span><span class="o">));</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    private List&lt;NacosServer&gt; instancesToServerList(List&lt;Instance&gt; instances) {
-        List&lt;NacosServer&gt; result = new ArrayList&lt;&gt;();
-        if (null == instances) {
-            return result;
-        }
-        for (Instance instance : instances) {
-            result.add(new NacosServer(instance));
-        }
-        return result;
-    }
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getServiceId</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">serviceId</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    public String getServiceId() {
-        return serviceId;
-    }
-
-    @Override
-    public void initWithNiwsConfig(IClientConfig iClientConfig) {
-        this.serviceId = iClientConfig.getClientName();
-    }
-}
-</code></pre>
-
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">initWithNiwsConfig</span><span class="o">(</span><span class="n">IClientConfig</span> <span class="n">iClientConfig</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">serviceId</span> <span class="o">=</span> <span class="n">iClientConfig</span><span class="o">.</span><span class="na">getClientName</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
 <p>2 编写配置类</p>
-
-<pre><code>/**
- * 参考：org.springframework.cloud.alibaba.nacos.ribbon.NacosRibbonClientConfiguration
- */
-@Configuration
-public class NacosRibbonClientExtendConfiguration {
-    @Bean
-    public ServerList&lt;?&gt; ribbonServerList(IClientConfig config, NacosDiscoveryProperties nacosDiscoveryProperties) {
-        NacosRibbonServerList serverList = new NacosRibbonServerList(nacosDiscoveryProperties);
-        serverList.initWithNiwsConfig(config);
-        return serverList;
-    }
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="cm">/**
+</span><span class="cm"> * 参考：org.springframework.cloud.alibaba.nacos.ribbon.NacosRibbonClientConfiguration
+</span><span class="cm"> */</span>
+<span class="nd">@Configuration</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">NacosRibbonClientExtendConfiguration</span> <span class="o">{</span>
+    <span class="nd">@Bean</span>
+    <span class="kd">public</span> <span class="n">ServerList</span><span class="o">&lt;?&gt;</span> <span class="n">ribbonServerList</span><span class="o">(</span><span class="n">IClientConfig</span> <span class="n">config</span><span class="o">,</span> <span class="n">NacosDiscoveryProperties</span> <span class="n">nacosDiscoveryProperties</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">NacosRibbonServerList</span> <span class="n">serverList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NacosRibbonServerList</span><span class="o">(</span><span class="n">nacosDiscoveryProperties</span><span class="o">);</span>
+        <span class="n">serverList</span><span class="o">.</span><span class="na">initWithNiwsConfig</span><span class="o">(</span><span class="n">config</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">serverList</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
 <p>3 添加注解，让上面的NacosRibbonClientExtendConfiguration成为Ribbon的默认配置。</p>
-
-<pre><code>// ...其他注解
-@RibbonClients(defaultConfiguration = NacosRibbonClientExtendConfiguration.class)
-public class ConsumerMovieApplication {
-  public static void main(String[] args) {
-    SpringApplication.run(ConsumerMovieApplication.class, args);
-  }
-}
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// ...其他注解
+</span><span class="c1"></span><span class="nd">@RibbonClients</span><span class="o">(</span><span class="n">defaultConfiguration</span> <span class="o">=</span> <span class="n">NacosRibbonClientExtendConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConsumerMovieApplication</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">SpringApplication</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">ConsumerMovieApplication</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
 <p>注意 ：</p>
 
 <p>务必注意，将 NacosRibbonClientExtendConfiguration 放在ComponentScan上下文（默认是启动类所在包及其子包）以外！！！</p>

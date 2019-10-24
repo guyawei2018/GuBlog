@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>@SentinelResource注解 属性总结 · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文基于Sentinel 1.6.2，理论支持1.4.0&#43; 属性 作用 是否必须 value 资源名称 是 entryType entry类型，标记流量的方向，取值IN/OUT，默认" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/23/sentinelresource%E6%B3%A8%E8%A7%A3-%E5%B1%9E%E6%80%A7%E6%80%BB%E7%BB%93/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="@SentinelResource注解 属性总结" />
+<meta property="og:description" content="本文基于Sentinel 1.6.2，理论支持1.4.0&#43; 属性 作用 是否必须 value 资源名称 是 entryType entry类型，标记流量的方向，取值IN/OUT，默认" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/23/sentinelresource%E6%B3%A8%E8%A7%A3-%E5%B1%9E%E6%80%A7%E6%80%BB%E7%BB%93/" />
+<meta property="article:published_time" content="2019-10-23T16:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-23T16:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="@SentinelResource注解 属性总结">
+<meta itemprop="description" content="本文基于Sentinel 1.6.2，理论支持1.4.0&#43; 属性 作用 是否必须 value 资源名称 是 entryType entry类型，标记流量的方向，取值IN/OUT，默认">
+
+
+<meta itemprop="datePublished" content="2019-10-23T16:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-23T16:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="1025">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="@SentinelResource注解 属性总结"/>
+<meta name="twitter:description" content="本文基于Sentinel 1.6.2，理论支持1.4.0&#43; 属性 作用 是否必须 value 资源名称 是 entryType entry类型，标记流量的方向，取值IN/OUT，默认"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">@SentinelResource注解 属性总结</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-23
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<pre><code>本文基于Sentinel 1.6.2，理论支持1.4.0+
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th align="left">属性</th>
+<th align="left">作用</th>
+<th align="center">是否必须</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">value</td>
+<td align="left">资源名称</td>
+<td align="center">是</td>
+</tr>
+
+<tr>
+<td align="left"><span style="background-color:#CCCCCC;">entryType</span></td>
+<td align="left"><span style="background-color:#CCCCCC;">entry类型，标记流量的方向，取值IN/OUT，默认是OUT</span></td>
+<td align="center"><span style="background-color:#CCCCCC;">否</span></td>
+</tr>
+
+<tr>
+<td align="left">blockHandler</td>
+<td align="left">处理BlockException的函数名称。函数要求：<br>1. 必须是 public <br>2.返回类型与原方法一致<br>3. 参数类型需要和原方法相匹配，并在最后加 BlockException 类型的参数。<br>4. 默认需和原方法在同一个类中。若希望使用其他类的函数，可配置 blockHandlerClass ，并指定blockHandlerClass里面的方法。</td>
+<td align="center">否</td>
+</tr>
+
+<tr>
+<td align="left"><span style="background-color:#CCCCCC;">blockHandlerClass</span></td>
+<td align="left"><span style="background-color:#CCCCCC;">存放blockHandler的类。对应的处理函数必须static修饰，否则无法解析，其他要求：同blockHandler。</span></td>
+<td align="center"><span style="background-color:#CCCCCC;">否</span></td>
+</tr>
+
+<tr>
+<td align="left">fallback</td>
+<td align="left">用于在抛出异常的时候提供fallback处理逻辑。fallback函数可以针对所有类型的异常（除了 exceptionsToIgnore 里面排除掉的异常类型）进行处理。函数要求：<br>1. 返回类型与原方法一致<br>2. 参数类型需要和原方法相匹配，Sentinel 1.6开始，也可在方法最后加 Throwable 类型的参数。<br>3.默认需和原方法在同一个类中。若希望使用其他类的函数，可配置 fallbackClass ，并指定fallbackClass里面的方法。</td>
+<td align="center">否</td>
+</tr>
+
+<tr>
+<td align="left"><span style="background-color:#CCCCCC;">fallbackClass【1.6】</span></td>
+<td align="left"><span style="background-color:#CCCCCC;">存放fallback的类。对应的处理函数必须static修饰，否则无法解析，其他要求：同fallback。</span></td>
+<td align="center"><span style="background-color:#CCCCCC;">否</span></td>
+</tr>
+
+<tr>
+<td align="left">defaultFallback【1.6】</td>
+<td align="left">用于通用的 fallback 逻辑。默认fallback函数可以针对所有类型的异常（除了 exceptionsToIgnore 里面排除掉的异常类型）进行处理。若同时配置了 fallback 和 defaultFallback，以fallback为准。函数要求：<br>1.返回类型与原方法一致<br>2.方法参数列表为空，或者有一个 Throwable 类型的参数<br>3. 默认需要和原方法在同一个类中。若希望使用其他类的函数，可配置 fallbackClass ，并指定 fallbackClass 里面的方法。</td>
+<td align="center">否</td>
+</tr>
+
+<tr>
+<td align="left"><span style="background-color:#CCCCCC;">exceptionsToIgnore【1.6】</span></td>
+<td align="left"><span style="background-color:#CCCCCC;">指定排除掉哪些异常。排除的异常不会计入异常统计，也不会进入fallback逻辑，而是原样抛出。</span></td>
+<td align="center"><span style="background-color:#CCCCCC;">否</span></td>
+</tr>
+
+<tr>
+<td align="left">exceptionsToTrace</td>
+<td align="left">需要trace的异常</td>
+<td align="center">Throwable</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="tips">TIPS</h3>
+
+<p>1.6.0 之前的版本 fallback 函数只针对降级异常（DegradeException）进行处理，不能针对业务异常进行处理。<br>
+若 blockHandler 和 fallback 都进行了配置，则被限流降级而抛出 BlockException 时只会进入 blockHandler 处理逻辑。若未配置 blockHandler、fallback 和 defaultFallback，则被限流降级时会将 BlockException 直接抛出。<br>
+从 1.4.0 版本开始，注解方式定义资源支持自动统计业务异常，无需手动调用 Tracer.trace(ex) 来记录业务异常。Sentinel 1.4.0 以前的版本需要自行调用 Tracer.trace(ex) 来记录业务异常。</p>
+
+<h3 id="参考文档">参考文档</h3>
+
+<ul>
+<li><p><a href="https://github.com/alibaba/Sentinel/wiki/%E6%B3%A8%E8%A7%A3%E6%94%AF%E6%8C%81">Sentinel 注解支持</a></p></li>
+
+<li><p><a href="https://github.com/alibaba/Sentinel/blob/1.6.2/sentinel-extension/sentinel-annotation-aspectj/src/test/java/com/alibaba/csp/sentinel/annotation/aspectj/integration/service/FooService.java">官方代码示例</a></p></li>
+</ul>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="http://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>
