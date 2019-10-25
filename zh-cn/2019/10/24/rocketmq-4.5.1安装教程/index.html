@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>RocketMQ 4.5.1安装教程 · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文基于RocketMQ 4.5.1，理论支持RocketMQ 4.0&#43; 本文详细探讨如何搭建RocketMQ 一、下载 前往 http://rocketmq.apache.org/release_notes/release-notes-4.5.1/ ，下载 Binary 文件即可。 例如Roc" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/24/rocketmq-4.5.1%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="RocketMQ 4.5.1安装教程" />
+<meta property="og:description" content="本文基于RocketMQ 4.5.1，理论支持RocketMQ 4.0&#43; 本文详细探讨如何搭建RocketMQ 一、下载 前往 http://rocketmq.apache.org/release_notes/release-notes-4.5.1/ ，下载 Binary 文件即可。 例如Roc" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/24/rocketmq-4.5.1%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/" />
+<meta property="article:published_time" content="2019-10-24T16:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-24T16:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="RocketMQ 4.5.1安装教程">
+<meta itemprop="description" content="本文基于RocketMQ 4.5.1，理论支持RocketMQ 4.0&#43; 本文详细探讨如何搭建RocketMQ 一、下载 前往 http://rocketmq.apache.org/release_notes/release-notes-4.5.1/ ，下载 Binary 文件即可。 例如Roc">
+
+
+<meta itemprop="datePublished" content="2019-10-24T16:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-24T16:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="697">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="RocketMQ 4.5.1安装教程"/>
+<meta name="twitter:description" content="本文基于RocketMQ 4.5.1，理论支持RocketMQ 4.0&#43; 本文详细探讨如何搭建RocketMQ 一、下载 前往 http://rocketmq.apache.org/release_notes/release-notes-4.5.1/ ，下载 Binary 文件即可。 例如Roc"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">RocketMQ 4.5.1安装教程</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-24
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">本文基于RocketMQ 4.5.1，理论支持RocketMQ 4.0+</code></pre></div>
+<p>本文详细探讨如何搭建RocketMQ</p>
+
+<h2 id="一-下载">一、下载</h2>
+
+<p>前往 <a href="http://rocketmq.apache.org/release_notes/release-notes-4.5.1/">http://rocketmq.apache.org/release_notes/release-notes-4.5.1/</a> ，下载 Binary 文件即可。<br></p>
+
+<p>例如RocketMQ 4.5.1的下载地址：</p>
+
+<p>Binary: <a href="https://www.apache.org/dyn/closer.cgi?path=rocketmq/4.5.1/rocketmq-all-4.5.1-bin-release.zip">rocketmq-all-4.5.1-bin-release.zip</a></p>
+
+<h2 id="二-系统要求">二、系统要求</h2>
+
+<ul>
+<li>64位操作系统，生产环境建议Linux/Unix/MacOS（Windows操作系统安装说明详见 Windows操作系统安装教程）</li>
+<li>64位JDK 1.8（目前RocketMQ不支持 JDK 11）</li>
+
+<li><p>4G+的可用磁盘</p>
+
+<h2 id="三-linux-unix-macos安装教程">三、Linux/Unix/MacOS安装教程</h2>
+
+<h3 id="3-1-搭建">3.1 搭建</h3></li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">解压压缩包
+
+unzip rocketmq-all-4.5.1-bin-release.zip
+切换目录到RocketMQ根目录
+
+cd rocketmq-all-4.5.1-bin-release
+启动Name Server
+
+nohup sh bin/mqnamesrv -n 192.168.44.78:9876 &amp;
+验证是否启动OK：
+
+tail -f ~/logs/rocketmqlogs/namesrv.log
+
+# 如果成功启动，能看到类似如下的日志：
+2019-07-18 17:03:56 INFO main - The Name Server boot success. ...
+启动 Broker
+
+由于服务器存在多网卡端口的可能，在程序启动的时候无法连接消息队列，
+需要修改broker.conf 文件，增加brokerId1=ip地址
+
+nohup sh bin/mqbroker -n 192.168.44.78:9876 -c conf/broker.conf autoCreateTopicEnable=true &amp;
+验证是否启动OK：
+
+tail -f ~/logs/rocketmqlogs/broker.log
+
+# 如果启动成功，能看到类似如下的日志：
+2019-07-18 17:08:41 INFO main - The broker[itmuchcomdeMacBook-Pro.local, 192.168.43.197:10911] boot success. serializeType=JSON and name server is localhost:9876</code></pre></div>
+<h3 id="3-2-验证rocketmq功能正常-可选">3.2 验证RocketMQ功能正常（可选）</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">3.2.1 验证生产消息正常
+执行如下命令：
+
+export NAMESRV_ADDR=localhost:9876
+sh bin/tools.sh org.apache.rocketmq.example.quickstart.Producer
+能看到类似如下输出：
+
+SendResult [sendStatus=SEND_OK, msgId=C0A82BC5F36C511D50C05B41...
+3.2.2 验证消费消息正常
+执行如下命令：
+
+sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
+能看到类似如下输出：
+
+ConsumeMessageThread_4 Receive New Messages: [MessageExt [queueId=3, stor....</code></pre></div>
+<h3 id="3-3-停止">3.3 停止</h3>
+
+<p>依次执行以下两条命令即可</p>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant"># 命令
+sh bin/mqshutdown broker
+# 输出如下信息说明停止成功
+The mqbroker(36695) is running...
+Send shutdown request to mqbroker(36695) OK
+
+# 命令
+sh bin/mqshutdown namesrv
+# 输出如下信息说明停止成功
+The mqnamesrv(36664) is running...
+Send shutdown request to mqnamesrv(36664) OK</code></pre></div>
+<h2 id="四-windows操作系统安装教程">四、Windows操作系统安装教程</h2>
+
+<p><a href="https://www.jianshu.com/p/4a275e779afa">详见 Windows下RocketMQ安装部署</a></p>
+
+<h2 id="五-生产可用集群搭建教程">五、生产可用集群搭建教程</h2>
+
+<p>RocketMQ集群搭建说明 ，集群安装模式非常多，本文不展开了。请各位看客根据自己的需求，选择适合自己的模式自行搭建。#</p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="http://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

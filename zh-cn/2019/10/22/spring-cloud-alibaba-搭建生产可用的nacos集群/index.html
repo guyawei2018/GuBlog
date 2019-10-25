@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-10-22T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-10-22T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="726">
+<meta itemprop="wordCount" content="1962">
 
 
 
@@ -278,6 +278,38 @@ proxy_pass http://nacos/nacos/;
 <li>本文为了演示方便，将所有Nacos实例都部署在了一台机器中；实际项目中，请将Nacos部署在不同机器中，从而实现更好的容灾与隔离</li>
 </ul>
 
+<h2 id="nacos配置详情">nacos配置详情</h2>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml"><span class="c"># 如果选择固定Ip注册可以配置</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.ip<span class="w"> </span>=<span class="w"> </span><span class="m">10.2</span>.<span class="m">11.11</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.port<span class="w"> </span>=<span class="w"> </span><span class="m">9090</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="c"># 如果选择固定网卡配置项</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.networkInterface<span class="w"> </span>=<span class="w"> </span>eth0<span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="c"># 如果想更丰富的选择，可以使用spring cloud 的工具 InetUtils进行配置</span><span class="w">
+</span><span class="w"></span><span class="c"># 具体说明可以自行检索: https://github.com/spring-cloud/spring-cloud-commons/blob/master/docs/src/main/asciidoc/spring-cloud-commons.adoc</span><span class="w">
+</span><span class="w"></span>spring.cloud.inetutils.default-hostname<span class="w">
+</span><span class="w"></span>spring.cloud.inetutils.default-ip-address<span class="w">
+</span><span class="w"></span>spring.cloud.inetutils.ignored-interfaces<span class="p">[</span><span class="m">0</span><span class="p">]</span>=eth0<span class="w">   </span><span class="c"># 忽略网卡，eth0</span><span class="w">
+</span><span class="w"></span>spring.cloud.inetutils.ignored-interfaces=eth.*<span class="w">     </span><span class="c"># 忽略网卡，eth.*，正则表达式</span><span class="w">
+</span><span class="w"></span>spring.cloud.inetutils.preferred-networks=<span class="m">10.34</span>.<span class="m">12</span><span class="w">  </span><span class="c"># 选择符合前缀的IP作为服务注册IP</span><span class="w">
+</span><span class="w"></span>spring.cloud.inetutils.timeout-seconds<span class="w">
+</span><span class="w"></span>spring.cloud.inetutils.use-only-site-local-interfaces<span class="w">
+</span><span class="w"></span><span class="c">#————————————————</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.server-addr<span class="w">  </span><span class="c">#Nacos Server 启动监听的ip地址和端口</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.service<span class="w">  </span><span class="c">#给当前的服务命名</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.weight<span class="w">  </span><span class="c">#取值范围 1 到 100，数值越大，权重越大</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.network-interface<span class="w"> </span><span class="c">#当IP未配置时，注册的IP为此网卡所对应的IP地址，如果此项也未配置，则默认取第一块网卡的地址</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.ip<span class="w">  </span><span class="c"># 优先级最高</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.port<span class="w">  </span><span class="c"># 默认情况下不用配置，会自动探测</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.namespace<span class="w"> </span><span class="c"># 常用场景之一是不同环境的注册的区分隔离，例如开发测试环境和生产环境的资源（如配置、服务）隔离等。</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.access-key<span class="w">  </span><span class="c"># 当要上阿里云时，阿里云上面的一个云账号名</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.secret-key<span class="w"> </span><span class="c"># 当要上阿里云时，阿里云上面的一个云账号密码</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.metadata<span class="w">    </span><span class="c">#使用Map格式配置，用户可以根据自己的需要自定义一些和服务相关的元数据信息</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.log-name<span class="w">   </span><span class="c"># 日志文件名</span><span class="w">
+</span><span class="w"></span>spring.cloud.nacos.discovery.enpoint<span class="w">   </span><span class="c"># 地域的某个服务的入口域名，通过此域名可以动态地拿到服务端地址</span><span class="w">
+</span><span class="w"></span>ribbon.nacos.enabled<span class="w">  </span><span class="c"># 是否集成Ribbon 默认为true</span></code></pre></div>
 <h2 id="参考文档">参考文档</h2>
 
 <ul>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>Alibaba Sentinel规则持久化-拉模式 · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文实现基于拉模式的Alibaba Sentinel规则持久化。 一、拉模式架构 引用自 https://github.com/alibaba/Se" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/24/alibaba-sentinel%E8%A7%84%E5%88%99%E6%8C%81%E4%B9%85%E5%8C%96-%E6%8B%89%E6%A8%A1%E5%BC%8F/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="Alibaba Sentinel规则持久化-拉模式" />
+<meta property="og:description" content="本文实现基于拉模式的Alibaba Sentinel规则持久化。 一、拉模式架构 引用自 https://github.com/alibaba/Se" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/24/alibaba-sentinel%E8%A7%84%E5%88%99%E6%8C%81%E4%B9%85%E5%8C%96-%E6%8B%89%E6%A8%A1%E5%BC%8F/" />
+<meta property="article:published_time" content="2019-10-24T16:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-24T16:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="Alibaba Sentinel规则持久化-拉模式">
+<meta itemprop="description" content="本文实现基于拉模式的Alibaba Sentinel规则持久化。 一、拉模式架构 引用自 https://github.com/alibaba/Se">
+
+
+<meta itemprop="datePublished" content="2019-10-24T16:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-24T16:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="1173">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Alibaba Sentinel规则持久化-拉模式"/>
+<meta name="twitter:description" content="本文实现基于拉模式的Alibaba Sentinel规则持久化。 一、拉模式架构 引用自 https://github.com/alibaba/Se"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Alibaba Sentinel规则持久化-拉模式</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-24
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">本文实现基于拉模式的Alibaba Sentinel规则持久化。</code></pre></div>
+<h2 id="一-拉模式架构">一、拉模式架构</h2>
+
+<p><img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/spring_cloud_alibaba/sentinel/sentinel-6.png" alt="图片" /></p>
+
+<h3 id="引用自-https-github-com-alibaba-sentinel-wiki-在生产环境中使用-sentinel">引用自 <a href="https://github.com/alibaba/Sentinel/wiki/在生产环境中使用-Sentinel">https://github.com/alibaba/Sentinel/wiki/在生产环境中使用-Sentinel</a></h3>
+
+<h2 id="二-原理简述">二、原理简述</h2>
+
+<ul>
+<li>FileRefreshableDataSource 定时从指定文件中读取规则JSON文件【图中的本地文件】，如果发现文件发生变化，就更新规则缓存。</li>
+
+<li><p>FileWritableDataSource 接收控制台规则推送，并根据配置，修改规则JSON文件【图中的本地文件】。</p>
+
+<h2 id="三-编写">三、编写</h2></li>
+</ul>
+
+<p>修改Spring Cloud Alibaba微服务。</p>
+
+<h3 id="3-1-加依赖">3.1 加依赖</h3>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>com.alibaba.csp<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>sentinel-datasource-extension<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span></code></pre></div>
+<h3 id="3-2-写代码">3.2 写代码</h3>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="cm">/**
+</span><span class="cm"> * 拉模式规则持久化
+</span><span class="cm"> *
+</span><span class="cm"> * @author itmuch.com
+</span><span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FileDataSourceInit</span> <span class="kd">implements</span> <span class="n">InitFunc</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// TIPS: 如果你对这个路径不喜欢，可修改为你喜欢的路径
+</span><span class="c1"></span>        <span class="n">String</span> <span class="n">ruleDir</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&#34;user.home&#34;</span><span class="o">)</span> <span class="o">+</span> <span class="s">&#34;/sentinel/rules&#34;</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">flowRulePath</span> <span class="o">=</span> <span class="n">ruleDir</span> <span class="o">+</span> <span class="s">&#34;/flow-rule.json&#34;</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">degradeRulePath</span> <span class="o">=</span> <span class="n">ruleDir</span> <span class="o">+</span> <span class="s">&#34;/degrade-rule.json&#34;</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">systemRulePath</span> <span class="o">=</span> <span class="n">ruleDir</span> <span class="o">+</span> <span class="s">&#34;/system-rule.json&#34;</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">authorityRulePath</span> <span class="o">=</span> <span class="n">ruleDir</span> <span class="o">+</span> <span class="s">&#34;/authority-rule.json&#34;</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">paramFlowRulePath</span> <span class="o">=</span> <span class="n">ruleDir</span> <span class="o">+</span> <span class="s">&#34;/param-flow-rule.json&#34;</span><span class="o">;</span>
+
+        <span class="k">this</span><span class="o">.</span><span class="na">mkdirIfNotExits</span><span class="o">(</span><span class="n">ruleDir</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">createFileIfNotExits</span><span class="o">(</span><span class="n">flowRulePath</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">createFileIfNotExits</span><span class="o">(</span><span class="n">degradeRulePath</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">createFileIfNotExits</span><span class="o">(</span><span class="n">systemRulePath</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">createFileIfNotExits</span><span class="o">(</span><span class="n">authorityRulePath</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">createFileIfNotExits</span><span class="o">(</span><span class="n">paramFlowRulePath</span><span class="o">);</span>
+
+        <span class="c1">// 流控规则
+</span><span class="c1"></span>        <span class="n">ReadableDataSource</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">FlowRule</span><span class="o">&gt;&gt;</span> <span class="n">flowRuleRDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileRefreshableDataSource</span><span class="o">&lt;&gt;(</span>
+            <span class="n">flowRulePath</span><span class="o">,</span>
+            <span class="n">flowRuleListParser</span>
+        <span class="o">);</span>
+        <span class="c1">// 将可读数据源注册至FlowRuleManager
+</span><span class="c1"></span>        <span class="c1">// 这样当规则文件发生变化时，就会更新规则到内存
+</span><span class="c1"></span>        <span class="n">FlowRuleManager</span><span class="o">.</span><span class="na">register2Property</span><span class="o">(</span><span class="n">flowRuleRDS</span><span class="o">.</span><span class="na">getProperty</span><span class="o">());</span>
+        <span class="n">WritableDataSource</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">FlowRule</span><span class="o">&gt;&gt;</span> <span class="n">flowRuleWDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileWritableDataSource</span><span class="o">&lt;&gt;(</span>
+            <span class="n">flowRulePath</span><span class="o">,</span><span class="nl">
+</span><span class="nl">            this:</span><span class="o">:</span><span class="n">encodeJson</span>
+        <span class="o">);</span>
+        <span class="c1">// 将可写数据源注册至transport模块的WritableDataSourceRegistry中
+</span><span class="c1"></span>        <span class="c1">// 这样收到控制台推送的规则时，Sentinel会先更新到内存，然后将规则写入到文件中
+</span><span class="c1"></span>        <span class="n">WritableDataSourceRegistry</span><span class="o">.</span><span class="na">registerFlowDataSource</span><span class="o">(</span><span class="n">flowRuleWDS</span><span class="o">);</span>
+
+        <span class="c1">// 降级规则
+</span><span class="c1"></span>        <span class="n">ReadableDataSource</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">DegradeRule</span><span class="o">&gt;&gt;</span> <span class="n">degradeRuleRDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileRefreshableDataSource</span><span class="o">&lt;&gt;(</span>
+            <span class="n">degradeRulePath</span><span class="o">,</span>
+            <span class="n">degradeRuleListParser</span>
+        <span class="o">);</span>
+        <span class="n">DegradeRuleManager</span><span class="o">.</span><span class="na">register2Property</span><span class="o">(</span><span class="n">degradeRuleRDS</span><span class="o">.</span><span class="na">getProperty</span><span class="o">());</span>
+        <span class="n">WritableDataSource</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">DegradeRule</span><span class="o">&gt;&gt;</span> <span class="n">degradeRuleWDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileWritableDataSource</span><span class="o">&lt;&gt;(</span>
+            <span class="n">degradeRulePath</span><span class="o">,</span><span class="nl">
+</span><span class="nl">            this:</span><span class="o">:</span><span class="n">encodeJson</span>
+        <span class="o">);</span>
+        <span class="n">WritableDataSourceRegistry</span><span class="o">.</span><span class="na">registerDegradeDataSource</span><span class="o">(</span><span class="n">degradeRuleWDS</span><span class="o">);</span>
+
+        <span class="c1">// 系统规则
+</span><span class="c1"></span>        <span class="n">ReadableDataSource</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">SystemRule</span><span class="o">&gt;&gt;</span> <span class="n">systemRuleRDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileRefreshableDataSource</span><span class="o">&lt;&gt;(</span>
+            <span class="n">systemRulePath</span><span class="o">,</span>
+            <span class="n">systemRuleListParser</span>
+        <span class="o">);</span>
+        <span class="n">SystemRuleManager</span><span class="o">.</span><span class="na">register2Property</span><span class="o">(</span><span class="n">systemRuleRDS</span><span class="o">.</span><span class="na">getProperty</span><span class="o">());</span>
+        <span class="n">WritableDataSource</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SystemRule</span><span class="o">&gt;&gt;</span> <span class="n">systemRuleWDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileWritableDataSource</span><span class="o">&lt;&gt;(</span>
+            <span class="n">systemRulePath</span><span class="o">,</span><span class="nl">
+</span><span class="nl">            this:</span><span class="o">:</span><span class="n">encodeJson</span>
+        <span class="o">);</span>
+        <span class="n">WritableDataSourceRegistry</span><span class="o">.</span><span class="na">registerSystemDataSource</span><span class="o">(</span><span class="n">systemRuleWDS</span><span class="o">);</span>
+
+        <span class="c1">// 授权规则
+</span><span class="c1"></span>        <span class="n">ReadableDataSource</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">AuthorityRule</span><span class="o">&gt;&gt;</span> <span class="n">authorityRuleRDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileRefreshableDataSource</span><span class="o">&lt;&gt;(</span>
+            <span class="n">authorityRulePath</span><span class="o">,</span>
+            <span class="n">authorityRuleListParser</span>
+        <span class="o">);</span>
+        <span class="n">AuthorityRuleManager</span><span class="o">.</span><span class="na">register2Property</span><span class="o">(</span><span class="n">authorityRuleRDS</span><span class="o">.</span><span class="na">getProperty</span><span class="o">());</span>
+        <span class="n">WritableDataSource</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">AuthorityRule</span><span class="o">&gt;&gt;</span> <span class="n">authorityRuleWDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileWritableDataSource</span><span class="o">&lt;&gt;(</span>
+            <span class="n">authorityRulePath</span><span class="o">,</span><span class="nl">
+</span><span class="nl">            this:</span><span class="o">:</span><span class="n">encodeJson</span>
+        <span class="o">);</span>
+        <span class="n">WritableDataSourceRegistry</span><span class="o">.</span><span class="na">registerAuthorityDataSource</span><span class="o">(</span><span class="n">authorityRuleWDS</span><span class="o">);</span>
+
+        <span class="c1">// 热点参数规则
+</span><span class="c1"></span>        <span class="n">ReadableDataSource</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">ParamFlowRule</span><span class="o">&gt;&gt;</span> <span class="n">paramFlowRuleRDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileRefreshableDataSource</span><span class="o">&lt;&gt;(</span>
+            <span class="n">paramFlowRulePath</span><span class="o">,</span>
+            <span class="n">paramFlowRuleListParser</span>
+        <span class="o">);</span>
+        <span class="n">ParamFlowRuleManager</span><span class="o">.</span><span class="na">register2Property</span><span class="o">(</span><span class="n">paramFlowRuleRDS</span><span class="o">.</span><span class="na">getProperty</span><span class="o">());</span>
+        <span class="n">WritableDataSource</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">ParamFlowRule</span><span class="o">&gt;&gt;</span> <span class="n">paramFlowRuleWDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileWritableDataSource</span><span class="o">&lt;&gt;(</span>
+            <span class="n">paramFlowRulePath</span><span class="o">,</span><span class="nl">
+</span><span class="nl">            this:</span><span class="o">:</span><span class="n">encodeJson</span>
+        <span class="o">);</span>
+        <span class="n">ModifyParamFlowRulesCommandHandler</span><span class="o">.</span><span class="na">setWritableDataSource</span><span class="o">(</span><span class="n">paramFlowRuleWDS</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">FlowRule</span><span class="o">&gt;&gt;</span> <span class="n">flowRuleListParser</span> <span class="o">=</span> <span class="n">source</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="o">.</span><span class="na">parseObject</span><span class="o">(</span>
+        <span class="n">source</span><span class="o">,</span>
+        <span class="k">new</span> <span class="n">TypeReference</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">FlowRule</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+        <span class="o">}</span>
+    <span class="o">);</span>
+    <span class="kd">private</span> <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">DegradeRule</span><span class="o">&gt;&gt;</span> <span class="n">degradeRuleListParser</span> <span class="o">=</span> <span class="n">source</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="o">.</span><span class="na">parseObject</span><span class="o">(</span>
+        <span class="n">source</span><span class="o">,</span>
+        <span class="k">new</span> <span class="n">TypeReference</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">DegradeRule</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+        <span class="o">}</span>
+    <span class="o">);</span>
+    <span class="kd">private</span> <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">SystemRule</span><span class="o">&gt;&gt;</span> <span class="n">systemRuleListParser</span> <span class="o">=</span> <span class="n">source</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="o">.</span><span class="na">parseObject</span><span class="o">(</span>
+        <span class="n">source</span><span class="o">,</span>
+        <span class="k">new</span> <span class="n">TypeReference</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SystemRule</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+        <span class="o">}</span>
+    <span class="o">);</span>
+
+    <span class="kd">private</span> <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">AuthorityRule</span><span class="o">&gt;&gt;</span> <span class="n">authorityRuleListParser</span> <span class="o">=</span> <span class="n">source</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="o">.</span><span class="na">parseObject</span><span class="o">(</span>
+        <span class="n">source</span><span class="o">,</span>
+        <span class="k">new</span> <span class="n">TypeReference</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">AuthorityRule</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+        <span class="o">}</span>
+    <span class="o">);</span>
+
+    <span class="kd">private</span> <span class="n">Converter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">ParamFlowRule</span><span class="o">&gt;&gt;</span> <span class="n">paramFlowRuleListParser</span> <span class="o">=</span> <span class="n">source</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="o">.</span><span class="na">parseObject</span><span class="o">(</span>
+        <span class="n">source</span><span class="o">,</span>
+        <span class="k">new</span> <span class="n">TypeReference</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">ParamFlowRule</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+        <span class="o">}</span>
+    <span class="o">);</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">mkdirIfNotExits</span><span class="o">(</span><span class="n">String</span> <span class="n">filePath</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">filePath</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">file</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">file</span><span class="o">.</span><span class="na">mkdirs</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">createFileIfNotExits</span><span class="o">(</span><span class="n">String</span> <span class="n">filePath</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">filePath</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">file</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">file</span><span class="o">.</span><span class="na">createNewFile</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">String</span> <span class="nf">encodeJson</span><span class="o">(</span><span class="n">T</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">JSON</span><span class="o">.</span><span class="na">toJSONString</span><span class="o">(</span><span class="n">t</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+<h3 id="3-3-配置">3.3 配置</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">在项目的 resources/META-INF/services 目录下创建文件，名为 com.alibaba.csp.sentinel.init.InitFunc ，
+内容为：改成上面FileDataSourceInit的包名类名全路径即可-&gt;com.itmuch.contentcenter.FileDataSourceInit</code></pre></div>
+<h2 id="四-优缺点分析">四、优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+
+<p>简单易懂
+没有多余依赖（比如配置中心、缓存等）</p>
+
+<h3 id="缺点">缺点</h3>
+
+<p>由于规则是用 FileRefreshableDataSource 定时更新的，所以规则更新会有延迟。如果FileRefreshableDataSource定时时间过大，可能长时间延迟；如果FileRefreshableDataSource过小，又会影响性能；
+规则存储在本地文件，如果有一天需要迁移微服务，那么需要把规则文件一起迁移，否则规则会丢失。</p>
+
+<h3 id="五-你可能会有的疑问">五、你可能会有的疑问</h3>
+
+<p>Spring Cloud Alibaba不是提供了如下配置了吗？为什么要全部自己写呢？</p>
+
+<p>spring.cloud.sentinel.datasource.ds1.file.file=classpath: degraderule.json
+spring.cloud.sentinel.datasource.ds1.file.rule-type=flow</p>
+
+<p>#spring.cloud.sentinel.datasource.ds1.file.file=classpath: flowrule.json
+#spring.cloud.sentinel.datasource.ds1.file.data-type=custom
+#spring.cloud.sentinel.datasource.ds1.file.converter-class=com.alibaba.cloud.examples.JsonFlowRuleListConverter
+#spring.cloud.sentinel.datasource.ds1.file.rule-type=flow
+关于这个问题，可以看Issue：<a href="https://github.com/alibaba/spring-cloud-alibaba/issues/756">https://github.com/alibaba/spring-cloud-alibaba/issues/756</a></p>
+
+<h2 id="六-参考文档">六、参考文档</h2>
+
+<p><a href="https://github.com/alibaba/Sentinel/wiki/在生产环境中使用-Sentinel#pull模式">https://github.com/alibaba/Sentinel/wiki/在生产环境中使用-Sentinel#pull模式</a></p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="http://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>
