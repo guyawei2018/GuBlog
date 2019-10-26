@@ -6,10 +6,19 @@
     <description>Recent content in Posts on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 24 Oct 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 26 Oct 2019 10:01:23 +0800</lastBuildDate>
     
 	<atom:link href="https://guyawei.top/zh-cn/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Spring Cloud Stream实现消息过滤消费</title>
+      <link>https://guyawei.top/zh-cn/2019/10/26/spring-cloud-stream%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E8%BF%87%E6%BB%A4%E6%B6%88%E8%B4%B9/</link>
+      <pubDate>Sat, 26 Oct 2019 10:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/26/spring-cloud-stream%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E8%BF%87%E6%BB%A4%E6%B6%88%E8%B4%B9/</guid>
+      <description>本文基于Spring Cloud Greenwich SR1 + spring-cloud-starter-stream-rocketmq 0.9.0 理论兼容：Spring Cloud Finchley+ + spring-cloud-starter-stream-rocketmq 0.2.2+ MQ使用的是RocketMQ，也可使用Kafka或者RabbitMQ。 本文探</description>
+    </item>
     
     <item>
       <title>Alibaba Sentinel规则持久化-拉模式</title>
@@ -102,6 +111,15 @@
     </item>
     
     <item>
+      <title>Spring Cloud Stream知识盘点</title>
+      <link>https://guyawei.top/zh-cn/2019/10/22/spring-cloud-stream%E7%9F%A5%E8%AF%86%E7%9B%98%E7%82%B9/</link>
+      <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/10/22/spring-cloud-stream%E7%9F%A5%E8%AF%86%E7%9B%98%E7%82%B9/</guid>
+      <description>本文来Spring Cloud Stream，做一个知识点盘点和总结，包括： 1.概念 2.Stream注解 3.Spring Integration（Spring Cloud Stre</description>
+    </item>
+    
+    <item>
       <title>Spring Cloud Stream错误处理详解</title>
       <link>https://guyawei.top/zh-cn/2019/10/22/spring-cloud-stream%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E8%AF%A6%E8%A7%A3/</link>
       <pubDate>Tue, 22 Oct 2019 16:01:23 +0800</pubDate>
@@ -171,24 +189,6 @@
       
       <guid>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</guid>
       <description>redis在CentOS7安装 1.# wget http://download.redis.io/releases/redis-5.0.3.tar.gz 2.# tar xzf redis-5.0.3.tar.gz 3.# cd redis-5.0.3 4.# yum install gcc-c++ &amp;lt;&amp;ndash;可能需要安装gcc c语言编译工具&amp;ndash;&amp;gt; 在第一</description>
-    </item>
-    
-    <item>
-      <title>webservice详解</title>
-      <link>https://guyawei.top/zh-cn/2019/05/29/webservice%E8%AF%A6%E8%A7%A3/</link>
-      <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
-      
-      <guid>https://guyawei.top/zh-cn/2019/05/29/webservice%E8%AF%A6%E8%A7%A3/</guid>
-      <description>webservice详解 Schema约束 1. namespace 相当于schema文件的id 2. targetNamespace属性 用来指定schema文件的nam</description>
-    </item>
-    
-    <item>
-      <title>浙江宁波游玩</title>
-      <link>https://guyawei.top/zh-cn/2019/04/21/%E6%B5%99%E6%B1%9F%E5%AE%81%E6%B3%A2%E6%B8%B8%E7%8E%A9/</link>
-      <pubDate>Sun, 21 Apr 2019 16:01:23 +0800</pubDate>
-      
-      <guid>https://guyawei.top/zh-cn/2019/04/21/%E6%B5%99%E6%B1%9F%E5%AE%81%E6%B3%A2%E6%B8%B8%E7%8E%A9/</guid>
-      <description>浙江宁波游玩 4月春暖花开，万物复苏的季节和家人来一场亲子游玩 刚到杭州湾跨海大桥 3D画 最终的目的地 女儿的童话王国 一起看熊出没剧场 女娲补天里面的</description>
     </item>
     
   </channel>

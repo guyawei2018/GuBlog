@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>Spring Cloud Stream实现消息过滤消费 · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文基于Spring Cloud Greenwich SR1 &#43; spring-cloud-starter-stream-rocketmq 0.9.0 理论兼容：Spring Cloud Finchley&#43; &#43; spring-cloud-starter-stream-rocketmq 0.2.2&#43; MQ使用的是RocketMQ，也可使用Kafka或者RabbitMQ。 本文探" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/26/spring-cloud-stream%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E8%BF%87%E6%BB%A4%E6%B6%88%E8%B4%B9/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="Spring Cloud Stream实现消息过滤消费" />
+<meta property="og:description" content="本文基于Spring Cloud Greenwich SR1 &#43; spring-cloud-starter-stream-rocketmq 0.9.0 理论兼容：Spring Cloud Finchley&#43; &#43; spring-cloud-starter-stream-rocketmq 0.2.2&#43; MQ使用的是RocketMQ，也可使用Kafka或者RabbitMQ。 本文探" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/26/spring-cloud-stream%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E8%BF%87%E6%BB%A4%E6%B6%88%E8%B4%B9/" />
+<meta property="article:published_time" content="2019-10-26T10:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-26T10:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="Spring Cloud Stream实现消息过滤消费">
+<meta itemprop="description" content="本文基于Spring Cloud Greenwich SR1 &#43; spring-cloud-starter-stream-rocketmq 0.9.0 理论兼容：Spring Cloud Finchley&#43; &#43; spring-cloud-starter-stream-rocketmq 0.2.2&#43; MQ使用的是RocketMQ，也可使用Kafka或者RabbitMQ。 本文探">
+
+
+<meta itemprop="datePublished" content="2019-10-26T10:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-26T10:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="1572">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Cloud Stream实现消息过滤消费"/>
+<meta name="twitter:description" content="本文基于Spring Cloud Greenwich SR1 &#43; spring-cloud-starter-stream-rocketmq 0.9.0 理论兼容：Spring Cloud Finchley&#43; &#43; spring-cloud-starter-stream-rocketmq 0.2.2&#43; MQ使用的是RocketMQ，也可使用Kafka或者RabbitMQ。 本文探"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Spring Cloud Stream实现消息过滤消费</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-26
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">本文基于Spring Cloud Greenwich SR1 + spring-cloud-starter-stream-rocketmq 0.9.0
+
+理论兼容：Spring Cloud Finchley+ + spring-cloud-starter-stream-rocketmq 0.2.2+
+
+MQ使用的是RocketMQ，也可使用Kafka或者RabbitMQ。</code></pre></div>
+<p>本文探讨Spring Cloud Stream &amp; RocketMQ过滤消息的各种姿势。</p>
+
+<p>在实际项目中，我们可能需要实现消息消费的过滤。</p>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">举个例子：实现消息的分流处理：
+
+生产者生产的消息，虽然消息体可能一样，但是header不一样。可编写两个或者更多的消费者，对不同header的消息做针对性的处理！</code></pre></div>
+<h2 id="condition">condition</h2>
+
+<h3 id="生产者">生产者</h3>
+
+<p>生产者设置一下header，比如my-header，值根据你的需要填写：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Autowired</span>
+<span class="kd">private</span> <span class="n">Source</span> <span class="n">source</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="n">String</span> <span class="nf">testStream</span><span class="o">()</span> <span class="o">{</span>
+  <span class="k">this</span><span class="o">.</span><span class="na">source</span><span class="o">.</span><span class="na">output</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">send</span><span class="o">(</span>
+    <span class="n">MessageBuilder</span>
+    <span class="o">.</span><span class="na">withPayload</span><span class="o">(</span><span class="s">&#34;消息体&#34;</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">setHeader</span><span class="o">(</span><span class="s">&#34;my-header&#34;</span><span class="o">,</span><span class="s">&#34;你的header&#34;</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">build</span><span class="o">()</span>
+  <span class="o">);</span>
+  <span class="k">return</span> <span class="s">&#34;success&#34;</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div>
+<h3 id="消费者">消费者</h3>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Service</span>
+<span class="nd">@Slf4j</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestStreamConsumer</span> <span class="o">{</span>
+    <span class="nd">@StreamListener</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="n">Sink</span><span class="o">.</span><span class="na">INPUT</span><span class="o">,</span><span class="n">condition</span> <span class="o">=</span> <span class="s">&#34;headers[&#39;my-header&#39;]==&#39;你的header&#39;&#34;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">receive</span><span class="o">(</span><span class="n">String</span> <span class="n">messageBody</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;通过stream收到了消息：messageBody ={}&#34;</span><span class="o">,</span> <span class="n">messageBody</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+<p>如代码所示，使用 StreamListener 注解的 condition 属性。当 headers[&lsquo;my-header&rsquo;]==&lsquo;你的header&rsquo; 条件满足，才会进入到方法体。</p>
+
+<h2 id="tags">Tags</h2>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">该方式只支持RoketMQ，不支持Kafka/RabbitMQ</code></pre></div>
+<h3 id="生产者-1">生产者</h3>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Autowired</span>
+<span class="kd">private</span> <span class="n">Source</span> <span class="n">source</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="n">String</span> <span class="nf">testStream</span><span class="o">()</span> <span class="o">{</span>
+  <span class="k">this</span><span class="o">.</span><span class="na">source</span><span class="o">.</span><span class="na">output</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">send</span><span class="o">(</span>
+    <span class="n">MessageBuilder</span>
+    <span class="o">.</span><span class="na">withPayload</span><span class="o">(</span><span class="s">&#34;消息体&#34;</span><span class="o">)</span>
+    <span class="c1">// 注意：只能设置1个tag
+</span><span class="c1"></span>    <span class="o">.</span><span class="na">setHeader</span><span class="o">(</span><span class="n">RocketMQHeaders</span><span class="o">.</span><span class="na">TAGS</span><span class="o">,</span> <span class="s">&#34;tag1&#34;</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">build</span><span class="o">()</span>
+  <span class="o">);</span>
+  <span class="k">return</span> <span class="s">&#34;success&#34;</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div>
+<h3 id="消费者-1">消费者</h3>
+
+<p>接口</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">MySink</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">INPUT1</span> <span class="o">=</span> <span class="s">&#34;input1&#34;</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">INPUT2</span> <span class="o">=</span> <span class="s">&#34;input2&#34;</span><span class="o">;</span>
+
+    <span class="nd">@Input</span><span class="o">(</span><span class="n">INPUT1</span><span class="o">)</span>
+    <span class="n">SubscribableChannel</span> <span class="nf">input</span><span class="o">();</span>
+
+    <span class="nd">@Input</span><span class="o">(</span><span class="n">INPUT2</span><span class="o">)</span>
+    <span class="n">SubscribableChannel</span> <span class="nf">input2</span><span class="o">();</span>
+<span class="o">}</span></code></pre></div>
+<p>注解</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@EnableBinding</span><span class="o">({</span><span class="n">MySink</span><span class="o">.</span><span class="na">class</span><span class="o">})</span></code></pre></div>
+<p>配置</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>stream<span class="p">:</span><span class="w">
+</span><span class="w">      </span>rocketmq<span class="p">:</span><span class="w">
+</span><span class="w">        </span>binder<span class="p">:</span><span class="w">
+</span><span class="w">          </span>name-server<span class="p">:</span><span class="w"> </span><span class="m">127.0</span>.<span class="m">0.1</span><span class="p">:</span><span class="m">9876</span><span class="w">
+</span><span class="w">        </span>bindings<span class="p">:</span><span class="w">
+</span><span class="w">          </span>input1<span class="p">:</span><span class="w">
+</span><span class="w">            </span>consumer<span class="p">:</span><span class="w">
+</span><span class="w">              </span><span class="c"># 表示input2消费带有tag1的消息</span><span class="w">
+</span><span class="w">              </span>tags<span class="p">:</span><span class="w"> </span>tag1<span class="w">
+</span><span class="w">          </span>input2<span class="p">:</span><span class="w">
+</span><span class="w">            </span>consumer<span class="p">:</span><span class="w">
+</span><span class="w">              </span><span class="c"># 表示input2消费带有tag2或者tag3的消息</span><span class="w">
+</span><span class="w">              </span>tags<span class="p">:</span><span class="w"> </span>tag2||tag3<span class="w">
+</span><span class="w">      </span>bindings<span class="p">:</span><span class="w">
+</span><span class="w">        </span>input1<span class="p">:</span><span class="w">
+</span><span class="w">          </span>destination<span class="p">:</span><span class="w"> </span>test-topic<span class="w">
+</span><span class="w">          </span>group<span class="p">:</span><span class="w"> </span>test-group1<span class="w">
+</span><span class="w">        </span>input2<span class="p">:</span><span class="w">
+</span><span class="w">          </span>destination<span class="p">:</span><span class="w"> </span>test-topic<span class="w">
+</span><span class="w">          </span>group<span class="p">:</span><span class="w"> </span>test-group2</code></pre></div>
+<p>消费代码</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Service</span>
+<span class="nd">@Slf4j</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyTestStreamConsumer</span> <span class="o">{</span>
+    <span class="cm">/**
+</span><span class="cm">     * 我消费带有tag1的消息
+</span><span class="cm">     *
+</span><span class="cm">     * @param messageBody 消息体
+</span><span class="cm">     */</span>
+    <span class="nd">@StreamListener</span><span class="o">(</span><span class="n">MySink</span><span class="o">.</span><span class="na">INPUT1</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">receive1</span><span class="o">(</span><span class="n">String</span> <span class="n">messageBody</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;带有tag1的消息被消费了：messageBody ={}&#34;</span><span class="o">,</span> <span class="n">messageBody</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * 我消费带有tag1或者tag2的消息
+</span><span class="cm">     *
+</span><span class="cm">     * @param messageBody 消息体
+</span><span class="cm">     */</span>
+    <span class="nd">@StreamListener</span><span class="o">(</span><span class="n">MySink</span><span class="o">.</span><span class="na">INPUT2</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">receive2</span><span class="o">(</span><span class="n">String</span> <span class="n">messageBody</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;带有tag2/tag3的消息被消费了：messageBody ={}&#34;</span><span class="o">,</span> <span class="n">messageBody</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+<p>日志：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">2019</span><span class="o">-</span><span class="n">08</span><span class="o">-</span><span class="n">04</span> <span class="nl">19:10:</span><span class="n">03</span><span class="o">.</span><span class="na">799</span>  <span class="n">INFO</span> <span class="n">53760</span> <span class="o">---</span> <span class="o">[</span><span class="n">MessageThread_1</span><span class="o">]</span> <span class="n">c</span><span class="o">.</span><span class="na">i</span><span class="o">.</span><span class="na">u</span><span class="o">.</span><span class="na">rocketmq</span><span class="o">.</span><span class="na">MyTestStreamConsumer</span>      <span class="o">:</span> <span class="n">带有tag1的消息被消费了</span><span class="err">：</span><span class="n">messageBody</span> <span class="o">=</span><span class="n">消息体</span></code></pre></div>
+<h2 id="sql-92">Sql 92</h2>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">该方式只支持RoketMQ，不支持Kafka/RabbitMQ
+用了sql，就不要用Tag</code></pre></div>
+<p>RocketMQ支持使用SQL语法过滤消息。官方文档：<a href="http://rocketmq.apache.org/rocketmq/filter-messages-by-sql92-in-rocketmq/">http://rocketmq.apache.org/rocketmq/filter-messages-by-sql92-in-rocketmq/</a></p>
+
+<p>Spring Clous Stream RocketMQ也为此特性提供了支持。</p>
+
+<h3 id="开启sql-92支持">开启SQL 92支持</h3>
+
+<p>默认情况下，RocketMQ的SQL过滤支持是关闭的，要想使用SQL 92过滤消息，需要：</p>
+<div class="highlight"><pre class="chroma"><code class="language-conf" data-lang="conf">在 conf/broker.conf 添加
+enablePropertyFilter = true
+
+启动RocketMQ
+nohup sh bin/mqbroker -n localhost:9876 -c ./conf/broker.conf &amp;</code></pre></div>
+<h3 id="生产者-2">生产者</h3>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Autowired</span>
+<span class="kd">private</span> <span class="n">Source</span> <span class="n">source</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="n">String</span> <span class="nf">testStream</span><span class="o">()</span> <span class="o">{</span>
+  <span class="k">this</span><span class="o">.</span><span class="na">source</span><span class="o">.</span><span class="na">output</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">send</span><span class="o">(</span>
+    <span class="n">MessageBuilder</span>
+    <span class="o">.</span><span class="na">withPayload</span><span class="o">(</span><span class="s">&#34;消息体&#34;</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">setHeader</span><span class="o">(</span><span class="s">&#34;index&#34;</span><span class="o">,</span> <span class="n">1000</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">build</span><span class="o">()</span>
+  <span class="o">);</span>
+  <span class="k">return</span> <span class="s">&#34;success&#34;</span><span class="o">;</span>
+<span class="o">}</span></code></pre></div>
+<h3 id="消费者-2">消费者</h3>
+
+<p>接口</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">MySink</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">INPUT1</span> <span class="o">=</span> <span class="s">&#34;input1&#34;</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">INPUT2</span> <span class="o">=</span> <span class="s">&#34;input2&#34;</span><span class="o">;</span>
+
+    <span class="nd">@Input</span><span class="o">(</span><span class="n">INPUT1</span><span class="o">)</span>
+    <span class="n">SubscribableChannel</span> <span class="nf">input</span><span class="o">();</span>
+
+    <span class="nd">@Input</span><span class="o">(</span><span class="n">INPUT2</span><span class="o">)</span>
+    <span class="n">SubscribableChannel</span> <span class="nf">input2</span><span class="o">();</span>
+<span class="o">}</span></code></pre></div>
+<p>注解</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@EnableBinding</span><span class="o">({</span><span class="n">MySink</span><span class="o">.</span><span class="na">class</span><span class="o">})</span></code></pre></div>
+<p>配置</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>stream<span class="p">:</span><span class="w">
+</span><span class="w">      </span>rocketmq<span class="p">:</span><span class="w">
+</span><span class="w">        </span>binder<span class="p">:</span><span class="w">
+</span><span class="w">          </span>name-server<span class="p">:</span><span class="w"> </span><span class="m">127.0</span>.<span class="m">0.1</span><span class="p">:</span><span class="m">9876</span><span class="w">
+</span><span class="w">        </span>bindings<span class="p">:</span><span class="w">
+</span><span class="w">          </span>input1<span class="p">:</span><span class="w">
+</span><span class="w">            </span>consumer<span class="p">:</span><span class="w">
+</span><span class="w">              </span>sql<span class="p">:</span><span class="w"> </span><span class="s1">&#39;index &lt; 1000&#39;</span><span class="w">
+</span><span class="w">          </span>input2<span class="p">:</span><span class="w">
+</span><span class="w">            </span>consumer<span class="p">:</span><span class="w">
+</span><span class="w">              </span>sql<span class="p">:</span><span class="w"> </span><span class="s1">&#39;index &gt;= 1000&#39;</span><span class="w">
+</span><span class="w">      </span>bindings<span class="p">:</span><span class="w">
+</span><span class="w">        </span>input1<span class="p">:</span><span class="w">
+</span><span class="w">          </span>destination<span class="p">:</span><span class="w"> </span>test-topic<span class="w">
+</span><span class="w">          </span>group<span class="p">:</span><span class="w"> </span>test-group1<span class="w">
+</span><span class="w">        </span>input2<span class="p">:</span><span class="w">
+</span><span class="w">          </span>destination<span class="p">:</span><span class="w"> </span>test-topic<span class="w">
+</span><span class="w">          </span>group<span class="p">:</span><span class="w"> </span>test-group2</code></pre></div>
+<p>消费代码</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Service</span>
+<span class="nd">@Slf4j</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyTestStreamConsumer</span> <span class="o">{</span>
+    <span class="cm">/**
+</span><span class="cm">     * 我消费带有tag1的消息
+</span><span class="cm">     *
+</span><span class="cm">     * @param messageBody 消息体
+</span><span class="cm">     */</span>
+    <span class="nd">@StreamListener</span><span class="o">(</span><span class="n">MySink</span><span class="o">.</span><span class="na">INPUT1</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">receive1</span><span class="o">(</span><span class="n">String</span> <span class="n">messageBody</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;index &gt; 1000的消息被消费了：messageBody ={}&#34;</span><span class="o">,</span> <span class="n">messageBody</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * 我消费带有tag1或者tag2的消息
+</span><span class="cm">     *
+</span><span class="cm">     * @param messageBody 消息体
+</span><span class="cm">     */</span>
+    <span class="nd">@StreamListener</span><span class="o">(</span><span class="n">MySink</span><span class="o">.</span><span class="na">INPUT2</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">receive2</span><span class="o">(</span><span class="n">String</span> <span class="n">messageBody</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;index &lt;=1000 的消息被消费了：messageBody ={}&#34;</span><span class="o">,</span> <span class="n">messageBody</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+<p>日志</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">2019</span><span class="o">-</span><span class="n">08</span><span class="o">-</span><span class="n">04</span> <span class="nl">19:58:</span><span class="n">59</span><span class="o">.</span><span class="na">787</span>  <span class="n">INFO</span> <span class="n">56375</span> <span class="o">---</span> <span class="o">[</span><span class="n">MessageThread_1</span><span class="o">]</span> <span class="n">c</span><span class="o">.</span><span class="na">i</span><span class="o">.</span><span class="na">u</span><span class="o">.</span><span class="na">rocketmq</span><span class="o">.</span><span class="na">MyTestStreamConsumer</span>      <span class="o">:</span> <span class="n">index</span> <span class="o">&lt;=</span><span class="n">1000</span> <span class="n">的消息被消费了</span><span class="err">：</span><span class="n">messageBody</span> <span class="o">=</span><span class="n">消息体</span></code></pre></div>
+<h3 id="相关代码">相关代码</h3>
+
+<p>org.springframework.cloud.stream.binder.rocketmq.properties.RocketMQConsumerProperties</p>
+
+<h3 id="参考文档">参考文档</h3>
+
+<p><a href="http://rocketmq.apache.org/rocketmq/filter-messages-by-sql92-in-rocketmq/">Filter Messages By SQL92 In RocketMQ</a><br></p>
+
+<p><a href="https://blog.csdn.net/u010690828/article/details/84337688">RocketMQ 错误：The broker does not support consumer to filter message by SQL92</a></p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>
