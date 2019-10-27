@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>Spring Cloud Gateway-路由谓词工厂详解（Route Predicate Factories） · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文基于Spring Cloud Greenwich SR2编写，兼容Spring Cloud Finchley及更高版本。 这一节来详细探讨Spring Cloud Gateway的路由谓词工厂" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/26/spring-cloud-gateway-%E8%B7%AF%E7%94%B1%E8%B0%93%E8%AF%8D%E5%B7%A5%E5%8E%82%E8%AF%A6%E8%A7%A3route-predicate-factories/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="Spring Cloud Gateway-路由谓词工厂详解（Route Predicate Factories）" />
+<meta property="og:description" content="本文基于Spring Cloud Greenwich SR2编写，兼容Spring Cloud Finchley及更高版本。 这一节来详细探讨Spring Cloud Gateway的路由谓词工厂" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/26/spring-cloud-gateway-%E8%B7%AF%E7%94%B1%E8%B0%93%E8%AF%8D%E5%B7%A5%E5%8E%82%E8%AF%A6%E8%A7%A3route-predicate-factories/" />
+<meta property="article:published_time" content="2019-10-26T10:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-26T10:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="Spring Cloud Gateway-路由谓词工厂详解（Route Predicate Factories）">
+<meta itemprop="description" content="本文基于Spring Cloud Greenwich SR2编写，兼容Spring Cloud Finchley及更高版本。 这一节来详细探讨Spring Cloud Gateway的路由谓词工厂">
+
+
+<meta itemprop="datePublished" content="2019-10-26T10:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-26T10:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="2375">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Cloud Gateway-路由谓词工厂详解（Route Predicate Factories）"/>
+<meta name="twitter:description" content="本文基于Spring Cloud Greenwich SR2编写，兼容Spring Cloud Finchley及更高版本。 这一节来详细探讨Spring Cloud Gateway的路由谓词工厂"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Spring Cloud Gateway-路由谓词工厂详解（Route Predicate Factories）</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-26
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">本文基于Spring Cloud Greenwich SR2编写，兼容Spring Cloud Finchley及更高版本。</code></pre></div>
+<p>这一节来详细探讨Spring Cloud Gateway的路由谓词工厂 （Route Predicate Factories），路由谓词工厂的作用是：符合Predicate的条件，就使用该路由的配置，否则就不管。 只要掌握这一句，掌握路由谓词工厂就比较轻松了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">TIPS
+
+Predicate是Java 8提供的一个函数式编程接口。</code></pre></div>
+<h2 id="本文探讨了spring-cloud-gateway中内置的谓词工厂-包括">本文探讨了Spring Cloud Gateway中内置的谓词工厂，包括：</h2>
+
+<h3 id="谓词工厂">谓词工厂</h3>
+
+<ul>
+<li>After</li>
+<li>Before</li>
+<li>Between</li>
+<li>Cookie</li>
+<li>Header</li>
+<li>Host</li>
+<li>Method</li>
+<li>Path</li>
+<li>Query</li>
+<li>RemoteAddr</li>
+</ul>
+
+<h2 id="路由配置的两种形式">路由配置的两种形式</h2>
+
+<p>先来探讨Spring Cloud Gateway路由配置的两种姿势：</p>
+
+<h3 id="路由到指定url">路由到指定URL</h3>
+
+<h4 id="示例1-通配">示例1：通配</h4>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>{唯一标识}<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//www.itmuch.com</code></pre></div>
+<p>表示访问 GATEWAY_URL/** 会转发到 <a href="http://www.itmuch.com/**">http://www.itmuch.com/**</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">TIPS<span class="w">
+</span><span class="w">
+</span><span class="w"></span>这段配置不能直接使用，需要和下面的Predicate配合使用才行。</code></pre></div>
+<h4 id="示例2-精确匹配">示例2：精确匹配</h4>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>{唯一标识}<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//www.itmuch.com/spring-cloud/spring-cloud-stream-pan-ta/</code></pre></div>
+<p>表示访问 GATEWAY_URL/spring-cloud/spring-cloud-stream-pan-ta/ 会转发到 <a href="http://www.itmuch.com/spring-cloud/spring-cloud-stream-pan-ta/">http://www.itmuch.com/spring-cloud/spring-cloud-stream-pan-ta/</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">TIPS<span class="w">
+</span><span class="w">
+</span><span class="w"></span>这段配置不能直接使用，需要和下面的Predicate配合使用才行。</code></pre></div>
+<h3 id="路由到服务发现组件上的微服务">路由到服务发现组件上的微服务</h3>
+
+<h4 id="示例1-通配-1">示例1：通配</h4>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>{唯一标识}<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center</code></pre></div>
+<p>表示访问 GATEWAY_URL/** 会转发到 user-center 微服务的 /**</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">TIPS<span class="w">
+</span><span class="w">
+</span><span class="w"></span>这段配置不能直接使用，需要和下面的Predicate配合使用才行。</code></pre></div>
+<h4 id="示例2-精确匹配-1">示例2：精确匹配</h4>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>{唯一标识}<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center/shares/<span class="m">1</span></code></pre></div>
+<p>表示访问 GATEWAY_URL/shares/1 会转发到 user-center 微服务的 /shares/1</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">TIPS<span class="w">
+</span><span class="w">
+</span><span class="w"></span>这段配置不能直接使用，需要和下面的Predicate配合使用才行。</code></pre></div>
+<h2 id="谓词工厂详解">谓词工厂详解</h2>
+
+<p>下面正式探讨路由谓词工厂。Spring Cloud Gateway提供了十来种路由谓词工厂。为网关实现灵活的转发提供了基石。</p>
+
+<h3 id="after">After</h3>
+
+<p>示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>after_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当请求时的时间After配置的时间时，才会转发到用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># 目前配置不会进该路由配置，所以返回404</span><span class="w">
+</span><span class="w">            </span><span class="c"># 将时间改成 &lt; now的时间，则访问localhost:8040/** -&gt; user-center/**</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1 -&gt; user-center/users/1</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>After=<span class="ld">2030-01-20T17:42:47.789</span>-<span class="m">07</span><span class="p">:</span><span class="m">00</span><span class="p">[</span>America/Denver<span class="p">]</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">TIPS
+
+1.技巧：时间可使用 System.out.println(ZonedDateTime.now()); 打印，然后即可看到时区。例如：2019-08-10T16:50:42.579+08:00[Asia/Shanghai]
+2.时间格式的相关逻辑：
+  a.默认时间格式：
+    org.springframework.format.support.DefaultFormattingConversionService#addDefaultFormatters
+  b.时间格式注册：
+    org.springframework.format.datetime.standard.DateTimeFormatterRegistrar#registerFormatters</code></pre></div>
+<h3 id="before">Before</h3>
+
+<p>示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>before_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当请求时的时间Before配置的时间时，才会转发到用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># 目前配置不会进该路由配置，所以返回404</span><span class="w">
+</span><span class="w">            </span><span class="c"># 将时间改成 &gt; now的时间，则访问localhost:8040/** -&gt; user-center/**</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1 -&gt; user-center/users/1</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>Before=<span class="ld">2018-01-20T17:42:47.789</span>-<span class="m">07</span><span class="p">:</span><span class="m">00</span><span class="p">[</span>America/Denver<span class="p">]</span></code></pre></div>
+<h3 id="between">Between</h3>
+
+<p>示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>between_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当请求时的时间Between配置的时间时，才会转发到用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># 因此，访问localhost:8040/** -&gt; user-center/**</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1 -&gt; user-center/users/1</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>Between=<span class="ld">2017-01-20T17:42:47.789</span>-<span class="m">07</span><span class="p">:</span><span class="m">00</span><span class="p">[</span>America/Denver<span class="p">],</span><span class="w"> </span><span class="ld">2027-01-21T17:42:47.789</span>-<span class="m">07</span><span class="p">:</span><span class="m">00</span><span class="p">[</span>America/Denver<span class="p">]</span></code></pre></div>
+<h3 id="cookie">Cookie</h3>
+
+<p>示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>cookie_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当带有名为somecookie，并且值符合正则ch.p的Cookie时，才会转发到用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># 如Cookie满足条件，则访问http://localhost:8040/** -&gt; user-center/**</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1 -&gt; user-center/users/1</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>Cookie=somecookie<span class="p">,</span><span class="w"> </span>ch.p</code></pre></div>
+<h3 id="header">Header</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>header_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当带有名为X-Request-Id，并且值符合正则\d+的Header时，才会转发到用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># 如Header满足条件，则访问http://localhost:8040/** -&gt; user-center/**</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1 -&gt; user-center/users/1</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>Header=X-Request-Id<span class="p">,</span><span class="w"> </span>\d+</code></pre></div>
+<h3 id="host">Host</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>host_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当名为Host的Header符合**.somehost.org或**.anotherhost.org时，才会转发用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># 如Host满足条件，则访问http://localhost:8040/** -&gt; user-center/**</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1 -&gt; user-center/users/1</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>Host=<span class="cp">**.somehost.org,**.anotherhost.org</span></code></pre></div>
+<h3 id="method">Method</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>method_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当HTTP请求方法是GET时，才会转发用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># 如请求方法满足条件，访问http://localhost:8040/** -&gt; user-center/**</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1 -&gt; user-center/users/1</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>Method=GET</code></pre></div>
+<h3 id="path">Path</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>path_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当访问路径是/users/*或者/some-path/**，才会转发用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># segment是一个特殊的占位符，单层路径匹配</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1 -&gt; user-center/users/1</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>Path=/users/{segment}<span class="p">,</span>/some-path/<span class="cp">**</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">TIPS
+
+建议大家看下这一部分的官方文档，里面有个segment编程技巧。比较简单，留个印象。
+
+https://cloud.spring.io/spring-cloud-static/Greenwich.SR2/single/spring-cloud.html#_path_route_predicate_factory</code></pre></div>
+<h3 id="query">Query</h3>
+
+<p>示例1：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>query_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当请求带有baz的参数，才会转发到用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1?baz=xx -&gt; user-center的/users/1</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>Query=baz</code></pre></div>
+<p>示例2：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>query_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当请求带有名为foo的参数，且参数值符合正则ba.，才会转发到用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1?baz=baz -&gt; user-center的/users/1?baz=baz</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>Query=foo<span class="p">,</span><span class="w"> </span>ba.</code></pre></div>
+<h3 id="remoteaddr">RemoteAddr</h3>
+
+<p>示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>remoteaddr_route<span class="w">
+</span><span class="w">          </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//user-center<span class="w">
+</span><span class="w">          </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">            </span><span class="c"># 当且仅当请求IP是192.168.1.1/24网段，例如192.168.1.10，才会转发到用户微服务</span><span class="w">
+</span><span class="w">            </span><span class="c"># eg. 访问http://localhost:8040/users/1 -&gt; user-center的/users/1</span><span class="w">
+</span><span class="w">            </span>-<span class="w"> </span>RemoteAddr=<span class="m">192.168</span>.<span class="m">1.1</span>/<span class="m">24</span></code></pre></div>
+<p>TIPS</p>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">建议大家看下这一部分的官方文档，有个小编程技巧。比较简单，留个印象。
+
+https://cloud.spring.io/spring-cloud-static/Greenwich.SR2/single/spring-cloud.html#_remoteaddr_route_predicate_factory</code></pre></div>
+<p>相关代码
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/spring_cloud_alibaba/gateway/gateway1.png" alt="图片" /></p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

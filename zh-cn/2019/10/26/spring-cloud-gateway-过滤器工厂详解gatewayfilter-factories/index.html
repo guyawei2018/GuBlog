@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>Spring Cloud Gateway-过滤器工厂详解（GatewayFilter Factories） · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文基于 Spring Cloud Greenwich SR2 ，理论支持 Spring Cloud Greenwich SR1 ，其中的新特性标注出来了。 TIPS 这一节来探讨Spring Cloud Gateway内置的Filter工厂。包括： AddRequestHeader GatewayFilter Factory AddRequestParameter" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/26/spring-cloud-gateway-%E8%BF%87%E6%BB%A4%E5%99%A8%E5%B7%A5%E5%8E%82%E8%AF%A6%E8%A7%A3gatewayfilter-factories/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="Spring Cloud Gateway-过滤器工厂详解（GatewayFilter Factories）" />
+<meta property="og:description" content="本文基于 Spring Cloud Greenwich SR2 ，理论支持 Spring Cloud Greenwich SR1 ，其中的新特性标注出来了。 TIPS 这一节来探讨Spring Cloud Gateway内置的Filter工厂。包括： AddRequestHeader GatewayFilter Factory AddRequestParameter" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/26/spring-cloud-gateway-%E8%BF%87%E6%BB%A4%E5%99%A8%E5%B7%A5%E5%8E%82%E8%AF%A6%E8%A7%A3gatewayfilter-factories/" />
+<meta property="article:published_time" content="2019-10-26T10:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-26T10:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="Spring Cloud Gateway-过滤器工厂详解（GatewayFilter Factories）">
+<meta itemprop="description" content="本文基于 Spring Cloud Greenwich SR2 ，理论支持 Spring Cloud Greenwich SR1 ，其中的新特性标注出来了。 TIPS 这一节来探讨Spring Cloud Gateway内置的Filter工厂。包括： AddRequestHeader GatewayFilter Factory AddRequestParameter">
+
+
+<meta itemprop="datePublished" content="2019-10-26T10:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-26T10:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="3224">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Cloud Gateway-过滤器工厂详解（GatewayFilter Factories）"/>
+<meta name="twitter:description" content="本文基于 Spring Cloud Greenwich SR2 ，理论支持 Spring Cloud Greenwich SR1 ，其中的新特性标注出来了。 TIPS 这一节来探讨Spring Cloud Gateway内置的Filter工厂。包括： AddRequestHeader GatewayFilter Factory AddRequestParameter"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Spring Cloud Gateway-过滤器工厂详解（GatewayFilter Factories）</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-26
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">本文基于 Spring Cloud Greenwich SR2 ，理论支持 Spring Cloud Greenwich SR1 ，其中的新特性标注出来了。</code></pre></div>
+<p>TIPS</p>
+
+<h2 id="这一节来探讨spring-cloud-gateway内置的filter工厂-包括">这一节来探讨Spring Cloud Gateway内置的Filter工厂。包括：</h2>
+
+<ol>
+<li>AddRequestHeader GatewayFilter Factory</li>
+<li>AddRequestParameter GatewayFilter Factory</li>
+<li>AddResponseHeader GatewayFilter Factory</li>
+<li>DedupeResponseHeader GatewayFilter Factory</li>
+<li>Hystrix GatewayFilter Factory</li>
+<li>FallbackHeaders GatewayFilter Factory</li>
+<li>PrefixPath GatewayFilter Factory</li>
+<li>PreserveHostHeader GatewayFilter Factory</li>
+<li>RequestRateLimiter GatewayFilter Factory</li>
+<li>RedirectTo GatewayFilter Factory</li>
+<li>RemoveHopByHopHeadersFilter GatewayFilter Factory</li>
+<li>RemoveRequestHeader GatewayFilter Factory</li>
+<li>RemoveResponseHeader GatewayFilter Factory</li>
+<li>RewritePath GatewayFilter Factory</li>
+<li>RewriteResponseHeader GatewayFilter Factory</li>
+<li>SaveSession GatewayFilter Factory</li>
+<li>SecureHeaders GatewayFilter Factory</li>
+<li>SetPath GatewayFilter Factory</li>
+<li>SetResponseHeader GatewayFilter Factory</li>
+<li>SetStatus GatewayFilter Factory</li>
+<li>StripPrefix GatewayFilter Factory</li>
+<li>Retry GatewayFilter Factory</li>
+<li>RequestSize GatewayFilter Factory</li>
+<li>Modify Request Body GatewayFilter Factory</li>
+<li>Modify Response Body GatewayFilter Factory</li>
+<li>Default Filters</li>
+</ol>
+
+<h3 id="技巧">技巧</h3>
+
+<ul>
+<li><p>断点打在 org.springframework.cloud.gateway.filter.NettyRoutingFilter#filter ，就可以调试Gateway转发的具体细节了。</p></li>
+
+<li><p>添加如下配置，可观察到一些请求细节：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">logging<span class="p">:</span><span class="w">
+</span><span class="w"></span>level<span class="p">:</span><span class="w">
+</span><span class="w"></span>org.springframework.cloud.gateway<span class="p">:</span><span class="w"> </span>trace<span class="w">
+</span><span class="w"></span>org.springframework.http.server.reactive<span class="p">:</span><span class="w"> </span>debug<span class="w">
+</span><span class="w"></span>org.springframework.web.reactive<span class="p">:</span><span class="w"> </span>debug<span class="w">
+</span><span class="w"></span>reactor.ipc.netty<span class="p">:</span><span class="w"> </span>debug</code></pre></div>
+<h3 id="1-addrequestheader-gatewayfilter-factory">1 AddRequestHeader GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w"></span>cloud<span class="p">:</span><span class="w">
+</span><span class="w"></span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">  </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>add_request_header_route<span class="w">
+</span><span class="w">    </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">    </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>AddRequestHeader=X-Request-Foo<span class="p">,</span><span class="w"> </span>Bar</code></pre></div>
+<p>为原始请求添加名为 X-Request-Foo ，值为 Bar 的请求头。</p></li>
+</ul>
+
+<h3 id="2-addrequestparameter-gatewayfilter-factory">2 AddRequestParameter GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>add_request_parameter_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>AddRequestParameter=foo<span class="p">,</span><span class="w"> </span>bar</code></pre></div>
+<p>为原始请求添加请求参数 foo=bar</p>
+
+<h3 id="3-addresponseheader-gatewayfilter-factory">3 AddResponseHeader GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>add_response_header_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>AddResponseHeader=X-Response-Foo<span class="p">,</span><span class="w"> </span>Bar</code></pre></div>
+<p>添加名为 X-Request-Foo ，值为 Bar 的响应头。</p>
+
+<h3 id="4-deduperesponseheader-gatewayfilter-factory">4 DedupeResponseHeader GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">TIPS<span class="w">
+</span><span class="w">
+</span><span class="w"></span>Spring<span class="w"> </span>Cloud<span class="w"> </span>Greenwich<span class="w"> </span>SR2提供的新特性，低于这个版本无法使用。<span class="w">
+</span><span class="w">
+</span><span class="w"></span>强烈建议阅读一下类<span class="w">
+</span><span class="w"></span>org.springframework.cloud.gateway.filter.factory.DedupeResponseHeaderGatewayFilterFactory上的注释，比官方文档写得还好。<span class="w">
+</span><span class="w">
+</span><span class="w"></span>spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>dedupe_response_header_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>DedupeResponseHeader=Access-Control-Allow-Credentials<span class="w"> </span>Access-Control-Allow-Origin<span class="p">,</span><span class="w"> </span>RETAIN_FIRST</code></pre></div>
+<p>剔除重复的响应头。</p>
+
+<h4 id="font-color-red-举个例子-font"><font color=red>举个例子：</font></h4>
+
+<p>我们在Gateway以及微服务上都设置了CORS（解决跨域）header，如果不做任何配置，请求 -&gt; 网关 -&gt; 微服务，获得的响应就是这样的：</p>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">Access-Control-Allow-Credentials: true, true
+Access-Control-Allow-Origin: https://musk.mars, https://musk.mars</code></pre></div>
+<p>也就是Header重复了。要想把这两个Header去重，只需设置成如下即可。</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">filters<span class="p">:</span><span class="w">
+</span><span class="w"></span>-<span class="w"> </span>DedupeResponseHeader=Access-Control-Allow-Credentials<span class="w"> </span>Access-Control-Allow-Origin</code></pre></div>
+<p>也就是说，想要去重的Header如果有多个，用空格分隔即可；</p>
+
+<p>去重策略：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">RETAIN_FIRST<span class="p">:</span><span class="w"> </span>默认值，保留第一个值<span class="w">
+</span><span class="w"></span>RETAIN_LAST<span class="p">:</span><span class="w"> </span>保留最后一个值<span class="w">
+</span><span class="w"></span>RETAIN_UNIQUE<span class="p">:</span><span class="w"> </span>保留所有唯一值，以它们第一次出现的顺序保留</code></pre></div>
+<h3 id="5-hystrix-gatewayfilter-factory">5 Hystrix GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">TIPS
+
+Hystrix是Spring Cloud第一代中的容错组件，不过已经进入维护模式（相关文章：Spring Cloud Netflix项目进入维护模式之我见 ），
+未来，Hystrix会被Spring Cloud移除掉，取而代之的是Alibaba Sentinel/Resilience4J。
+
+所以本文不做详细探讨了，但Gateway整合Hystrix其实包含了很多姿势。
+请感兴趣的自行前往官方文档了解详情：
+https://cloud.spring.io/spring-cloud-static/Greenwich.SR2/single/spring-cloud.html#hystrix 。</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>hystrix_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>Hystrix=myCommandName</code></pre></div>
+<h3 id="6-fallbackheaders-gatewayfilter-factory">6 FallbackHeaders GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">TIPS
+
+也是对Hystrix的支持，不做详细探讨了，请感兴趣的自行前往官方文档了解详情：
+https://cloud.spring.io/spring-cloud-static/Greenwich.SR2/single/spring-cloud.html#fallback-headers</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>ingredients<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//ingredients<span class="w">
+</span><span class="w">        </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>Path=//ingredients/<span class="cp">**</span><span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>Hystrix<span class="w">
+</span><span class="w">          </span>args<span class="p">:</span><span class="w">
+</span><span class="w">            </span>name<span class="p">:</span><span class="w"> </span>fetchIngredients<span class="w">
+</span><span class="w">            </span>fallbackUri<span class="p">:</span><span class="w"> </span>forward<span class="p">:</span>/fallback<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>ingredients-fallback<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//localhost<span class="p">:</span><span class="m">9994</span><span class="w">
+</span><span class="w">        </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>Path=/fallback<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>FallbackHeaders<span class="w">
+</span><span class="w">          </span>args<span class="p">:</span><span class="w">
+</span><span class="w">            </span>executionExceptionTypeHeaderName<span class="p">:</span><span class="w"> </span>Test-Header</code></pre></div>
+<h3 id="7-prefixpath-gatewayfilter-factory">7 PrefixPath GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>prefixpath_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>PrefixPath=/mypath</code></pre></div>
+<p>为匹配的路由添加前缀。例如：访问${GATEWAY_URL}/hello 会转发到<a href="https://example.org/mypath/hello">https://example.org/mypath/hello</a> 。</p>
+
+<h3 id="8-preservehostheader-gatewayfilter-factory">8 PreserveHostHeader GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>preserve_host_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>PreserveHostHeader</code></pre></div>
+<p>如果不设置，那么名为 Host 的Header由Http Client控制；如果设置了，那么会设置一个请求属性（preserveHostHeader=true），路由过滤器会检查从而去判断是否要发送原始的、名为Host的Header。</p>
+
+<h3 id="9-requestratelimiter-gatewayfilter-factory">9 RequestRateLimiter GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">TIPS
+
+也可阅读官方文档 https://cloud.spring.io/spring-cloud-static/Greenwich.SR2/single/spring-cloud.html#_requestratelimiter_gatewayfilter_factory</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>requestratelimiter_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>RequestRateLimiter<span class="w">
+</span><span class="w">          </span>args<span class="p">:</span><span class="w">
+</span><span class="w">            </span>redis-rate-limiter.replenishRate<span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w">
+</span><span class="w">            </span>redis-rate-limiter.burstCapacity<span class="p">:</span><span class="w"> </span><span class="m">20</span></code></pre></div>
+<h3 id="10-redirectto-gatewayfilter-factory">10 RedirectTo GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>prefixpath_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="c"># 配置成HTTP状态码, URL的形式</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>RedirectTo=<span class="m">302</span><span class="p">,</span><span class="w"> </span>http<span class="p">:</span>//www.itmuch.com</code></pre></div>
+<ul>
+<li>HTTP状态码应该是HTTP状态码300序列，例如301</li>
+<li>URL必须是合法的URL，并且该值会作为名为 Location 的Header。<br></li>
+</ul>
+
+<p>上面配置表达的意思是： ${GATEWAY_URL}/hello 会重定向到 <a href="https://ecme.org/hello">https://ecme.org/hello</a> ，并且携带一个 Location:<a href="http://www.itmuch.com">http://www.itmuch.com</a> 的Header。</p>
+
+<h3 id="11-removehopbyhopheadersfilter-gatewayfilter-factory">11 RemoveHopByHopHeadersFilter GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring.cloud.gateway.filter.remove-hop-by-hop.headers<span class="p">:</span><span class="w"> </span>Connection<span class="p">,</span>Keep-Alive</code></pre></div>
+<p>移除转发请求的Header，多个用 , 分隔。默认情况下，移除如下Header。这些Header是由 IETF 组织规定的。</p>
+
+<ul>
+<li>Connection</li>
+<li>Keep-Alive</li>
+<li>Proxy-Authenticate</li>
+<li>Proxy-Authorization</li>
+<li>TE</li>
+<li>Trailer</li>
+<li>Transfer-Encoding</li>
+<li>Upgrade</li>
+</ul>
+
+<h3 id="12-removerequestheader-gatewayfilter-factory">12 RemoveRequestHeader GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>removerequestheader_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>RemoveRequestHeader=X-Request-Foo</code></pre></div>
+<p>为原始请求删除名为 X-Request-Foo 的请求头。</p>
+
+<h3 id="13-removeresponseheader-gatewayfilter-factory">13 RemoveResponseHeader GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>removeresponseheader_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>RemoveResponseHeader=X-Response-Foo</code></pre></div>
+<p>删除名为 X-Request-Foo 的响应头。</p>
+
+<h3 id="14-rewritepath-gatewayfilter-factory">14 RewritePath GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>rewritepath_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>Path=/foo/<span class="cp">**</span><span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="c"># 配置成原始路径正则, 重写后的路径的正则</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>RewritePath=/foo/(<span class="p">?</span>&lt;segment&gt;.<span class="cp">*),</span><span class="w"> </span>/$\{segment}</code></pre></div>
+<p>重写请求路径。如上配置，访问 /foo/bar 会将路径改为/bar 再转发，也就是会转发到 <a href="https://example.org/bar">https://example.org/bar</a> 。需要注意的是，由于YAML语法，需用$\ 替换 $ 。</p>
+
+<h3 id="15-rewriteresponseheader-gatewayfilter-factory">15 RewriteResponseHeader GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>rewriteresponseheader_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>RewriteResponseHeader=X-Response-Foo<span class="p">,</span><span class="w"> </span>password=<span class="p">[</span>^<span class="cp">&amp;]+,</span><span class="w"> </span>password=<span class="cp">***</span></code></pre></div>
+<p>如果名为 X-Response-Foo 的响应头的内容是/42？user=ford&amp;password=omg!what&amp;flag=true，则会被修改为/42?user=ford&amp;password=***&amp;flag=true。</p>
+
+<h3 id="16-savesession-gatewayfilter-factory">16 SaveSession GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>save_session<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>Path=/foo/<span class="cp">**</span><span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>SaveSession</code></pre></div>
+<p>在转发到后端微服务请求之前，强制执行 WebSession::save 操作。用在那种像 Spring Session 延迟数据存储（笔者注：数据不是立刻持久化）的，并希望在请求转发前确保session状态保存情况。</p>
+
+<p>如果你将Spring Secutiry于Spring Session集成使用，并想确保安全信息都传到下游机器，你就需要配置这个filter。</p>
+
+<h3 id="17-secureheaders-gatewayfilter-factory">17 SecureHeaders GatewayFilter Factory</h3>
+
+<p>添加一系列起安全作用的响应头。Spring Cloud Gateway参考了这篇博客的建议：<a href="https://blog.appcanary.com/2017/http-security-headers.html">https://blog.appcanary.com/2017/http-security-headers.html</a></p>
+
+<p>默认会添加如下Header（包括值）：</p>
+
+<ul>
+<li><font color="red">X-Xss-Protection:1; mode=block</font></li>
+<li><font color="red">Strict-Transport-Security:max-age=631138519</font></li>
+<li><font color="red">X-Frame-Options:DENY</font></li>
+<li><font color="red">X-Content-Type-Options:nosniff</font></li>
+<li><font color="red">Referrer-Policy:no-referrer</font></li>
+<li><font color="red">Content-Security-Policy:default-src &lsquo;self&rsquo; https:; font-src &lsquo;self&rsquo; https: data:; img-src &lsquo;self&rsquo; https: data:; object-src &lsquo;none&rsquo;;script-src https:; style-src &lsquo;self&rsquo; https: &lsquo;unsafe-inline&rsquo;</font></li>
+<li><font color="red">X-Download-Options:noopen</font></li>
+<li><font color="red">X-Permitted-Cross-Domain-Policies:none</font></li>
+</ul>
+
+<p>如果你想修改这些Header的值，可使用如下配置：</p>
+
+<p>前缀：<font color="red">spring.cloud.gateway.filter.secure-headers</font></p>
+
+<p>上面的header对应的后缀：</p>
+
+<ul>
+<li><font color="red">xss-protection-header</font></li>
+<li><font color="red">strict-transport-security</font></li>
+<li><font color="red">frame-options</font></li>
+<li><font color="red">content-type-options</font></li>
+<li><font color="red">referrer-policy</font></li>
+<li><font color="red">content-security-policy</font></li>
+<li><font color="red">download-options</font></li>
+<li><font color="red">permitted-cross-domain-policies</font></li>
+</ul>
+
+<p>例如：spring.cloud.gateway.filter.secure-headers.xss-protection-header: 你想要的值<br></p>
+
+<p>如果想禁用某些Header，可使用如下配置：<font color="red">spring.cloud.gateway.filter.secure-headers.disable</font>，多个用 , 分隔。例如：<font color="red">spring.cloud.gateway.filter.secure-headers.disable=frame-options,download-options</font> 。</p>
+
+<h3 id="18-setpath-gatewayfilter-factory">18 SetPath GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>setpath_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>https<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>Path=/foo/{segment}<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>SetPath=/{segment}</code></pre></div>
+<p>采用路径template参数，通过请求路径的片段的模板化，来达到操作修改路径的母的，运行多个路径片段模板化。</p>
+
+<p>如上配置，访问${GATEWAY_PATH}/foo/bar ，则对于后端微服务的路径会修改为 /bar 。</p>
+
+<h3 id="19-setresponseheader-gatewayfilter-factory">19 SetResponseHeader GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>setresponseheader_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>SetResponseHeader=X-Response-Foo<span class="p">,</span><span class="w"> </span>Bar</code></pre></div>
+<p>如果后端服务响应带有名为 X-Response-Foo 的响应头，则将值改为替换成 Bar 。</p>
+
+<h3 id="20-setstatus-gatewayfilter-factory">20 SetStatus GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>setstatusstring_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>SetStatus=BAD_REQUEST<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>setstatusint_route<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//example.org<span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>SetStatus=<span class="m">401</span></code></pre></div>
+<p>修改响应的状态码，值可以是数字，也可以是字符串。但一定要是Spring HttpStatus 枚举类中的值。如上配置，两种方式都可以返回HTTP状态码401。</p>
+
+<h3 id="21-stripprefix-gatewayfilter-factory">21 StripPrefix GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>nameRoot<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//nameservice<span class="w">
+</span><span class="w">        </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>Path=/name/<span class="cp">**</span><span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>StripPrefix=<span class="m">2</span></code></pre></div>
+<p>数字表示要截断的路径的数量。如上配置，如果请求的路径为 /name/bar/foo ，则路径会修改为/foo ，也就是会截断2个路径。</p>
+
+<h3 id="22-retry-gatewayfilter-factory">22 Retry GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>retry_test<span class="w">
+</span><span class="w">        </span>uri<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//localhost<span class="p">:</span><span class="m">8080</span>/flakey<span class="w">
+</span><span class="w">        </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>Host=<span class="cp">*.retry.com</span><span class="w">
+</span><span class="w">        </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>Retry<span class="w">
+</span><span class="w">          </span>args<span class="p">:</span><span class="w">
+</span><span class="w">            </span>retries<span class="p">:</span><span class="w"> </span><span class="m">3</span><span class="w">
+</span><span class="w">            </span>statuses<span class="p">:</span><span class="w"> </span>BAD_GATEWAY</code></pre></div>
+<p>针对不同的响应做重试，可配置如下参数：</p>
+
+<ul>
+<li>retries: 重试次数</li>
+<li>statuses: 需要重试的状态码，取值在 org.springframework.http.HttpStatus 中</li>
+<li>methods: 需要重试的请求方法，取值在 org.springframework.http.HttpMethod 中</li>
+<li>series: HTTP状态码系列，取值在 org.springframework.http.HttpStatus.Series 中</li>
+</ul>
+
+<h3 id="23-requestsize-gatewayfilter-factory">23 RequestSize GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>routes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>id<span class="p">:</span><span class="w"> </span>request_size_route<span class="w">
+</span><span class="w">      </span>uri<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//localhost<span class="p">:</span><span class="m">8080</span>/upload<span class="w">
+</span><span class="w">      </span>predicates<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>Path=/upload<span class="w">
+</span><span class="w">      </span>filters<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>RequestSize<span class="w">
+</span><span class="w">        </span>args<span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="c"># 单位字节</span><span class="w">
+</span><span class="w">          </span>maxSize<span class="p">:</span><span class="w"> </span><span class="m">5000000</span></code></pre></div>
+<p>为后端服务设置收到的最大请求包大小。如果请求大小超过设置的值，则返回 413 Payload Too Large 。默认值是5M</p>
+
+<h3 id="24-modify-request-body-gatewayfilter-factory">24 Modify Request Body GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">TIPS
+
+该过滤器处于 BETA 状态，未来API可能会变化，生产环境请慎用。</code></pre></div>
+<p>可用于在Gateway将请求发送给后端微服务之前，修改请求体内容。该过滤器只能通过代码配置，不支持在配置文件设置。示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="n">RouteLocator</span> <span class="nf">routes</span><span class="o">(</span><span class="n">RouteLocatorBuilder</span> <span class="n">builder</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="na">routes</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">route</span><span class="o">(</span><span class="s">&#34;rewrite_request_obj&#34;</span><span class="o">,</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="n">r</span><span class="o">.</span><span class="na">host</span><span class="o">(</span><span class="s">&#34;*.rewriterequestobj.org&#34;</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">filters</span><span class="o">(</span><span class="n">f</span> <span class="o">-&gt;</span> <span class="n">f</span><span class="o">.</span><span class="na">prefixPath</span><span class="o">(</span><span class="s">&#34;/httpbin&#34;</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">modifyRequestBody</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">Hello</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">MediaType</span><span class="o">.</span><span class="na">APPLICATION_JSON_VALUE</span><span class="o">,</span>
+                    <span class="o">(</span><span class="n">exchange</span><span class="o">,</span> <span class="n">s</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="k">return</span> <span class="n">Mono</span><span class="o">.</span><span class="na">just</span><span class="o">(</span><span class="k">new</span> <span class="n">Hello</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">toUpperCase</span><span class="o">())))).</span><span class="na">uri</span><span class="o">(</span><span class="n">uri</span><span class="o">))</span>
+        <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="kd">static</span> <span class="kd">class</span> <span class="nc">Hello</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Hello</span><span class="o">()</span> <span class="o">{</span> <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">Hello</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getMessage</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">message</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setMessage</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></div>
+<h3 id="25-modify-response-body-gatewayfilter-factory">25 Modify Response Body GatewayFilter Factory</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">TIPS
+
+该过滤器处于 BETA 状态，未来API可能会变化，生产环境请慎用。</code></pre></div>
+<p>可用于修改响应体内容。该过滤器只能通过代码配置，不支持在配置文件设置。示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="n">RouteLocator</span> <span class="nf">routes</span><span class="o">(</span><span class="n">RouteLocatorBuilder</span> <span class="n">builder</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="na">routes</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">route</span><span class="o">(</span><span class="s">&#34;rewrite_response_upper&#34;</span><span class="o">,</span> <span class="n">r</span> <span class="o">-&gt;</span> <span class="n">r</span><span class="o">.</span><span class="na">host</span><span class="o">(</span><span class="s">&#34;*.rewriteresponseupper.org&#34;</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">filters</span><span class="o">(</span><span class="n">f</span> <span class="o">-&gt;</span> <span class="n">f</span><span class="o">.</span><span class="na">prefixPath</span><span class="o">(</span><span class="s">&#34;/httpbin&#34;</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">modifyResponseBody</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+                    <span class="o">(</span><span class="n">exchange</span><span class="o">,</span> <span class="n">s</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">Mono</span><span class="o">.</span><span class="na">just</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">toUpperCase</span><span class="o">()))).</span><span class="na">uri</span><span class="o">(</span><span class="n">uri</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="o">}</span></code></pre></div>
+<h3 id="26-default-filters">26 Default Filters</h3>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>cloud<span class="p">:</span><span class="w">
+</span><span class="w">    </span>gateway<span class="p">:</span><span class="w">
+</span><span class="w">      </span>default-filters<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>AddResponseHeader=X-Response-Default-Foo<span class="p">,</span><span class="w"> </span>Default-Bar<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>PrefixPath=/httpbin</code></pre></div>
+<p>如果你想为所有路由添加过滤器，可使用该属性。</p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

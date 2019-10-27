@@ -3,14 +3,13 @@
 <head>
   <meta name="generator" content="Hugo 0.55.6" />
   <meta charset="utf-8">
-  <title>GUBlog</title>
+  <title>Spring Cloud Gateway-排错、调试技巧总结 · GUBlog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="心在远方，路在脚下" />
+  <meta name="description" content="本文总结Spring Cloud Gateway的排错、调试技巧。 第一式：Actuator监控端点 借助Actuator的监控端点，可分析全局过滤器、过滤" />
+
   <meta name="keywords" content="Hugo, theme, den" />
 
-<link rel="canonical" href="https://guyawei.top/zh-cn/" />
-<link rel="alternate" href="https://guyawei.top/en/" hreflang="en">
-<link rel="alternate" href="https://guyawei.top/zh-tw/" hreflang="zh-tw">
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/26/spring-cloud-gateway-%E6%8E%92%E9%94%99%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93/" />
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
@@ -20,22 +19,28 @@
 
 
 
-<link href="https://guyawei.top/zh-cn/index.xml" rel="alternate" type="application/rss+xml" title="GUBlog" />
+
+<meta property="og:title" content="Spring Cloud Gateway-排错、调试技巧总结" />
+<meta property="og:description" content="本文总结Spring Cloud Gateway的排错、调试技巧。 第一式：Actuator监控端点 借助Actuator的监控端点，可分析全局过滤器、过滤" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/26/spring-cloud-gateway-%E6%8E%92%E9%94%99%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93/" />
+<meta property="article:published_time" content="2019-10-26T10:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-26T10:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="Spring Cloud Gateway-排错、调试技巧总结">
+<meta itemprop="description" content="本文总结Spring Cloud Gateway的排错、调试技巧。 第一式：Actuator监控端点 借助Actuator的监控端点，可分析全局过滤器、过滤">
 
 
-<meta property="og:title" content="GUBlog" />
-<meta property="og:description" content="心在远方，路在脚下" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://guyawei.top/zh-cn/" />
+<meta itemprop="datePublished" content="2019-10-26T10:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-26T10:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="361">
 
-<meta property="og:updated_time" content="2019-10-26T10:01:23&#43;08:00"/>
 
-<meta itemprop="name" content="GUBlog">
-<meta itemprop="description" content="心在远方，路在脚下">
 
+<meta itemprop="keywords" content="java," />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="GUBlog"/>
-<meta name="twitter:description" content="心在远方，路在脚下"/>
+<meta name="twitter:title" content="Spring Cloud Gateway-排错、调试技巧总结"/>
+<meta name="twitter:description" content="本文总结Spring Cloud Gateway的排错、调试技巧。 第一式：Actuator监控端点 借助Actuator的监控端点，可分析全局过滤器、过滤"/>
 </head>
 <body>
   
@@ -111,15 +116,25 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="header-content">
-        <h1 class="header-title">
-          
-            GUBlog
-          
-        </h1>
+        <h1 class="header-title">Spring Cloud Gateway-排错、调试技巧总结</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-26
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
+        </p>
+        
         <div class="header-underline"></div>
         
-        <p class="header-subtitle header-subtitle-homepage">心在远方，路在脚下</p>
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
         
+        
+
       </div>
     </div>
   </div>
@@ -127,73 +142,75 @@
 
   </div>
   <main>
-<div class="archive-container">
-    <div class="container content archive">
-      <h2>最新文章 <small>- 页 2</small></h2>
-        <dl class="row">
-            <dt class="col-md-3">2019-10-23</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/10/23/alibaba-sentinel-%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%80%BB%E7%BB%93/">Alibaba Sentinel 配置项总结</a></dd>
-            <dt class="col-md-3">2019-10-22</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/10/22/feign%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/">Feign常见问题总结</a></dd>
-            <dt class="col-md-3">2019-10-22</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/10/22/intellij-idea%E4%B8%ADmybatis-mapper%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%85%A5%E8%AD%A6%E5%91%8A%E7%9A%846%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">Intellij IDEA中Mybatis Mapper自动注入警告的6种解决方案</a></dd>
-            <dt class="col-md-3">2019-10-22</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/10/22/spring-cloud-alibaba-%E6%90%AD%E5%BB%BA%E7%94%9F%E4%BA%A7%E5%8F%AF%E7%94%A8%E7%9A%84nacos%E9%9B%86%E7%BE%A4/">Spring Cloud Alibaba-搭建生产可用的Nacos集群</a></dd>
-            <dt class="col-md-3">2019-10-22</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/10/22/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8feign%E6%9E%84%E9%80%A0%E5%A4%9A%E5%8F%82%E6%95%B0%E7%9A%84%E8%AF%B7%E6%B1%82/">如何使用Feign构造多参数的请求</a></dd>
-            <dt class="col-md-3">2019-10-22</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81nacos%E6%9D%83%E9%87%8D%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">扩展Ribbon支持Nacos权重的三种方式</a></dd>
-            <dt class="col-md-3">2019-10-22</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/10/22/%E6%89%A9%E5%B1%95ribbon%E6%94%AF%E6%8C%81%E5%9F%BA%E4%BA%8E%E5%85%83%E6%95%B0%E6%8D%AE%E7%9A%84%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/">扩展Ribbon支持基于元数据的版本管理</a></dd>
-            <dt class="col-md-3">2019-09-16</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/09/16/docker-%E9%83%A8%E7%BD%B2jenkins/">Docker 部署jenkins</a></dd>
-            <dt class="col-md-3">2019-06-24</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/06/24/docker-%E5%85%A5%E9%97%A8/">Docker 入门</a></dd>
-            <dt class="col-md-3">2019-05-29</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">Linux常用指令</a></dd>
-            <dt class="col-md-3">2019-05-29</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/">redis在CentOS7安装</a></dd>
-            <dt class="col-md-3">2019-05-29</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/05/29/webservice%E8%AF%A6%E8%A7%A3/">webservice详解</a></dd>
-            <dt class="col-md-3">2019-04-21</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2019/04/21/%E6%B5%99%E6%B1%9F%E5%AE%81%E6%B3%A2%E6%B8%B8%E7%8E%A9/">浙江宁波游玩</a></dd>
-            <dt class="col-md-3">2018-03-05</dt>
-            <dd class="col-md-9"><a href="/zh-cn/2018/03/05/%E5%A4%95%E9%98%B3/">夕阳</a></dd>
-            <dt class="col-md-3">0001-01-01</dt>
-            <dd class="col-md-9"><a href="/zh-cn/1/01/01/frp%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1%E7%A9%BF%E9%80%8F/">FRP内网服务穿透</a></dd>
-            
-        </dl>
+<div class="container content">
+  <article>
+  
+
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">本文总结Spring Cloud Gateway的排错、调试技巧。</code></pre></div>
+<h2 id="第一式-actuator监控端点">第一式：Actuator监控端点</h2>
+
+<p>借助Actuator的监控端点，可分析全局过滤器、过滤器工厂、路由详情。详见：Spring Cloud Gateway监控</p>
+
+<h2 id="第二式-日志">第二式：日志</h2>
+
+<p>加日志，按需将如下包的日志级别设置成 debug 或 trace ，总有一款对你有用。</p>
+
+<ul>
+<li>org.springframework.cloud.gateway</li>
+<li>org.springframework.http.server.reactive</li>
+<li>org.springframework.web.reactive</li>
+<li>org.springframework.boot.autoconfigure.web</li>
+<li>reactor.netty</li>
+<li>redisratelimiter
+配置示例：</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">logging<span class="p">:</span><span class="w">
+</span><span class="w">  </span>level<span class="p">:</span><span class="w">
+</span><span class="w">    </span>org.springframework.cloud.gateway<span class="p">:</span><span class="w"> </span>trace</code></pre></div>
+<h2 id="第三式-wiretap-从greenwich-sr3及更高版本才会支持">第三式：Wiretap【从Greenwich SR3及更高版本才会支持】</h2>
+
+<p>Reactor Netty HttpClient 以及 HttpServer 可启用 Wiretap 。将reactor.netty 包设置成 debug 或 trace ，然后设置如下属性：</p>
+
+<ul>
+<li>spring.cloud.gateway.httpserver.wiretap=true</li>
+<li>spring.cloud.gateway.httpclient.wiretap=true
+分别开启HttpServer及HttpClient的Wiretap。</li>
+</ul>
+
+<p>然后，就可以分析日志啦。</p>
+
+<h3 id="tips">TIPS</h3>
+
+<p>相关Issue: <a href="https://github.com/spring-cloud/spring-cloud-gateway/issues/1194">https://github.com/spring-cloud/spring-cloud-gateway/issues/1194</a></p>
+
+<p>wiretap其实是Reactor Netty的概念，作用是，打印对端之间的流量详情，相关文档：</p>
+
+<p><a href="https://projectreactor.io/docs/netty/milestone/reference/index.html#_wire_logger_2">HttpClient的Wire Logger</a></p>
+
+<p><a href="https://projectreactor.io/docs/netty/milestone/reference/index.html#_wire_logger">HttpServer的Wire Logger</a></p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
     </div>
+  </div>
+    
+  
+  
+
+
 </div>
-
-
-<nav class="container navigation">
-  
-    
-    
-    
-    
-    <ul class="pagination justify-content-center">
-      
-        
-          
-          <li class="page-item">
-            <a href="/zh-cn/" class="page-link">1</a>
-          </li>
-          
-        
-          
-          <li class="page-item active">
-            <a href="#" class="page-link">2</a>
-          </li>
-          
-        
-      
-    </ul>
-  
-</nav>
-
-
 
   </main><div class="footer gradient-2">
   <div class="container footer-container ">

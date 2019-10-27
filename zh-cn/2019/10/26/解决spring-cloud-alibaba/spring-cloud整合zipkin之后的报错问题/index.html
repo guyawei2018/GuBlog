@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.55.6" />
+  <meta charset="utf-8">
+  <title>解决Spring Cloud Alibaba/Spring Cloud整合Zipkin之后的报错问题 · GUBlog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文服务发现组件以Nacos为例。 本文基于 Spring Cloud Greenwich SR1 问题复现 依赖 &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.cloud&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-cloud-starter-zipkin&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; 配置 spring:zipkin:base-url:http://localhost:9411/sleuth:sampler:probability:1.0 结果 只要你的API被调用，应用就会疯狂报类似如下的异常。 2019-08-24 23:10:25.330 ERROR [user-center,,,]" />
+
+  <meta name="keywords" content="Hugo, theme, den" />
+
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/10/26/%E8%A7%A3%E5%86%B3spring-cloud-alibaba/spring-cloud%E6%95%B4%E5%90%88zipkin%E4%B9%8B%E5%90%8E%E7%9A%84%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+<link rel="stylesheet" href="https://guyawei.top/css/den.css">
+
+
+
+
+<meta property="og:title" content="解决Spring Cloud Alibaba/Spring Cloud整合Zipkin之后的报错问题" />
+<meta property="og:description" content="本文服务发现组件以Nacos为例。 本文基于 Spring Cloud Greenwich SR1 问题复现 依赖 &lt;dependency&gt; &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt; &lt;artifactId&gt;spring-cloud-starter-zipkin&lt;/artifactId&gt; &lt;/dependency&gt; 配置 spring:zipkin:base-url:http://localhost:9411/sleuth:sampler:probability:1.0 结果 只要你的API被调用，应用就会疯狂报类似如下的异常。 2019-08-24 23:10:25.330 ERROR [user-center,,,]" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/26/%E8%A7%A3%E5%86%B3spring-cloud-alibaba/spring-cloud%E6%95%B4%E5%90%88zipkin%E4%B9%8B%E5%90%8E%E7%9A%84%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/" />
+<meta property="article:published_time" content="2019-10-26T10:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-10-26T10:01:23&#43;08:00"/>
+
+<meta itemprop="name" content="解决Spring Cloud Alibaba/Spring Cloud整合Zipkin之后的报错问题">
+<meta itemprop="description" content="本文服务发现组件以Nacos为例。 本文基于 Spring Cloud Greenwich SR1 问题复现 依赖 &lt;dependency&gt; &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt; &lt;artifactId&gt;spring-cloud-starter-zipkin&lt;/artifactId&gt; &lt;/dependency&gt; 配置 spring:zipkin:base-url:http://localhost:9411/sleuth:sampler:probability:1.0 结果 只要你的API被调用，应用就会疯狂报类似如下的异常。 2019-08-24 23:10:25.330 ERROR [user-center,,,]">
+
+
+<meta itemprop="datePublished" content="2019-10-26T10:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-26T10:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="1557">
+
+
+
+<meta itemprop="keywords" content="java," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="解决Spring Cloud Alibaba/Spring Cloud整合Zipkin之后的报错问题"/>
+<meta name="twitter:description" content="本文服务发现组件以Nacos为例。 本文基于 Spring Cloud Greenwich SR1 问题复现 依赖 &lt;dependency&gt; &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt; &lt;artifactId&gt;spring-cloud-starter-zipkin&lt;/artifactId&gt; &lt;/dependency&gt; 配置 spring:zipkin:base-url:http://localhost:9411/sleuth:sampler:probability:1.0 结果 只要你的API被调用，应用就会疯狂报类似如下的异常。 2019-08-24 23:10:25.330 ERROR [user-center,,,]"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/home-bg-jeep.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://guyawei.top/zh-cn/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://guyawei.top/images/globe.svg" alt="logo">
+        
+        
+          GU
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/java/">java</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/demos/">生活</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+              <a class="nav-link" href="https://guyawei.top/zh-cn/category/notes/">笔记</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+            <a class="nav-link" href="https://guyawei.top/zh-cn/about/">关于</a>
+            
+          </li>
+        
+        
+          
+            
+          
+          
+          
+            
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">解决Spring Cloud Alibaba/Spring Cloud整合Zipkin之后的报错问题</h1>
+        <p class="header-date">作者：
+          GUYW /
+        
+        2019-10-26
+          / 分类：
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">本文服务发现组件以Nacos为例。
+本文基于 Spring Cloud Greenwich SR1</code></pre></div>
+<h2 id="问题复现">问题复现</h2>
+
+<p>依赖</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>org.springframework.cloud<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>spring-cloud-starter-zipkin<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span></code></pre></div>
+<p>配置</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>zipkin<span class="p">:</span><span class="w">
+</span><span class="w">    </span>base-url<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//localhost<span class="p">:</span><span class="m">9411</span>/<span class="w">
+</span><span class="w">  </span>sleuth<span class="p">:</span><span class="w">
+</span><span class="w">    </span>sampler<span class="p">:</span><span class="w">
+</span><span class="w">      </span>probability<span class="p">:</span><span class="w"> </span><span class="m">1.0</span></code></pre></div>
+<p>结果
+只要你的API被调用，应用就会疯狂报类似如下的异常。</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">2019</span><span class="o">-</span><span class="n">08</span><span class="o">-</span><span class="n">24</span> <span class="nl">23:10:</span><span class="n">25</span><span class="o">.</span><span class="na">330</span> <span class="n">ERROR</span> <span class="o">[</span><span class="n">user</span><span class="o">-</span><span class="n">center</span><span class="o">,,,]</span> <span class="n">48628</span> <span class="o">---</span> <span class="o">[.</span><span class="na">naming</span><span class="o">.</span><span class="na">updater</span><span class="o">]</span> <span class="n">com</span><span class="o">.</span><span class="na">alibaba</span><span class="o">.</span><span class="na">nacos</span><span class="o">.</span><span class="na">client</span><span class="o">.</span><span class="na">naming</span>          <span class="o">:</span> <span class="o">[</span><span class="n">NA</span><span class="o">]</span> <span class="n">failed</span> <span class="n">to</span> <span class="n">update</span> <span class="nl">serviceName:</span> <span class="n">DEFAULT_GROUP</span><span class="err">@</span><span class="nd">@localhost</span>
+
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">IllegalStateException</span><span class="o">:</span> <span class="n">failed</span> <span class="n">to</span> <span class="n">req</span> <span class="nl">API:</span><span class="o">/</span><span class="n">nacos</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">ns</span><span class="o">/</span><span class="n">instance</span><span class="o">/</span><span class="n">list</span> <span class="n">after</span> <span class="n">all</span> <span class="nf">servers</span><span class="o">([</span><span class="nl">localhost:</span><span class="n">8848</span><span class="o">])</span> <span class="nl">tried:</span> <span class="n">failed</span> <span class="n">to</span> <span class="n">req</span> <span class="nl">API:http:</span><span class="c1">//localhost:8848/nacos/v1/ns/instance/list. code:404 msg: service not found: DEFAULT_GROUP@@localhost
+</span><span class="c1"></span>    <span class="n">at</span> <span class="n">com</span><span class="o">.</span><span class="na">alibaba</span><span class="o">.</span><span class="na">nacos</span><span class="o">.</span><span class="na">client</span><span class="o">.</span><span class="na">naming</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">NamingProxy</span><span class="o">.</span><span class="na">reqAPI</span><span class="o">(</span><span class="n">NamingProxy</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">380</span><span class="o">)</span> <span class="o">~[</span><span class="n">nacos</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">1</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">jar</span><span class="o">:</span><span class="n">na</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">com</span><span class="o">.</span><span class="na">alibaba</span><span class="o">.</span><span class="na">nacos</span><span class="o">.</span><span class="na">client</span><span class="o">.</span><span class="na">naming</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">NamingProxy</span><span class="o">.</span><span class="na">reqAPI</span><span class="o">(</span><span class="n">NamingProxy</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">304</span><span class="o">)</span> <span class="o">~[</span><span class="n">nacos</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">1</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">jar</span><span class="o">:</span><span class="n">na</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">com</span><span class="o">.</span><span class="na">alibaba</span><span class="o">.</span><span class="na">nacos</span><span class="o">.</span><span class="na">client</span><span class="o">.</span><span class="na">naming</span><span class="o">.</span><span class="na">net</span><span class="o">.</span><span class="na">NamingProxy</span><span class="o">.</span><span class="na">queryList</span><span class="o">(</span><span class="n">NamingProxy</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">217</span><span class="o">)</span> <span class="o">~[</span><span class="n">nacos</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">1</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">jar</span><span class="o">:</span><span class="n">na</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">com</span><span class="o">.</span><span class="na">alibaba</span><span class="o">.</span><span class="na">nacos</span><span class="o">.</span><span class="na">client</span><span class="o">.</span><span class="na">naming</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">HostReactor</span><span class="o">.</span><span class="na">updateServiceNow</span><span class="o">(</span><span class="n">HostReactor</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">273</span><span class="o">)</span> <span class="o">~[</span><span class="n">nacos</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">1</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">jar</span><span class="o">:</span><span class="n">na</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">com</span><span class="o">.</span><span class="na">alibaba</span><span class="o">.</span><span class="na">nacos</span><span class="o">.</span><span class="na">client</span><span class="o">.</span><span class="na">naming</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">HostReactor$UpdateTask</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">HostReactor</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">318</span><span class="o">)</span> <span class="o">[</span><span class="n">nacos</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">1</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">0</span><span class="o">.</span><span class="na">jar</span><span class="o">:</span><span class="n">na</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">Executors$RunnableAdapter</span><span class="o">.</span><span class="na">call</span><span class="o">(</span><span class="n">Executors</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">511</span><span class="o">)</span> <span class="o">[</span><span class="nl">na:</span><span class="n">1</span><span class="o">.</span><span class="na">8</span><span class="o">.</span><span class="na">0_201</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">FutureTask</span><span class="o">.</span><span class="na">run$$$capture</span><span class="o">(</span><span class="n">FutureTask</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">266</span><span class="o">)</span> <span class="o">[</span><span class="nl">na:</span><span class="n">1</span><span class="o">.</span><span class="na">8</span><span class="o">.</span><span class="na">0_201</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">FutureTask</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">FutureTask</span><span class="o">.</span><span class="na">java</span><span class="o">)</span> <span class="o">[</span><span class="nl">na:</span><span class="n">1</span><span class="o">.</span><span class="na">8</span><span class="o">.</span><span class="na">0_201</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">ScheduledThreadPoolExecutor$ScheduledFutureTask</span><span class="o">.</span><span class="na">access$201</span><span class="o">(</span><span class="n">ScheduledThreadPoolExecutor</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">180</span><span class="o">)</span> <span class="o">[</span><span class="nl">na:</span><span class="n">1</span><span class="o">.</span><span class="na">8</span><span class="o">.</span><span class="na">0_201</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">ScheduledThreadPoolExecutor$ScheduledFutureTask</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">ScheduledThreadPoolExecutor</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">293</span><span class="o">)</span> <span class="o">[</span><span class="nl">na:</span><span class="n">1</span><span class="o">.</span><span class="na">8</span><span class="o">.</span><span class="na">0_201</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">ThreadPoolExecutor</span><span class="o">.</span><span class="na">runWorker</span><span class="o">(</span><span class="n">ThreadPoolExecutor</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">1149</span><span class="o">)</span> <span class="o">[</span><span class="nl">na:</span><span class="n">1</span><span class="o">.</span><span class="na">8</span><span class="o">.</span><span class="na">0_201</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">ThreadPoolExecutor$Worker</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">ThreadPoolExecutor</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">624</span><span class="o">)</span> <span class="o">[</span><span class="nl">na:</span><span class="n">1</span><span class="o">.</span><span class="na">8</span><span class="o">.</span><span class="na">0_201</span><span class="o">]</span>
+    <span class="n">at</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">748</span><span class="o">)</span> <span class="o">[</span><span class="nl">na:</span><span class="n">1</span><span class="o">.</span><span class="na">8</span><span class="o">.</span><span class="na">0_201</span><span class="o">]</span></code></pre></div>
+<p>原因：</p>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">Spring Cloud把 http://localhost:9411/ 当作了服务发现组件里面的服务名称；
+于是，Nacos Client尝试从Nacos Server寻找一个名为 localhost:9411 的服务…这个服务根本不存在啊，
+于是就疯狂报异常（因为Nacos Client本地定时任务，刷新本地服务发现缓存）</code></pre></div>
+<p>解决方案</p>
+
+<ul>
+<li>让Spring Cloud 正确识别 <a href="http://localhost:9411/">http://localhost:9411/</a> ，当成一个URL，而不要当做服务名。</li>
+
+<li><p>把Zipkin Server注册到Nacos</p>
+
+<h2 id="谈谈zipkin-server注册到服务发现组件">谈谈Zipkin Server注册到服务发现组件</h2>
+
+<p>Zipkin Server 官方并不支持注册到服务发现组件！！！！<br>
+在 <a href="https://github.com/openzipkin/zipkin/issues/2540">https://github.com/openzipkin/zipkin/issues/2540</a> 里面，官方人员解答得很清楚了：</p></li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">@nkorange thank you for reaching out. We have had several users ask about service discovery with Zipkin Server over the years (see #1870) and less ask about dynamic/external configuration. We don’t currently support any service discovery as a first-class feature. There is a workaround to use Eureka mentioned in #1870. So unless a user is using that, or is building a custom Zipkin Server (which we don’t officially support), there should be no service discovery.
+
+If you want to come chat with us on Gitter (https://gitter.im/openzipkin/zipkin) about next steps, please do.</code></pre></div>
+<p>详见 <font color="red">We don&rsquo;t currently support any service discovery as a first-class feature.</font></p>
+
+<p>如果你想要注册到服务发现组件，那么可以参考 <a href="https://github.com/openzipkin/zipkin/issues/1870">https://github.com/openzipkin/zipkin/issues/1870</a> 说明自己改造Zipkin Server让其注册到服务发现组件，但这样做不会得到任何官方的技术支持！！</p>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">所以，将Zipkin Server注册到Nacos或者其他服务发现组件，不是最优解。
+我们的解决方案就演变成了：让Spring Cloud 正确识别 http://localhost:9411/ ，当成一个URL，而不要当做服务名。这一种解决方案。</code></pre></div>
+<p>配置走你！</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>zipkin<span class="p">:</span><span class="w">
+</span><span class="w">    </span>base-url<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//localhost<span class="p">:</span><span class="m">9411</span>/<span class="w">
+</span><span class="w">    </span>discovery-client-enabled<span class="p">:</span><span class="w"> </span><span class="kc">false</span></code></pre></div>
+<p>从这个配置的注释（ 代码见 org.springframework.cloud.sleuth.zipkin2.ZipkinProperties#discoveryClientEnabled ）来看，只要设置成false，那么就会把 <a href="http://localhost:9411/">http://localhost:9411/</a> 当成一个URL，而不是服务名称了。</p>
+
+<p>然而当你去测试的时候，发现 然并卵 ，一点效果都没有。</p>
+
+<p>Spring Cloud Sleuth Bug、解决方案与Pull Request
+问题代码在这里：org.springframework.cloud.sleuth.zipkin2.sender.ZipkinRestTemplateSenderConfiguration.
+DiscoveryClientZipkinUrlExtractorConfiguration.ZipkinClientNoOpConfiguration ，里面是这么玩的：</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="nd">@Configuration</span>
+<span class="nd">@ConditionalOnProperty</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;spring.zipkin.discoveryClientEnabled&#34;</span><span class="o">,</span> <span class="n">havingValue</span> <span class="o">=</span> <span class="s">&#34;false&#34;</span><span class="o">)</span>
+<span class="kd">static</span> <span class="kd">class</span> <span class="nc">ZipkinClientNoOpConfiguration</span> <span class="o">{</span>
+  <span class="o">...</span>
+<span class="o">}</span></code></pre></div>
+<p>当你看到这个代码的时候，就应该知道解决方案啦！那就是你得把配置修改为：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>zipkin<span class="p">:</span><span class="w">
+</span><span class="w">    </span>base-url<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//localhost<span class="p">:</span><span class="m">9411</span>/<span class="w">
+</span><span class="w">    </span>discoveryClientEnabled<span class="p">:</span><span class="w"> </span><span class="kc">false</span></code></pre></div>
+<p>就可以了！</p>
+
+<p>这其实是Spring Cloud Sleuth子项目 spring-cloud-sleuth-zipkin 的一个Bug！</p>
+
+<ul>
+<li>相关的Issue在：<a href="https://github.com/spring-cloud/spring-cloud-sleuth/issues/1376">https://github.com/spring-cloud/spring-cloud-sleuth/issues/1376</a></li>
+
+<li><p>解决的Pul Request在：<a href="https://github.com/spring-cloud/spring-cloud-sleuth/pull/1379">https://github.com/spring-cloud/spring-cloud-sleuth/pull/1379</a> ，代码已经合并了，在 Spring Cloud Greenwich SR3 版本中会修正！
+简单总结一下：</p></li>
+
+<li><p>如果你使用的是Greenwich SR3之前的版本，务必使用 spring.zipkin.discoveryClientEnabled = false ，否则配置不生效！！</p></li>
+
+<li><p>如果你使用的是Greenwich SR3及更高版本，可使用 discovery-client-enabled 或者 discoveryClientEnabled 。</p></li>
+</ul>
+
+<h3 id="为什么zipkin-server不支持服务发现-spring-cloud还弄个服务发现的配置">为什么Zipkin Server不支持服务发现，Spring Cloud还弄个服务发现的配置？</h3>
+
+<p>我暂时没有找到Spring Cloud这样做的意图。我的猜想：是因为早期Spring Cloud是使用自己编写代码实现Zipkin Server的（从Finchley开始，改成了直接用Zipkin官方现成的jar包启动），这种方式可以注册到你想要的服务发现组件上（因为本质上，Zipkin Server就是个基于Spring Boot的应用嘛）。</p>
+
+<h3 id="一点吐槽">一点吐槽</h3>
+
+<p>个人觉得Spring Cloud这部分的设计不太优雅，如果让我来设计的话，我应该会这么设计：</p>
+
+<p>URL模式：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>zipkin<span class="p">:</span><span class="w">
+</span><span class="w">    </span>base-url<span class="p">:</span><span class="w"> </span>http<span class="p">:</span>//localhost<span class="p">:</span><span class="m">9411</span>/</code></pre></div>
+<p>服务名称的模式：</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">spring<span class="p">:</span><span class="w">
+</span><span class="w">  </span>zipkin<span class="p">:</span><span class="w">
+</span><span class="w">    </span>base-url<span class="p">:</span><span class="w"> </span>lb<span class="p">:</span>//zipkin-server/</code></pre></div>
+<p>这样带来的好处：</p>
+
+<p>scheme（http:// 、 lb:// ）就可以区分出是具体URL还是微服务名称了，无需配置 discoveryClientEnabled
+lb:// 协议和Spring Cloud Gateway形成了呼应，学习成本也比较低，使用体验更加一致</p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://106.15.235.215"><img src="/images/blank-profile.png" alt="GUYW" /></a></div>
+      <div class="author-content">
+      <p class="author-title">作者</p>
+      <p class="author-name">GUYW</p>
+      <p class="author-desc">心在远方，路在脚下</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">网站地图</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://guyawei.top/zh-cn/tags/">标签</a></li>
+              
+              
+                <li><a href="https://guyawei.top/zh-cn/categories/">分类</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://guyawei.top/zh-cn/index.xml"><i class="fas fa-rss-square"></i> RSS订阅</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">社群</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/guyawei2018/" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">友链</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/shaform/hugo-theme-den/" rel="noopener" target="_blank">关于我</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            Gu
+            
+              2017 -
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>
