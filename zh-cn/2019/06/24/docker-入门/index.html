@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-06-24T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-06-24T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="1218">
+<meta itemprop="wordCount" content="1254">
 
 
 
@@ -246,7 +246,9 @@ docker stop containerId&mdash; 停止容器<br>
 docker container ls &ndash;all &mdash;查看所有容器（包含未运行的容器）<br>
 docker rm containerId&mdash;删除容器<br>
 docker cp 文件路径 containerId:文件绝对路径  &mdash;替换docker 内部文件<br>
-docker commit -m  &ldquo;&rdquo;   -a  &ldquo;&rdquo;   [CONTAINER ID]  [给新的镜像命名]   &mdash;&ndash;打包成镜像<br></p>
+docker commit -m  &ldquo;&rdquo;   -a  &ldquo;&rdquo;   [CONTAINER ID]  [给新的镜像命名]   &mdash;&ndash;打包成镜像<br>
+systemctl enable docker    设置docker开机自启动
+docker update &ndash;restart 容器ID   设置docker容器自启动</p>
 
 <h2 id="部署镜像私有仓库">部署镜像私有仓库</h2></li>
 
