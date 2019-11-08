@@ -6,10 +6,19 @@
     <description>Recent content in notes on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 22 Oct 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 07 Nov 2019 16:01:23 +0800</lastBuildDate>
     
 	<atom:link href="https://guyawei.top/zh-cn/tag/notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Linux修改时区</title>
+      <link>https://guyawei.top/zh-cn/2019/11/07/linux%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/</link>
+      <pubDate>Thu, 07 Nov 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/11/07/linux%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/</guid>
+      <description>查看系统时区 [root@linux-node ~]# date -R 修改系统时间 1、将日期设置为2017年11月3日 [root@linux-node ~]# date -s 11/03/17 2、将时间设置为14点20分50秒 [root@linux-node ~]# date -s 14:20:50 3、将时间设置为2</description>
+    </item>
     
     <item>
       <title>Intellij IDEA中Mybatis Mapper自动注入警告的6种解决方案</title>

@@ -5,7 +5,7 @@
     <description>Recent content on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 26 Oct 2019 10:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 07 Nov 2019 16:01:23 +0800</lastBuildDate>
     
         <atom:link href="https://guyawei.top/zh-cn/index.xml" rel="self" type="application/rss+xml" />
     
@@ -31,6 +31,37 @@
 
 &lt;p&gt;了解並貢獻： &lt;a href=&#34;https://github.com/gohugoio&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 </description>
+      
+    </item>
+    
+    <item>
+      <title>Linux修改时区</title>
+      <link>https://guyawei.top/zh-cn/2019/11/07/linux%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/</link>
+      <pubDate>Thu, 07 Nov 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/11/07/linux%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;查看系统时区&#34;&gt;查看系统时区&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    [root@linux-node ~]# date -R&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;修改系统时间&#34;&gt;修改系统时间&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    1、将日期设置为2017年11月3日
+    [root@linux-node ~]# date -s 11/03/17
+
+    2、将时间设置为14点20分50秒
+    [root@linux-node ~]# date -s 14:20:50
+
+    3、将时间设置为2017年11月3日14点16分30秒（MMDDhhmmYYYY.ss）
+    [root@linux-node ~]# date 1103141617.30&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;时区设置用tzselect-命令来实现&#34;&gt;时区设置用tzselect 命令来实现&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    但是通过tzselect命令设置TZ这个环境变量来选择的时区，需要将变量添加到.profile文件中
+
+    执行tzselect命令 --&amp;gt; 选择Asia --&amp;gt; 选择China --&amp;gt; 选择east China - Beijing, Guangdong, Shanghai, etc--&amp;gt;然后输入1。
+
+    执行完tzselect命令选择时区后，时区并没有更改，只是在命令最后提示你可以执行 
+    TZ=’Asia/Shanghai’; export TZ 并将这行命令添加到.profile中，然后退出并重新登录。
+    这里可以将TZ=’Asia/Shanghai’; export TZ添加到/etc/profile文件中，最后source profile文件&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
       
     </item>
     
@@ -5295,28 +5326,28 @@ scp -r /opt/soft/mongodb root@192.168.120.204:/opt/soft/scptest
 &lt;li&gt;1.# wget &lt;a href=&#34;http://download.redis.io/releases/redis-5.0.3.tar.gz&#34;&gt;http://download.redis.io/releases/redis-5.0.3.tar.gz&lt;/a&gt;&lt;br&gt;&lt;/li&gt;
 &lt;li&gt;2.# tar xzf redis-5.0.3.tar.gz&lt;/li&gt;
 &lt;li&gt;3.# cd redis-5.0.3&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;4.# yum install gcc-c++&lt;br&gt;&amp;lt;&amp;ndash;可能需要安装gcc c语言编译工具&amp;ndash;&amp;gt;&lt;br&gt;
-&lt;p&gt;在第一次make指令后再次make会出现“没有那个文件或目录”错误，是因为第一次make后没有清除残留文件导致&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;4.# yum install gcc-c++&lt;br&gt;
+&amp;lt;&amp;ndash;可能需要安装gcc c语言编译工具&amp;ndash;&amp;gt;&lt;br&gt;
+在第一次make指令后再次make会出现“没有那个文件或目录”错误，是因为第一次make后没有清除残留文件导致&lt;/li&gt;
 &lt;li&gt;5.执行# make distclean之后再执行make&lt;br&gt;&lt;/li&gt;
 &lt;li&gt;6.# make&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;7.# make install&lt;br&gt;
-&lt;p&gt;ps ：/usr/local/bin路径下有启动命令；可以指定配置文件启动，
-开启服务前可以修改配置文件redis.conf，GENERAL模块 daemonize no改为yes 可以最小化后台运行
-这样可以不用改变初始化的文件  redis-server /home/redis/redis.conf&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;7.# make install&lt;br&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;ps ：/usr/sbin或者/usr/local/bin路径下有启动命令；可以指定配置文件启动，
+开启服务前可以修改配置文件redis.conf，GENERAL模块 daemonize no改为yes 可以最小化后台运行
+这样可以不用改变初始化的文件  
+redis-server /home/redis/redis.conf&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;strong&gt;进入redis&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;redis-cli -p 6379&lt;br&gt;
 &lt;strong&gt;退出&lt;/strong&gt;
 shutdown&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;redis常用指令&lt;/strong&gt;
-select 数字（0-15）切换库，默认有16个库，启始库为0，&lt;br&gt;
-dbsize 查看当前数据库有多少key&lt;br&gt;
-keys */或者其他通配符  keys 7**&lt;br&gt;
-flushdb 清当前库 flushall 情况所有库&lt;br&gt;&lt;/p&gt;
-
+&lt;p&gt;&lt;strong&gt;redis常用指令&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;select 数字（0-15）切换库，默认有16个库，启始库为0
+dbsize 查看当前数据库有多少key
+keys */或者其他通配符  keys 7**
+flushdb 清当前库 flushall 情况所有库&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;strong&gt;默认端口6379&lt;/strong&gt;&lt;br&gt;
 &lt;strong&gt;哨兵默认端口 16379&lt;/strong&gt;&lt;br&gt;
 数据类型操作指令大全

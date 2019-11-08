@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-05-29T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-05-29T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="373">
+<meta itemprop="wordCount" content="383">
 
 
 
@@ -150,28 +150,28 @@
 <li>1.# wget <a href="http://download.redis.io/releases/redis-5.0.3.tar.gz">http://download.redis.io/releases/redis-5.0.3.tar.gz</a><br></li>
 <li>2.# tar xzf redis-5.0.3.tar.gz</li>
 <li>3.# cd redis-5.0.3<br></li>
-<li>4.# yum install gcc-c++<br>&lt;&ndash;可能需要安装gcc c语言编译工具&ndash;&gt;<br>
-<p>在第一次make指令后再次make会出现“没有那个文件或目录”错误，是因为第一次make后没有清除残留文件导致</p></li>
+<li>4.# yum install gcc-c++<br>
+&lt;&ndash;可能需要安装gcc c语言编译工具&ndash;&gt;<br>
+在第一次make指令后再次make会出现“没有那个文件或目录”错误，是因为第一次make后没有清除残留文件导致</li>
 <li>5.执行# make distclean之后再执行make<br></li>
 <li>6.# make<br></li>
-<li>7.# make install<br>
-<p>ps ：/usr/local/bin路径下有启动命令；可以指定配置文件启动，
-开启服务前可以修改配置文件redis.conf，GENERAL模块 daemonize no改为yes 可以最小化后台运行
-这样可以不用改变初始化的文件  redis-server /home/redis/redis.conf</p></li>
+<li>7.# make install<br></li>
 </ul>
-
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">ps ：/usr/sbin或者/usr/local/bin路径下有启动命令；可以指定配置文件启动，
+开启服务前可以修改配置文件redis.conf，GENERAL模块 daemonize no改为yes 可以最小化后台运行
+这样可以不用改变初始化的文件  
+redis-server /home/redis/redis.conf</code></pre></div>
 <p><strong>进入redis</strong></p>
 
 <p>redis-cli -p 6379<br>
 <strong>退出</strong>
 shutdown</p>
 
-<p><strong>redis常用指令</strong>
-select 数字（0-15）切换库，默认有16个库，启始库为0，<br>
-dbsize 查看当前数据库有多少key<br>
-keys */或者其他通配符  keys 7**<br>
-flushdb 清当前库 flushall 情况所有库<br></p>
-
+<p><strong>redis常用指令</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">select 数字（0-15）切换库，默认有16个库，启始库为0
+dbsize 查看当前数据库有多少key
+keys */或者其他通配符  keys 7**
+flushdb 清当前库 flushall 情况所有库</code></pre></div>
 <p><strong>默认端口6379</strong><br>
 <strong>哨兵默认端口 16379</strong><br>
 数据类型操作指令大全

@@ -10,13 +10,44 @@
   
   <url>
     <loc>https://guyawei.top/zh-cn/categories/</loc>
-    <lastmod>2019-10-26T10:01:23+08:00</lastmod>
+    <lastmod>2019-11-07T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://guyawei.top/zh-cn/</loc>
-    <lastmod>2019-10-26T10:01:23+08:00</lastmod>
+    <lastmod>2019-11-07T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/2019/11/07/linux%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/</loc>
+    <lastmod>2019-11-07T16:01:23+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/category/notes/</loc>
+    <lastmod>2019-11-07T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/posts/</loc>
+    <lastmod>2019-11-07T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/tags/</loc>
+    <lastmod>2019-11-07T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/tag/notes/</loc>
+    <lastmod>2019-11-07T16:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -29,12 +60,6 @@
   
   <url>
     <loc>https://guyawei.top/zh-cn/category/java/</loc>
-    <lastmod>2019-10-26T10:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/posts/</loc>
     <lastmod>2019-10-26T10:01:23+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -107,12 +132,6 @@
     <lastmod>2019-10-26T10:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/tags/</loc>
-    <lastmod>2019-10-26T10:01:23+08:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -206,22 +225,10 @@
   </url>
   
   <url>
-    <loc>https://guyawei.top/zh-cn/category/notes/</loc>
-    <lastmod>2019-10-22T16:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://guyawei.top/zh-cn/2019/10/22/spring-cloud-alibaba-%E6%90%AD%E5%BB%BA%E7%94%9F%E4%BA%A7%E5%8F%AF%E7%94%A8%E7%9A%84nacos%E9%9B%86%E7%BE%A4/</loc>
     <lastmod>2019-10-22T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/tag/notes/</loc>
-    <lastmod>2019-10-22T16:01:23+08:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>

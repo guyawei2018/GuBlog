@@ -6,10 +6,19 @@
     <description>Recent content in Posts on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 26 Oct 2019 10:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 07 Nov 2019 16:01:23 +0800</lastBuildDate>
     
 	<atom:link href="https://guyawei.top/zh-cn/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Linux修改时区</title>
+      <link>https://guyawei.top/zh-cn/2019/11/07/linux%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/</link>
+      <pubDate>Thu, 07 Nov 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/11/07/linux%E4%BF%AE%E6%94%B9%E6%97%B6%E5%8C%BA/</guid>
+      <description>查看系统时区 [root@linux-node ~]# date -R 修改系统时间 1、将日期设置为2017年11月3日 [root@linux-node ~]# date -s 11/03/17 2、将时间设置为14点20分50秒 [root@linux-node ~]# date -s 14:20:50 3、将时间设置为2</description>
+    </item>
     
     <item>
       <title>JWT操作工具类分享</title>
@@ -180,15 +189,6 @@
       
       <guid>https://guyawei.top/zh-cn/2019/10/23/sentinelresource%E6%B3%A8%E8%A7%A3-%E5%B1%9E%E6%80%A7%E6%80%BB%E7%BB%93/</guid>
       <description>本文基于Sentinel 1.6.2，理论支持1.4.0+ 属性 作用 是否必须 value 资源名称 是 entryType entry类型，标记流量的方向，取值IN/OUT，默认</description>
-    </item>
-    
-    <item>
-      <title>Alibaba Sentinel 规则参数总结</title>
-      <link>https://guyawei.top/zh-cn/2019/10/23/alibaba-sentinel-%E8%A7%84%E5%88%99%E5%8F%82%E6%95%B0%E6%80%BB%E7%BB%93/</link>
-      <pubDate>Wed, 23 Oct 2019 16:01:23 +0800</pubDate>
-      
-      <guid>https://guyawei.top/zh-cn/2019/10/23/alibaba-sentinel-%E8%A7%84%E5%88%99%E5%8F%82%E6%95%B0%E6%80%BB%E7%BB%93/</guid>
-      <description>本文总结了Alibaba Sentinel各种规则的参数。 基于Sentinel 1.6.2编写，未来如果本文不再适用，可自行点击每一节 参考 一览的</description>
     </item>
     
   </channel>
