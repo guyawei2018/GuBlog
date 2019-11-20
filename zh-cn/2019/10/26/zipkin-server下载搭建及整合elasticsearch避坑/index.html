@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-10-26T10:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-10-26T10:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="957">
+<meta itemprop="wordCount" content="1097">
 
 
 
@@ -192,9 +192,9 @@ Zipkin Server的 API兼容性（微服务通过集成reporter模块，从而Zipk
 
 <ul>
 <li>前往 <a href="https://www.elastic.co/cn/downloads/elasticsearch">https://www.elastic.co/cn/downloads/elasticsearch</a> 下载Elasticsearch，笔者使用的版本是 elasticsearch-6.5.3</li>
-<li>启动Elasticsearch
-cd elasticsearch-6.5.3/bin
-./elasticsearch</li>
+<li>启动Elasticsearch<br /></li>
+<li>cd elasticsearch-6.5.3/bin</li>
+<li>./elasticsearch 或者 ./elasticsearch  -d (后台启动)</li>
 
 <li><p>url <a href="http://localhost:9200/">http://localhost:9200/</a> or Invoke-RestMethod <a href="http://localhost:9200">http://localhost:9200</a> 看是否有返回JSON数据</p>
 <div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
@@ -247,11 +247,25 @@ vi ${elasticsearch_HOME}/config/jvm.options</p>
     <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="na">elasticsearch</span><span class="o">.</span><span class="na">bootstrap</span><span class="o">.</span><span class="na">Elasticsearch</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="n">Elasticsearch</span><span class="o">.</span><span class="na">java</span><span class="o">:</span><span class="n">121</span><span class="o">)</span> <span class="o">~[</span><span class="n">elasticsearch</span><span class="o">-</span><span class="n">5</span><span class="o">.</span><span class="na">2</span><span class="o">.</span><span class="na">2</span><span class="o">.</span><span class="na">jar</span><span class="o">:</span><span class="n">5</span><span class="o">.</span><span class="na">2</span><span class="o">.</span><span class="na">2</span><span class="o">]</span>
     <span class="o">...</span> <span class="n">6</span> <span class="n">more</span></code></pre></div>
 <p>解决方案：创建一个非root用户并赋予目录该用户权限，再启动<br></p>
-<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant"># groupadd es
-# useradd es -g es -p es
-# chown es:es ${elasticsearch_HOME}/
-# sudo su es
-# ./bin/elasticsearch</code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">这是出于系统安全考虑设置的条件。由于ElasticSearch可以接收用户输入的脚本并且执行，为了系统安全考   虑，建议创建一个单独的用户用来运行ElasticSearch。
+
+创建用户组和用户：
+
+groupadd esgroup
+
+useradd esuser -g esgroup -p espassword
+
+更改elasticsearch文件夹及内部文件的所属用户及组：
+
+cd /opt
+
+chown -R esuser:esgroup elasticsearch-6.8.4
+
+切换用户并运行：
+
+su esuser
+
+./bin/elasticsearch</code></pre></div>
 <h3 id="执行如下命令-重新启动zipkin-server">执行如下命令，重新启动Zipkin Server</h3>
 
 <p>STORAGE_TYPE=elasticsearch ES_HOSTS=localhost:9200 java -jar zipkin-server-2.11.3-exec.jar</p>

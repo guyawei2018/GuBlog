@@ -2301,9 +2301,9 @@ Zipkin Server的 API兼容性（微服务通过集成reporter模块，从而Zipk
 
 &lt;ul&gt;
 &lt;li&gt;前往 &lt;a href=&#34;https://www.elastic.co/cn/downloads/elasticsearch&#34;&gt;https://www.elastic.co/cn/downloads/elasticsearch&lt;/a&gt; 下载Elasticsearch，笔者使用的版本是 elasticsearch-6.5.3&lt;/li&gt;
-&lt;li&gt;启动Elasticsearch
-cd elasticsearch-6.5.3/bin
-./elasticsearch&lt;/li&gt;
+&lt;li&gt;启动Elasticsearch&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;cd elasticsearch-6.5.3/bin&lt;/li&gt;
+&lt;li&gt;./elasticsearch 或者 ./elasticsearch  -d (后台启动)&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;url &lt;a href=&#34;http://localhost:9200/&#34;&gt;http://localhost:9200/&lt;/a&gt; or Invoke-RestMethod &lt;a href=&#34;http://localhost:9200&#34;&gt;http://localhost:9200&lt;/a&gt; 看是否有返回JSON数据&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
@@ -2356,11 +2356,25 @@ vi ${elasticsearch_HOME}/config/jvm.options&lt;/p&gt;
     &lt;span class=&#34;n&#34;&gt;at&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;org&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;elasticsearch&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;bootstrap&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Elasticsearch&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;init&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Elasticsearch&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;java&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;121&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;~[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;elasticsearch&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;jar&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
     &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;6&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;more&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;解决方案：创建一个非root用户并赋予目录该用户权限，再启动&lt;br&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;# groupadd es
-# useradd es -g es -p es
-# chown es:es ${elasticsearch_HOME}/
-# sudo su es
-# ./bin/elasticsearch&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;这是出于系统安全考虑设置的条件。由于ElasticSearch可以接收用户输入的脚本并且执行，为了系统安全考   虑，建议创建一个单独的用户用来运行ElasticSearch。
+
+创建用户组和用户：
+
+groupadd esgroup
+
+useradd esuser -g esgroup -p espassword
+
+更改elasticsearch文件夹及内部文件的所属用户及组：
+
+cd /opt
+
+chown -R esuser:esgroup elasticsearch-6.8.4
+
+切换用户并运行：
+
+su esuser
+
+./bin/elasticsearch&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;执行如下命令-重新启动zipkin-server&#34;&gt;执行如下命令，重新启动Zipkin Server&lt;/h3&gt;
 
 &lt;p&gt;STORAGE_TYPE=elasticsearch ES_HOSTS=localhost:9200 java -jar zipkin-server-2.11.3-exec.jar&lt;/p&gt;
