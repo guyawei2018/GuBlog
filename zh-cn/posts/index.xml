@@ -6,10 +6,28 @@
     <description>Recent content in Posts on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 07 Nov 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 26 Nov 2019 10:01:23 +0800</lastBuildDate>
     
 	<atom:link href="https://guyawei.top/zh-cn/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>CentOS7下安装nodeJs</title>
+      <link>https://guyawei.top/zh-cn/2019/11/26/centos7%E4%B8%8B%E5%AE%89%E8%A3%85nodejs/</link>
+      <pubDate>Tue, 26 Nov 2019 10:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/11/26/centos7%E4%B8%8B%E5%AE%89%E8%A3%85nodejs/</guid>
+      <description>1. 使用EPEL安装 EPEL（Extra Packages for Enterprise Linux）企业版Linux的额外软件包，是Fedora小组维护的一个软件仓库项目，为RHEL/</description>
+    </item>
+    
+    <item>
+      <title>ElasticSearch入门篇</title>
+      <link>https://guyawei.top/zh-cn/2019/11/26/elasticsearch%E5%85%A5%E9%97%A8%E7%AF%87/</link>
+      <pubDate>Tue, 26 Nov 2019 10:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/11/26/elasticsearch%E5%85%A5%E9%97%A8%E7%AF%87/</guid>
+      <description>本文基于elasticsearch6.8.4版本 理论支持更高版本 第一节 ElasticSearch概述 1.1ElasticSearch是一个基</description>
+    </item>
     
     <item>
       <title>Linux修改时区</title>
@@ -171,24 +189,6 @@
       
       <guid>https://guyawei.top/zh-cn/2019/10/24/rocketmq-4.5.1%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/</guid>
       <description>本文基于RocketMQ 4.5.1，理论支持RocketMQ 4.0+ 本文详细探讨如何搭建RocketMQ 一、下载 前往 http://rocketmq.apache.org/release_notes/release-notes-4.5.1/ ，下载 Binary 文件即可。 例如Roc</description>
-    </item>
-    
-    <item>
-      <title>RocketMQ控制台安装教程</title>
-      <link>https://guyawei.top/zh-cn/2019/10/24/rocketmq%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/</link>
-      <pubDate>Thu, 24 Oct 2019 16:01:23 +0800</pubDate>
-      
-      <guid>https://guyawei.top/zh-cn/2019/10/24/rocketmq%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/</guid>
-      <description>这一节来搭建RocketMQ控制台，RocketMQ的可视化管理界面。 一、下载代码 方式一、git下载，执行如下命令 git clone https://github.com/apache/rocketmq-externals.git 方式二、直接下载，访</description>
-    </item>
-    
-    <item>
-      <title>@SentinelResource注解 属性总结</title>
-      <link>https://guyawei.top/zh-cn/2019/10/23/sentinelresource%E6%B3%A8%E8%A7%A3-%E5%B1%9E%E6%80%A7%E6%80%BB%E7%BB%93/</link>
-      <pubDate>Wed, 23 Oct 2019 16:01:23 +0800</pubDate>
-      
-      <guid>https://guyawei.top/zh-cn/2019/10/23/sentinelresource%E6%B3%A8%E8%A7%A3-%E5%B1%9E%E6%80%A7%E6%80%BB%E7%BB%93/</guid>
-      <description>本文基于Sentinel 1.6.2，理论支持1.4.0+ 属性 作用 是否必须 value 资源名称 是 entryType entry类型，标记流量的方向，取值IN/OUT，默认</description>
     </item>
     
   </channel>

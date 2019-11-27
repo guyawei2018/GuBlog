@@ -3,13 +3,13 @@
 <head>
   <meta name="generator" content="Hugo 0.55.6" />
   <meta charset="utf-8">
-  <title>Linux常用指令 · GUBlog</title>
+  <title>CentOS7下安装nodeJs · GUBlog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Linux常用指令 授权文件 chmod &#43;x 文件名/文件夹 将端口加入到Linux防火墙 firewall-cmd --permanent --add-port=80/tcp 跳过认证直接连接mysql数据库 mysqld_safe --skip-grant-tables 启动，停止，重启，状态 service mysqld" />
+  <meta name="description" content="1. 使用EPEL安装 EPEL（Extra Packages for Enterprise Linux）企业版Linux的额外软件包，是Fedora小组维护的一个软件仓库项目，为RHEL/" />
 
   <meta name="keywords" content="Hugo, theme, den" />
 
-<link rel="canonical" href="https://guyawei.top/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" />
+<link rel="canonical" href="https://guyawei.top/zh-cn/2019/11/26/centos7%E4%B8%8B%E5%AE%89%E8%A3%85nodejs/" />
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
@@ -20,27 +20,27 @@
 
 
 
-<meta property="og:title" content="Linux常用指令" />
-<meta property="og:description" content="Linux常用指令 授权文件 chmod &#43;x 文件名/文件夹 将端口加入到Linux防火墙 firewall-cmd --permanent --add-port=80/tcp 跳过认证直接连接mysql数据库 mysqld_safe --skip-grant-tables 启动，停止，重启，状态 service mysqld" />
+<meta property="og:title" content="CentOS7下安装nodeJs" />
+<meta property="og:description" content="1. 使用EPEL安装 EPEL（Extra Packages for Enterprise Linux）企业版Linux的额外软件包，是Fedora小组维护的一个软件仓库项目，为RHEL/" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://guyawei.top/zh-cn/2019/05/29/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" />
-<meta property="article:published_time" content="2019-05-29T16:01:23&#43;08:00"/>
-<meta property="article:modified_time" content="2019-05-29T16:01:23&#43;08:00"/>
+<meta property="og:url" content="https://guyawei.top/zh-cn/2019/11/26/centos7%E4%B8%8B%E5%AE%89%E8%A3%85nodejs/" />
+<meta property="article:published_time" content="2019-11-26T10:01:23&#43;08:00"/>
+<meta property="article:modified_time" content="2019-11-26T10:01:23&#43;08:00"/>
 
-<meta itemprop="name" content="Linux常用指令">
-<meta itemprop="description" content="Linux常用指令 授权文件 chmod &#43;x 文件名/文件夹 将端口加入到Linux防火墙 firewall-cmd --permanent --add-port=80/tcp 跳过认证直接连接mysql数据库 mysqld_safe --skip-grant-tables 启动，停止，重启，状态 service mysqld">
-
-
-<meta itemprop="datePublished" content="2019-05-29T16:01:23&#43;08:00" />
-<meta itemprop="dateModified" content="2019-05-29T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="399">
+<meta itemprop="name" content="CentOS7下安装nodeJs">
+<meta itemprop="description" content="1. 使用EPEL安装 EPEL（Extra Packages for Enterprise Linux）企业版Linux的额外软件包，是Fedora小组维护的一个软件仓库项目，为RHEL/">
 
 
+<meta itemprop="datePublished" content="2019-11-26T10:01:23&#43;08:00" />
+<meta itemprop="dateModified" content="2019-11-26T10:01:23&#43;08:00" />
+<meta itemprop="wordCount" content="533">
 
-<meta itemprop="keywords" content="notes," />
+
+
+<meta itemprop="keywords" content="java," />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Linux常用指令"/>
-<meta name="twitter:description" content="Linux常用指令 授权文件 chmod &#43;x 文件名/文件夹 将端口加入到Linux防火墙 firewall-cmd --permanent --add-port=80/tcp 跳过认证直接连接mysql数据库 mysqld_safe --skip-grant-tables 启动，停止，重启，状态 service mysqld"/>
+<meta name="twitter:title" content="CentOS7下安装nodeJs"/>
+<meta name="twitter:description" content="1. 使用EPEL安装 EPEL（Extra Packages for Enterprise Linux）企业版Linux的额外软件包，是Fedora小组维护的一个软件仓库项目，为RHEL/"/>
 </head>
 <body>
   
@@ -116,13 +116,13 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="header-content">
-        <h1 class="header-title">Linux常用指令</h1>
+        <h1 class="header-title">CentOS7下安装nodeJs</h1>
         <p class="header-date">作者：
           GUYW /
         
-        2019-05-29
+        2019-11-26
           / 分类：
-          <a href="https://guyawei.top/zh-cn/category/notes/">Notes</a>
+          <a href="https://guyawei.top/zh-cn/category/java/">Java</a>
         </p>
         
         <div class="header-underline"></div>
@@ -130,7 +130,7 @@
           <div class="clearfix"></div>
           <p class="float-right header-tags">
               <i class="fas fa-tags" aria-hidden="true"></i>
-              <a href="https://guyawei.top/zh-cn/tag/notes/">notes</a>
+              <a href="https://guyawei.top/zh-cn/tag/java/">java</a>
           </p>
         
         
@@ -144,116 +144,38 @@
   <main>
 <div class="container content">
   <article>
-  <h1>Linux常用指令</h1>
+  
 
-<p><strong>授权文件</strong><br></p>
+<h2 id="1-使用epel安装">1. 使用EPEL安装</h2>
 
-<pre><code>chmod +x 文件名/文件夹  
-</code></pre>
+<p>EPEL（Extra Packages for Enterprise Linux）企业版Linux的额外软件包，是Fedora小组维护的一个软件仓库项目，为RHEL/CentOS提供他们默认不提供的软件包。</p>
 
-<p><strong>将端口加入到Linux防火墙</strong><br></p>
+<h3 id="先确认系统是否已经安装了epel-release包">先确认系统是否已经安装了epel-release包：</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">    $ yum info epel-release</code></pre></div>
+<h3 id="如果有输出有关epel-release的已安装信息-则说明已经安装-如果提示没有安装或可安装-则安装">如果有输出有关epel-release的已安装信息，则说明已经安装，如果提示没有安装或可安装，则安装</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">   $ sudo yum install epel-release</code></pre></div>
+<h3 id="安装完后-就可以使用yum命令安装nodejs了-安装的一般会是较新的版本-并且会将npm作为依赖包一起安装">安装完后，就可以使用yum命令安装nodejs了，安装的一般会是较新的版本，并且会将npm作为依赖包一起安装</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">$ sudo yum install nodejs</code></pre></div>
+<h3 id="安装完成后-验证是否正确的安装-node-v-如果输出如下版本信息-说明成功安装">安装完成后，验证是否正确的安装，node -v，如果输出如下版本信息，说明成功安装</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">v6.9.4</code></pre></div>
+<h2 id="2-使用官方编译过的二进制数据包安装">2. 使用官方编译过的二进制数据包安装</h2>
 
-<pre><code>firewall-cmd --permanent --add-port=80/tcp
-</code></pre>
+<p>进入官网的<a href='https://nodejs.org/download/release/'>下载链接</a>，在列表中进入想要下载的版本链接，选择与下面链接类似的想要下载的版本（*-linux-x64.tar.gz），右击并复制下载链接。</p>
 
-<p><strong>跳过认证直接连接mysql数据库</strong><br></p>
+<h3 id="使用wget命令下载-把下载路径粘贴到命令后">使用wget命令下载，把下载路径粘贴到命令后</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">$ wget https://nodejs.org/download/release/latest-v6.x/node-v12.13.1-linux-x64.tar.gz</code></pre></div>
+<h3 id="下载完成后使用下面的命令解压到-usr-local目录并安装">下载完成后使用下面的命令解压到/usr/local目录并安装：</h3>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">$ sudo tar --strip-components 1 -xzvf node-v* -C /usr/local</code></pre></div>
+<h3 id="安装完成后就可以使用方法-1-相同的方式来验证安装">安装完成后就可以使用方法 1 相同的方式来验证安装</h3>
 
-<pre><code>mysqld_safe --skip-grant-tables 
-</code></pre>
+<h2 id="cnpm不是内部或外部命令-cnpm-command-not-found-解决方案">cnpm不是内部或外部命令 cnpm: command not found 解决方案</h2>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">问题是处在于 你没用用淘宝的镜像 安装cnpm
 
-<p><strong>启动，停止，重启，状态</strong><br></p>
+不信 你打下cnpm -v,  看是  是不是也不是内部命令；
 
-<pre><code>service mysqld start/stop/restart/status  
-</code></pre>
+好了，那就安装下吧
 
-<p><strong>关闭防火墙命令</strong><br></p>
-
-<pre><code>systemctl stop firewalld.service
-</code></pre>
-
-<p><strong>开启防火墙</strong><br></p>
-
-<pre><code>systemctl start firewalld.service
-</code></pre>
-
-<p><strong>查询防火墙是否设置端口</strong><br></p>
-
-<pre><code>firewall-cmd --query-port=3306/tcp
-</code></pre>
-
-<p><strong>向防火墙添加端口</strong><br></p>
-
-<pre><code>firewall-cmd --permanent --add-port=3306/tcp
-</code></pre>
-
-<p><strong>防火墙重启</strong><br></p>
-
-<pre><code>firewall-cmd --reload
-</code></pre>
-
-<p><strong>查看防火墙所有端口</strong><br></p>
-
-<pre><code>firewall-cmd --list-all
-</code></pre>
-
-<p><strong>查看tomcat</strong><br></p>
-
-<pre><code>ps -ef|grep tomcat
-</code></pre>
-
-<p><strong>查看所有端口使用情况</strong><br></p>
-
-<pre><code>ps -ef
-
-lsof -i: 端口号
-</code></pre>
-
-<p><strong>查看端口是否启动</strong><br></p>
-
-<pre><code>nestat -na|grep 端口号
-kill -9 
-</code></pre>
-
-<p><strong>查看程序安装位置</strong><br></p>
-
-<pre><code>which docker
-</code></pre>
-
-<p><strong>mv 指令可以文件或文件夹重命名</strong><br></p>
-
-<p>linux中快速清空文件内容的几种方法,需要的朋友可以参考下</p>
-
-<p>$ : &gt; filename
-$ &gt; filename
-$ echo &ldquo;&rdquo; &gt; filename
-$ echo &gt; filename
-$ cat /dev/null &gt; filename</p>
-
-<p><strong>重新运行环境变量文件</strong><br></p>
-
-<pre><code>source etc/profile
-</code></pre>
-
-<p><strong>远程复制文件</strong><br></p>
-
-<pre><code>实例1：从远处复制文件到本地目录&lt;br&gt;
-
-命令：
-scp root@192.168.120.204:/opt/soft/nginx-0.5.38.tar.gz /opt/soft/
-
-实例2：从远处复制到本地&lt;br&gt;
-命令：
-scp -r root@192.168.120.204:/opt/soft/mongodb /opt/soft/
-
-实例3：上传本地文件到远程机器指定目录&lt;br&gt;
-命令：
-scp /opt/soft/nginx-0.5.38.tar.gz root@192.168.120.204:/opt/soft/scptest
-
-实例4：上传本地目录到远程机器指定目录&lt;br&gt;
-命令：
-scp -r /opt/soft/mongodb root@192.168.120.204:/opt/soft/scptest
-</code></pre>
-
+npm install cnpm -g --registry=https://registry.npm.taobao.org</code></pre></div>
   </article>
 
   

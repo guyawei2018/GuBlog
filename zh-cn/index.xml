@@ -5,7 +5,7 @@
     <description>Recent content on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 07 Nov 2019 16:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 26 Nov 2019 10:01:23 +0800</lastBuildDate>
     
         <atom:link href="https://guyawei.top/zh-cn/index.xml" rel="self" type="application/rss+xml" />
     
@@ -31,6 +31,533 @@
 
 &lt;p&gt;了解並貢獻： &lt;a href=&#34;https://github.com/gohugoio&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 </description>
+      
+    </item>
+    
+    <item>
+      <title>CentOS7下安装nodeJs</title>
+      <link>https://guyawei.top/zh-cn/2019/11/26/centos7%E4%B8%8B%E5%AE%89%E8%A3%85nodejs/</link>
+      <pubDate>Tue, 26 Nov 2019 10:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/11/26/centos7%E4%B8%8B%E5%AE%89%E8%A3%85nodejs/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;1-使用epel安装&#34;&gt;1. 使用EPEL安装&lt;/h2&gt;
+
+&lt;p&gt;EPEL（Extra Packages for Enterprise Linux）企业版Linux的额外软件包，是Fedora小组维护的一个软件仓库项目，为RHEL/CentOS提供他们默认不提供的软件包。&lt;/p&gt;
+
+&lt;h3 id=&#34;先确认系统是否已经安装了epel-release包&#34;&gt;先确认系统是否已经安装了epel-release包：&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    $ yum info epel-release&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;如果有输出有关epel-release的已安装信息-则说明已经安装-如果提示没有安装或可安装-则安装&#34;&gt;如果有输出有关epel-release的已安装信息，则说明已经安装，如果提示没有安装或可安装，则安装&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;   $ sudo yum install epel-release&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;安装完后-就可以使用yum命令安装nodejs了-安装的一般会是较新的版本-并且会将npm作为依赖包一起安装&#34;&gt;安装完后，就可以使用yum命令安装nodejs了，安装的一般会是较新的版本，并且会将npm作为依赖包一起安装&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;$ sudo yum install nodejs&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;安装完成后-验证是否正确的安装-node-v-如果输出如下版本信息-说明成功安装&#34;&gt;安装完成后，验证是否正确的安装，node -v，如果输出如下版本信息，说明成功安装&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;v6.9.4&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;2-使用官方编译过的二进制数据包安装&#34;&gt;2. 使用官方编译过的二进制数据包安装&lt;/h2&gt;
+
+&lt;p&gt;进入官网的&lt;a href=&#39;https://nodejs.org/download/release/&#39;&gt;下载链接&lt;/a&gt;，在列表中进入想要下载的版本链接，选择与下面链接类似的想要下载的版本（*-linux-x64.tar.gz），右击并复制下载链接。&lt;/p&gt;
+
+&lt;h3 id=&#34;使用wget命令下载-把下载路径粘贴到命令后&#34;&gt;使用wget命令下载，把下载路径粘贴到命令后&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;$ wget https://nodejs.org/download/release/latest-v6.x/node-v12.13.1-linux-x64.tar.gz&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;下载完成后使用下面的命令解压到-usr-local目录并安装&#34;&gt;下载完成后使用下面的命令解压到/usr/local目录并安装：&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;$ sudo tar --strip-components 1 -xzvf node-v* -C /usr/local&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;安装完成后就可以使用方法-1-相同的方式来验证安装&#34;&gt;安装完成后就可以使用方法 1 相同的方式来验证安装&lt;/h3&gt;
+
+&lt;h2 id=&#34;cnpm不是内部或外部命令-cnpm-command-not-found-解决方案&#34;&gt;cnpm不是内部或外部命令 cnpm: command not found 解决方案&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;问题是处在于 你没用用淘宝的镜像 安装cnpm
+
+不信 你打下cnpm -v,  看是  是不是也不是内部命令；
+
+好了，那就安装下吧
+
+npm install cnpm -g --registry=https://registry.npm.taobao.org&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>ElasticSearch入门篇</title>
+      <link>https://guyawei.top/zh-cn/2019/11/26/elasticsearch%E5%85%A5%E9%97%A8%E7%AF%87/</link>
+      <pubDate>Tue, 26 Nov 2019 10:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2019/11/26/elasticsearch%E5%85%A5%E9%97%A8%E7%AF%87/</guid>
+      
+        <description>
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;本文基于elasticsearch6.8.4版本 理论支持更高版本&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;第一节-elasticsearch概述&#34;&gt;第一节 ElasticSearch概述&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-1elasticsearch是一个基于lucene的搜索服务器&#34;&gt;1.1ElasticSearch是一个基于Lucene的搜索服务器。&lt;/h3&gt;
+
+&lt;p style=&#34;color:green&#34;&gt;它提供了一个分布式多用户能力的全文搜索引擎，基于RESTfulweb接口。ElasticSearch是用Java开发的，并作为Apache许可条款下的开放源码发布，是当前流行的企业级搜索引擎。设计用于云计算中，能够达到实时搜索，稳定，可靠，快速，安装使用方便。构建在全文检索开源软件Lucene之上的Elasticsearch，不仅能对海量规模的数据完成分布式索引与检索，还能提供数据聚合分析。据国际权威的数据库产品评测机构DBEngines的统计，在2016年1月，Elasticsearch已超过Solr等，成为排名第一的搜索引擎类应用概括：基于Restful标准的高扩展高可用的实时数据分析的全文搜索工具&lt;/p&gt;
+
+&lt;h3 id=&#34;1-2elasticsearch的基本概念&#34;&gt;1.2ElasticSearch的基本概念&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Index    &lt;p style=&#34;color:green&#34;&gt;类似于mysql数据库中的database。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Type     &lt;p style=&#34;color:green&#34;&gt;类似于mysql数据库中的table表，es中可以在Index中建立type（table），通过mapping进行映射。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Document &lt;p style=&#34;color:green&#34;&gt;由于es存储的数据是文档型的，一条数据对应一篇文档即相当于mysql数据库中的一行数据row，一个文档中可以有多个字段也就是mysql数据库一行可以有多列。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Field    &lt;p style=&#34;color:green&#34;&gt;es中一个文档中对应的多个列与mysql数据库中每一列对应。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Mapping  &lt;p style=&#34;color:green&#34;&gt;可以理解为mysql或者solr中对应的schema，只不过有些时候es中的mapping增加了动态识别功能，感觉很强大的样子，其实实际生产环境上不建议使用，最好还是开始制定好了对应的schema为主。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;indexed  &lt;p style=&#34;color:green&#34;&gt;就是名义上的建立索引。mysql中一般会对经常使用的列增加相应的索引用于提高查询速度，而在es中默认都是会加上索引的，除非你特殊制定不建立索引只是进行存储用于展示，这个需要看你具体的需求和业务进行设定了。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Query DSL &lt;p style=&#34;color:green&#34;&gt;类似于mysql的sql语句，只不过在es中是使用的json格式的查询语句，专业术语就叫：QueryDSL。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;GET/PUT/POST/DELETE &lt;p style=&#34;color:green&#34;&gt;分别类似与mysql中的select/update/delete&amp;hellip;&amp;hellip;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;1-3elasticsearch的架构&#34;&gt;1.3Elasticsearch的架构&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/elasticsearch/es1.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Gateway层&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p style=&#34;color:green&#34;&gt;es用来存储索引文件的一个文件系统且它支持很多类型，例如：本地磁盘、共享存储（做snapshot的时候需要用到）、hadoop的hdfs分布式存储、亚马逊的S3。它的主要职责是用来对数据进行长持久化以及整个集群重启之后可以通过gateway重新恢复数据。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Distributed Lucene Directory&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p style=&#34;color:green&#34;&gt;Gateway上层就是一个lucene的分布式框架，lucene是做检索的，但是它是一个单机的搜索引擎，像这种es分布式搜索引擎系统，虽然底层用lucene，但是需要在每个节点上都运行lucene进行相应的索引、查询以及更新，所以需要做成一个分布式的运行框架来满足业务的需要。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;四大模块组件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p style=&#34;color:green&#34;&gt;districted lucene directory之上就是一些es的模块&lt;/p&gt;
+&lt;p style=&#34;color:green&#34;&gt;Index Module是索引模块，就是对数据建立索引也就是通常所说的建立一些倒排索引等；&lt;/p&gt;
+&lt;p style=&#34;color:green&#34;&gt;Search Module是搜索模块，就是对数据进行查询搜索；&lt;/p&gt;
+&lt;p style=&#34;color:green&#34;&gt;Mapping模块是数据映射与解析模块，就是你的数据的每个字段可以根据你建立的表结构通过mapping进行映射解析，如果你没有建立表结构，es就会根据你的数据类型推测你的数据结构之后自己生成一个mapping，然后都是根据这个mapping进行解析你的数据；&lt;/p&gt;
+&lt;p style=&#34;color:green&#34;&gt;River模块在es2.0之后应该是被取消了，它的意思表示是第三方插件，例如可以通过一些自定义的脚本将传统的数据库（mysql）等数据源通过格式化转换后直接同步到es集群里，这个river大部分是自己写的，写出来的东西质量参差不齐，将这些东西集成到es中会引发很多内部bug，严重影响了es的正常应用，所以在es2.0之后考虑将其去掉。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Discovery、Script&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p style=&#34;color:green&#34;&gt;es4大模块组件之上有 Discovery模块：es是一个集群包含很多节点，很多节点需要互相发现对方，然后组成一个集群包括选主的，这些es都是用的discovery模块，默认使用的是 Zen，也可是使用EC2；es查询还可以支撑多种script即脚本语言，包括mvel、js、python等等。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Transport协议层&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p style=&#34;color:green&#34;&gt;再上一层就是es的通讯接口Transport，支持的也比较多：Thrift、Memcached以及Http，默认的是http，JMX就是java的一个远程监控管理框架，因为es是通过java实现的。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;RESTful接口层&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p style=&#34;color:green&#34;&gt;最上层就是es暴露给我们的访问接口，官方推荐的方案就是这种Restful接口，直接发送http请求，方便后续使用nginx做代理、分发包括可能后续会做权限的管理，通过http很容易做这方面的管理。如果使用java客户端它是直接调用api，在做负载均衡以及权限管理还是不太好做。&lt;/p&gt;
+
+&lt;h3 id=&#34;1-4restfull-api&#34;&gt;1.4RESTfull API&lt;/h3&gt;
+
+&lt;p&gt;一种软件架构风格、设计风格，而不是标准，只是提供了一组设计原则和约束条件。它主要用于客户端和服务器交互类的软件。基于这个风格设计的软件可以更简洁，更有层次，更易于实现缓存等机制。在目前主流的三种Web服务交互方案中，REST相比于SOAP（Simple Object Access protocol，简单对象访问协议）以及XML-RPC更加简单明了&lt;/p&gt;
+
+&lt;p&gt;(Representational State Transfer 意思是：表述性状态传递)&lt;/p&gt;
+
+&lt;p&gt;它使用典型的HTTP方法，诸如GET,POST.DELETE,PUT来实现资源的获取，添加，修改，删除等操作。即通过HTTP动词来实现资源的状态扭转
+复制代码&lt;/p&gt;
+
+&lt;p&gt;GET 用来获取资源&lt;/p&gt;
+
+&lt;p&gt;POST 用来新建资源（也可以用于更新资源）&lt;/p&gt;
+
+&lt;p&gt;PUT 用来更新资源&lt;/p&gt;
+
+&lt;p&gt;DELETE 用来删除资源&lt;/p&gt;
+
+&lt;h3 id=&#34;1-5crul命令&#34;&gt;1.5CRUL命令&lt;/h3&gt;
+
+&lt;p&gt;以命令的方式执行HTTP协议的请求 GET/POST/PUT/DELETE&lt;/p&gt;
+
+&lt;p&gt;示例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;访问一个网页
+
+curl www.baidu.com
+
+curl -o tt.html www.baidu.com
+
+显示响应的头信息
+
+curl -i www.baidu.com
+
+显示一次HTTP请求的通信过程
+
+curl -v www.baidu.com
+
+执行GET/POST/PUT/DELETE操作
+
+curl -X GET/POST/PUT/DELETE url&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;1-6centos7下安装elasticsearch6-8-4&#34;&gt;1.6CentOS7下安装ElasticSearch6.8.4&lt;/h3&gt;
+
+&lt;h4 id=&#34;1-需要java-配置jdk环境&#34;&gt;(1)需要java 配置JDK环境&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;1.解压jdk到当前目录
+    tar -zxvf jdk-8u60-linux-x64.tar.gz
+2.编辑配置文件，配置环境变量
+    vim /etc/profile
+    在文件末尾添加一下内容（按“i”进入编辑）：
+    export JAVA_HOME=/usr/java/jdk1.8.0_201
+    export JRE_HOME=$JAVA_HOME/jre
+    export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+    export PATH=$PATH:$JAVA_HOME/bin
+3.生效配置
+    source  /etc/profile&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&#34;2-安装elasticsearch6-8-4&#34;&gt;(2)安装ElasticSearch6.8.4&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;下载地址： &lt;a href=&#34;https://www.elastic.co/cn/downloads/past-releases#elasticsearch&#34;&gt;https://www.elastic.co/cn/downloads/past-releases#elasticsearch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;解压文件并进入bin 文件夹 ./elsaticsearch -d 启动&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;red&#34;&gt;启动报错&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/elasticsearch/es2.png&#34; alt=&#34;image&#34; /&gt;
+&lt;b&gt;&lt;font color=&#34;green&#34;&gt;解决方式&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;bin/elasticsearch -Des.insecure.allow.root=true
+或者修改bin/elasticsearch，加上ES_JAVA_OPTS属性：
+ES_JAVA_OPTS=&amp;#34;-Des.insecure.allow.root=true&amp;#34;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;red&#34;&gt;再次启动&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/elasticsearch/es3.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;font color=&#34;blue&#34;&gt;这是出于系统安全考虑设置的条件。由于ElasticSearch可以接收用户输入的脚本并且执行，为了系统安全考虑.
+建议创建一个单独的用户用来运行ElasticSearch。&lt;/font&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;创建用户组和用户：
+
+groupadd esgroup
+
+useradd esuser -g esgroup -p espassword
+
+更改elasticsearch文件夹及内部文件的所属用户及组：
+
+cd /opt
+
+chown -R esuser:esgroup elasticsearch-6.2.4
+
+切换用户并运行：
+
+su esuser
+
+./bin/elasticsearch&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;red&#34;&gt;再次启动显示已杀死&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/elasticsearch/es4.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;green&#34;&gt;需要调整JVM的内存大小：&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;vi bin/elasticsearch
+
+ES_JAVA_OPTS=&amp;#34;-Xms512m -Xmx512m&amp;#34;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;再次启动：启动成功&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;red&#34;&gt;如果显示如下类似信息：&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;INFO&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;][&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;r&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;DiskThresholdMonitor&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ZAds5FP&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;low&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;disk&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;watermark&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;85&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;%]&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;exceeded&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;on&lt;/span&gt;     &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ZAds5FPeTY&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ZUKjXd7HJKA&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;][&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ZAds5FP&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;][/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;opt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;elasticsearch&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;nodes&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;free:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;2gb&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;%],&lt;/span&gt;     &lt;span class=&#34;n&#34;&gt;replicas&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;will&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;be&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;assigned&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;to&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;node&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;green&#34;&gt;需要清理磁盘空间&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;后台运行：./bin/elasticsearch -d&lt;/p&gt;
+
+&lt;p&gt;测试连接：curl 127.0.0.1:9200&lt;/p&gt;
+
+&lt;p&gt;会看到一下JSON数据：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;root@localhost&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;~&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;curl&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;127.0&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.1&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;9200&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;rBrMTNx&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;cluster_name&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;elasticsearch&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;cluster_uuid&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;-noR5DxFRsyvAFvAzxl07g&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;version&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;number&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;5.1.1&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;build_hash&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;5395e21&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;build_date&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;2016-12-06T12:36:15.409Z&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;build_snapshot&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+    &lt;span class=&#34;nt&#34;&gt;&amp;#34;lucene_version&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;6.3.0&amp;#34;&lt;/span&gt;
+  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+  &lt;span class=&#34;nt&#34;&gt;&amp;#34;tagline&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;You Know, for Search&amp;#34;&lt;/span&gt;
+ &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;green&#34;&gt;实现远程访问：&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;需要对config/elasticsearch.yml进行   配置：
+    network.host: 0.0.0.0&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;red&#34;&gt;再次启动报错：&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/elasticsearch/es5.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;green&#34;&gt;处理第一个错误：&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;vim /etc/security/limits.conf   
+//文件最后加入    
+//esuser刚才启动elasticsearch创建的user
+esuser soft nofile 65536 
+
+esuser hard nofile 65536
+
+esuser soft nproc 4096
+
+esuser hard nproc 4096&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;green&#34;&gt;处理第二个错误：&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;进入limits.d目录下修改配置文件。
+
+vim /etc/security/limits.d/20-nproc.conf 
+修改为 esuser soft nproc 4096&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;b&gt;&lt;font color=&#34;green&#34;&gt;处理第三个错误：&lt;/font&gt;：&lt;/b&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;vim /etc/sysctl.conf
+
+vm.max_map_count=655360
+
+执行以下命令生效：
+sysctl -p
+
+关闭防火墙：systemctl stop firewalld.service
+
+再次终于启动成功！&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;1-7安装head插件&#34;&gt;1.7安装Head插件&lt;/h3&gt;
+
+&lt;p&gt;Head是elasticsearch的集群管理工具，可以用于数据的浏览和查询&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;elasticsearch-head是一款开源软件，被托管在github上面，所以如果我们要使用它，必须先安装git，通过git获取elasticsearch-head&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;运行elasticsearch-head会用到grunt，而grunt需要npm包管理器，所以nodejs是必须要安装的&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;elasticsearch5.0之后，elasticsearch-head不做为插件放在其plugins目录下了。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;使用git拷贝elasticsearch-head到本地
+
+cd /usr/local/
+
+ git clone git://github.com/mobz/elasticsearch-head.git
+ &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;安装elasticsearch-head依赖包&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;[root@localhost local]# npm install -g grunt-cli
+
+[root@localhost _site]# cd /usr/local/elasticsearch-head/
+
+[root@localhost elasticsearch-head]# cnpm install&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;修改Gruntfile.js&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;[root@localhost _site]# cd /usr/local/elasticsearch-head/
+
+[root@localhost elasticsearch-head]# vi Gruntfile.js
+
+在connect--&amp;gt;server--&amp;gt;options下面添加：hostname:’*’，允许所有IP可以访问&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;修改elasticsearch-head默认连接地址&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;[root@localhost elasticsearch-head]# cd /usr/local/elasticsearch-head/_site/
+
+[root@localhost _site]# vi app.js
+
+将this.base_uri = this.config.base_uri || this.prefs.get(&amp;#34;app-base_uri&amp;#34;) || &amp;#34;http://localhost:9200&amp;#34;;中的localhost修改成你es的服务器地址&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;配置elasticsearch允许跨域访问&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;打开elasticsearch的配置文件elasticsearch.yml，在文件末尾追加下面两行代码即可：
+
+http.cors.enabled: true
+
+http.cors.allow-origin: &amp;#34;*&amp;#34;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;打开9100端口&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;[root@localhost elasticsearch-head]# firewall-cmd --zone=public --add-port=9100/tcp --permanent
+
+重启防火墙
+
+[root@localhost elasticsearch-head]# firewall-cmd --reload&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;启动elasticsearch&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;启动elasticsearch-head&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;[root@localhost _site]# cd /usr/local/elasticsearch-head/
+
+[root@localhost elasticsearch-head]# node_modules/grunt/bin/grunt server&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;访问elasticsearch-head&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;关闭防火墙：systemctl stop firewalld.service
+
+浏览器输入网址：http://192.168.25.131:9100/&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;1-8安装kibana&#34;&gt;1.8安装Kibana&lt;/h3&gt;
+
+&lt;p&gt;Kibana是一个针对Elasticsearch的开源分析及可视化平台，使用Kibana可以查询、查看并与存储在ES索引的数据进行交互操作，使用Kibana能执行高级的数据分析，并能以图表、表格和地图的形式查看数据&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;下载Kibana
+&lt;a href=&#34;https://www.elastic.co/cn/downloads/past-releases#kibana&#34;&gt;https://www.elastic.co/cn/downloads/past-releases#kibana&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;把下载好的压缩包拷贝到自己的目录下解压缩&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;编辑kibana配置文件&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;[root@localhost /]# vi /usr/local/kibana/config/kibana.yml
+
+将server.host,elasticsearch.url修改成所在服务器的ip地址&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/elasticsearch/es6.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;开启5601端口&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;Kibana的默认端口是5601
+
+开启防火墙:systemctl start firewalld.service
+
+开启5601端口:firewall-cmd --permanent --zone=public --add-port=5601/tcp
+
+重启防火墙：firewall-cmd -–reload&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;启动Kibana&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;[root@localhost /]# ./${your path}/bin/kibana
+
+浏览器访问：http://192.168.25.131:5601&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;1-9安装中文分词器&#34;&gt;1.9安装中文分词器&lt;/h3&gt;
+
+&lt;p&gt;在elasticsearch 5.5版本以后支持 使用elasticsearch-plugin在线安装&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-ik-6.3.0.zip
+
+NOTE: replace 6.3.0 to your own elasticsearch version&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;手动安装&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;下载中文分词器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    https://github.com/medcl/elasticsearch-analysis-ik
+
+    下载elasticsearch-analysis-ik-master.zip&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;解压elasticsearch-analysis-ik-master.zip&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;   unzip elasticsearch-analysis-ik-master.zip&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;进入elasticsearch-analysis-ik-master，编译源码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;mvn clean install -Dmaven.test.skip=true &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;在es的plugins文件夹下创建目录ik&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;将编译后生成的elasticsearch-analysis-ik-版本.zip移动到ik下，并解压&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;解压后的内容移动到ik目录下&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;restart elasticsearch&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;1-10-logstash安装自动同步mysql&#34;&gt;1.10  logstash安装自动同步mysql&lt;/h3&gt;
+
+&lt;p&gt;大多数情况下我们的数据都存放在了数据库中，但是elasticsearch它有自己的索引库，那么如果我们在做搜索的是时候就需要将数据库中的数据同步到elasticsearch中，在这里我们使用logstash的logstash-jdbc-input的插件进行与数据库的同步，对于logstash与数据库同步，我们可以设置elasticsearch与数据库同步的时间，使用这种方式进行同步还是很方便的。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;下载并安装logstash&lt;/p&gt;
+
+&lt;p&gt;注意下载的版本要和你的elasticsearch的版本号一致，我的版本elasticsearch6.2.2&lt;/p&gt;
+
+&lt;p&gt;logstash下载地址：&lt;a href=&#34;https://www.elastic.co/downloads/logstash&#34;&gt;https://www.elastic.co/downloads/logstash&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;下载后之后，直接解压就好&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;配置logstash&lt;/p&gt;
+
+&lt;p&gt;对于logstash5.x以上版本，它自身已经集成了这个插件，不需要我们去单独安装，直接使用即可。我这里说一下与mysql进行同步的简单配置&lt;/p&gt;
+
+&lt;p&gt;在logstash文件目录下，新建一个文件夹(命名随意)。如：mysql&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;logstash 6.2.x 以上的版本需要加mysql驱动jar放置在指定目录，在配置文件也可以不用指定路径
+　  logstash_install_dir/logstash-core/lib/jars/&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;创建一个 .conf 的配置文件(命名随意)，用来将es与数据库关联。如mysql.conf&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span class=&#34;nx&#34;&gt;input&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;jdbc&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;name_info&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;mysql&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;数据库链接&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;shop为数据库名&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_connection_string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;jdbc:mysql://172.1.1.239:3306/qzsmk_card?autoReconnect=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;allowMultiQueries=true&amp;amp;serverTimezone=UTC&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;用户名和密码&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_user&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_password&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;123456&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;驱动&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_driver_library&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/usr/elasticsearch/logstash/logstash-6.8.4/logstash-core/lib/jars/mysql-connector-java-5.1.46.jar&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;驱动类名&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_driver_class&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;com.mysql.jdbc.Driver&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_paging_enabled&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_page_size&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;50000&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;执行的sql&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;文件路径&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;名称&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;statement_filepath&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/usr/elasticsearch/logstash/logstash-6.8.4/bin/mysql/jdbc.sql&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;设置监听间隔&lt;/span&gt;  &lt;span class=&#34;nx&#34;&gt;各字段含义&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;（&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;由左至右&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;）&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;分&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;、&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;时&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;、&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;天&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;、&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;月&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;、&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;年&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;，&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;全部为&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;默认含义为每分钟都更新&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;schedule&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;* * * * *&amp;#34;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;jdbc&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;keyword_info&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;mysql&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;数据库链接&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;shop为数据库名&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_connection_string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;jdbc:mysql://172.1.1.239:3306/qzsmk_card?autoReconnect=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;allowMultiQueries=true&amp;amp;serverTimezone=UTC&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;用户名和密码&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_user&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_password&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;123456&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;驱动&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_driver_library&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/usr/elasticsearch/logstash/logstash-6.8.4/logstash-core/lib/jars/mysql-connector-java-5.1.46.jar&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;驱动类名&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_driver_class&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;com.mysql.jdbc.Driver&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_paging_enabled&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;jdbc_page_size&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;50000&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;执行的sql&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;文件路径&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;名称&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;statement_filepath&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/usr/elasticsearch/logstash/logstash-6.8.4/bin/mysql/jdbc2.sql&amp;#34;&lt;/span&gt;
+      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;设置监听间隔&lt;/span&gt;  &lt;span class=&#34;nx&#34;&gt;各字段含义&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;（&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;由左至右&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;）&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;分&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;、&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;时&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;、&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;天&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;、&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;月&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;、&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;年&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;，&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;全部为&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;默认含义为每分钟都更新&lt;/span&gt;
+      &lt;span class=&#34;nx&#34;&gt;schedule&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;* * * * *&amp;#34;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nx&#34;&gt;filter&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;json&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;remove_field&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;message&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;nx&#34;&gt;output&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;name_info&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;elasticsearch&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;ES的IP地址及端口&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;hosts&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;localhost:9200&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;索引名称&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;index&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;
+            &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;需要关联的数据库中有有一个id字段&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;，&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;对应类型中的id&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;document_id&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;%{id}&amp;#34;&lt;/span&gt;
+            &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;索引名称&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;document_type&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;city&amp;#34;&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;stdout&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;JSON格式输出&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;codec&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;json_lines&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;keyword_info&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;elasticsearch&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;ES的IP地址及端口&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;hosts&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;localhost:9200&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;索引名称&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;index&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;keyword&amp;#34;&lt;/span&gt;
+            &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;需要关联的数据库中有有一个id字段&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;，&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;对应类型中的id&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;document_id&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;%{id}&amp;#34;&lt;/span&gt;
+            &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;索引名称&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;document_type&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;word&amp;#34;&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;stdout&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;JSON格式输出&lt;/span&gt;
+            &lt;span class=&#34;nx&#34;&gt;codec&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;json_lines&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;创建一个sql文件，我这里命名为jdbc.sql和上边的配置文件一致&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-css&#34; data-lang=&#34;css&#34;&gt;&lt;span class=&#34;nt&#34;&gt;SELECT&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;last_name&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;lastName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;age&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;email&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;xwj_user&lt;/span&gt;
+&lt;span class=&#34;nt&#34;&gt;注意&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;：&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;sql不能有结束符&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;，&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;不然运行的时候会报错&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;至于原因&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;，&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;后面会讲到&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;启动logstash&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;    在logstash的bin目录下，使用cmd执行命令：logstash -f /your path/mysql.conf&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
       
     </item>
     
@@ -2319,7 +2846,7 @@ Zipkin Server的 API兼容性（微服务通过集成reporter模块，从而Zipk
 &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
 &lt;span class=&#34;nt&#34;&gt;&amp;#34;tagline&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;You Know, for Search&amp;#34;&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;报错&#34;&gt;报错&lt;/h3&gt;
+&lt;h3 id=&#34;报错-详细见centos7下安装elasticsearch文章&#34;&gt;报错 详细见CentOS7下安装ElasticSearch文章&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;启动内存不足&lt;br&gt;
@@ -5276,6 +5803,8 @@ $ vim /etc/docker/daemon.json  不存在就新建&lt;br&gt;
 &lt;p&gt;&lt;strong&gt;查看所有端口使用情况&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;ps -ef
+
+lsof -i: 端口号
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;strong&gt;查看端口是否启动&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
