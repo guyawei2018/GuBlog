@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-06-24T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-06-24T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="1254">
+<meta itemprop="wordCount" content="1654">
 
 
 
@@ -200,7 +200,9 @@ yum install -y yum-utils device-mapper-persistent-data lvm2</p></li>
 
 <li><p>3.建议使用阿里云的地址，国外的地址，下载比较慢，而且很容易链接超时：<br>
 官网地址<br>
-sudo yum-config-manager &ndash;add-repo  <a href="https://download.docker.com/linux/centos/docker-ce.repo">https://download.docker.com/linux/centos/docker-ce.repo</a><br>
+sudo yum-config-manager <br />
+&ndash;add-repo <br />
+<a href="https://download.docker.com/linux/centos/docker-ce.repo">https://download.docker.com/linux/centos/docker-ce.repo</a><br>
 阿里云地址<br>
 yum-config-manager &ndash;add-repo <a href="http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo">http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</a><br></p></li>
 
@@ -216,59 +218,104 @@ docker run hello-world</p>
 
 <h2 id="docker-常用命令">Docker 常用命令</h2>
 
-<p><strong>获取镜像</strong><br>
-docker pull  [不写默认中央仓库]  imagename  [TAG]&ndash;镜像版本默认最新版本<br>
-<strong>查看本地镜像列表</strong><br>
-docker image ls /docker images<br>
-<strong>运行镜像</strong><br>
-docker run [options] imageName [TAG][COMMANP][ARG]<br>
-例: docker run -d -p 8080:8080 [-v xxxxxxxx]  tomcat《后台运行tomcat容器端口映射是8080，如果有-v可以用外部文件替代内部文件》<br>
-<strong>运行nginx</strong><br>
+<p><strong>Docker帮助命令</strong><br></p></li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">    docker version
+    docker info
+    docker --help</code></pre></div>
+<p><strong>镜像命令</strong><br></p>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">  查看本地镜像列表
+  docker image ls 
+  docker images [-a(列出本地所有的镜像-含中间映像层)/-q(只显示镜像ID)]
+
+  docker pull  [不写默认中央仓库]  imagename  [TAG]--镜像版本默认最新版本
+
+  docker search 镜像名字 [--no-trunc(显示完整的镜像描述)/-s(列出收藏数不小于指定值的镜像)/--automated(只列出automated build类型的镜像)]
+
+  删除镜像
+  docker rmi [-f(强制删除)] imageName/多个imageName
+
+  删除全部镜像
+  docker rmi -f $(docker images - q)</code></pre></div>
+<p><strong>容器命令</strong><br></p>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">  运行镜像
+  docker run [options] imageName [TAG][COMMANP][ARG]
+  [options说明]
+  --name=&#34;name&#34;:为容器指定一个名称
+  -d:后台运行模式
+  -i:以交互模式运行容器
+  -t:为容器重新分配一个伪输入终端，通常与-i同时使用
+  -P:随机分配端口映射
+  -p:指定端口映射
+
+  例: docker run -d -p 8080:8080 [-v xxxxxxxx]  tomcat《后台运行tomcat容器端口映射是8080，如果有-v可以用外部文件替代内部文件》
+
+  查看已经运行的容器
+  docker ps
+  docker ps -a
+
+  运行容器
+  docker start containerId
+  停止容器
+  docker stop containerId
+  docker kill containerId
+  重启容器
+  docker restart containerId
+  删除容器
+  docker rm containerId
+  强制删除容器
+  docker rm -f containerId
+  容器不停止退出
+  ctrl+P+Q
+  进入正在运行的容器并以命令行交互
+  docker exec(再容器中打开新的终端，并且可以启动新的进程)/attach(之间进入容器启动命令终端，不会启动新的进程) -it 容器名/容器ID  bash
+  查看容器日志
+  docker logs -f -t --tail containerId
+  查看容器进程
+  docker top containerId
+  查看容器内部细节（重要）
+  docker inspect containerId
+  从容器内拷贝文件到主机上
+  docker cp  containerId:文件绝对路径  宿主机文件路径
+  替换docker 内部文件
+  docker cp 文件路径 containerId:文件绝对路径  
+  
+  </code></pre></div>
+<p><strong>运行nginx</strong><br>
 docker run &ndash;name docker_nginx -d -p 80:80 <br>
--v /zzz/mynginx/nginx/log:/var/log/nginx<br>
--v /zzz/mynginx/nginx/conf:/etc/nginx/conf.d<br>
--v /zzz/mynginx/nginx/nginx.conf:/etc/nginx/nginx/conf<br>
--v /zzz/mynginx/nginx/html:/lx/html<br>
-nginx<br>
+  -v /zzz/mynginx/nginx/log:/var/log/nginx<br>
+  -v /zzz/mynginx/nginx/conf:/etc/nginx/conf.d<br>
+  -v /zzz/mynginx/nginx/nginx.conf:/etc/nginx/nginx/conf<br>
+  -v /zzz/mynginx/nginx/html:/lx/html<br>
+  nginx<br>
 第一个-v:挂载日志目录<br>
 第二个-v:挂载配置目录<br>
 第三个-v:干脆把配置文件直接挂出来，不推荐<br>
-第四个-v:挂载项目目录<br>
-<strong>进入容器(类似登录Linux)</strong><br>
-docker exec -it 容器名/容器ID  bash<br>
-<strong>查看已经运行的容器</strong><br>
-docker ps<br>
-docker container ls <br>
-<strong>其他指令</strong><br>
-docker rmi imageName&mdash;删除镜像<br>
-docker start containerId &mdash;运行容器<br>
-docker stop containerId&mdash; 停止容器<br>
+第四个-v:挂载项目目录<br></p>
+
+<p><strong>其他指令</strong><br>
 docker container ls &ndash;all &mdash;查看所有容器（包含未运行的容器）<br>
-docker rm containerId&mdash;删除容器<br>
-docker cp 文件路径 containerId:文件绝对路径  &mdash;替换docker 内部文件<br>
 docker commit -m  &ldquo;&rdquo;   -a  &ldquo;&rdquo;   [CONTAINER ID]  [给新的镜像命名]   &mdash;&ndash;打包成镜像<br>
 systemctl enable docker    设置docker开机自启动
 docker update &ndash;restart 容器ID   设置docker容器自启动</p>
 
-<h2 id="部署镜像私有仓库">部署镜像私有仓库</h2></li>
+<h2 id="部署镜像私有仓库">部署镜像私有仓库</h2>
 
-<li><p>1.下载镜像registry<br>
-$ docker pull registry<br></p></li>
-
-<li><p>2.启动容器<br>
+<ul>
+<li>1.下载镜像registry<br>
+$ docker pull registry<br></li>
+<li>2.启动容器<br>
 $ docker run -d -p 5000:5000  &ndash;name=registry-srv [-v /mydata/dockerRegistry:/var/lib/registry] registry<br>
-<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625200858.png" alt="图片" /></p></li>
-
-<li><p>3.作制本地镜像上传仓库<br>
-$ docker tag 源镜像 仓库IP:5000/目标镜像<br></p></li>
-
-<li><p>4.上传tag镜像到仓库<br>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625200858.png" alt="图片" /></li>
+<li>3.作制本地镜像上传仓库<br>
+$ docker tag 源镜像 仓库IP:5000/目标镜像<br></li>
+<li>4.上传tag镜像到仓库<br>
 docker push 制作好的image<br>
 说明：push 会出现错误 Get <a href="https://xxxxxxxx:5000/v1/_ping:">https://xxxxxxxx:5000/v1/_ping:</a> http: server gave HTTP response to HTTPS client<br>
 这是因为Docker在1.3.x之后默认docker registry使用的是https，为了解决这个问题，修改本地主机的docker启动配置文件<br>
 $ vim /etc/docker/daemon.json  不存在就新建<br>
 <strong>{&ldquo;insecure-registries&rdquo;:[&ldquo;192.168.84.104:5000&rdquo;]}</strong>
-<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625202047.png" alt="图片" /></p></li>
+<img src="http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625202047.png" alt="图片" /></li>
 </ul>
 
   </article>
@@ -345,7 +392,7 @@ $ vim /etc/docker/daemon.json  不存在就新建<br>
             Gu
             
               2017 -
-            2019
+            2020
           </small>
           
         </p>

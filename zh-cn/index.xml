@@ -5662,7 +5662,9 @@ yum install -y yum-utils device-mapper-persistent-data lvm2&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;3.建议使用阿里云的地址，国外的地址，下载比较慢，而且很容易链接超时：&lt;br&gt;
 官网地址&lt;br&gt;
-sudo yum-config-manager &amp;ndash;add-repo  &lt;a href=&#34;https://download.docker.com/linux/centos/docker-ce.repo&#34;&gt;https://download.docker.com/linux/centos/docker-ce.repo&lt;/a&gt;&lt;br&gt;
+sudo yum-config-manager &lt;br /&gt;
+&amp;ndash;add-repo &lt;br /&gt;
+&lt;a href=&#34;https://download.docker.com/linux/centos/docker-ce.repo&#34;&gt;https://download.docker.com/linux/centos/docker-ce.repo&lt;/a&gt;&lt;br&gt;
 阿里云地址&lt;br&gt;
 yum-config-manager &amp;ndash;add-repo &lt;a href=&#34;http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo&#34;&gt;http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo&lt;/a&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
 
@@ -5678,59 +5680,104 @@ docker run hello-world&lt;/p&gt;
 
 &lt;h2 id=&#34;docker-常用命令&#34;&gt;Docker 常用命令&lt;/h2&gt;
 
-&lt;p&gt;&lt;strong&gt;获取镜像&lt;/strong&gt;&lt;br&gt;
-docker pull  [不写默认中央仓库]  imagename  [TAG]&amp;ndash;镜像版本默认最新版本&lt;br&gt;
-&lt;strong&gt;查看本地镜像列表&lt;/strong&gt;&lt;br&gt;
-docker image ls /docker images&lt;br&gt;
-&lt;strong&gt;运行镜像&lt;/strong&gt;&lt;br&gt;
-docker run [options] imageName [TAG][COMMANP][ARG]&lt;br&gt;
-例: docker run -d -p 8080:8080 [-v xxxxxxxx]  tomcat《后台运行tomcat容器端口映射是8080，如果有-v可以用外部文件替代内部文件》&lt;br&gt;
-&lt;strong&gt;运行nginx&lt;/strong&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;Docker帮助命令&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    docker version
+    docker info
+    docker --help&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;镜像命令&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;  查看本地镜像列表
+  docker image ls 
+  docker images [-a(列出本地所有的镜像-含中间映像层)/-q(只显示镜像ID)]
+
+  docker pull  [不写默认中央仓库]  imagename  [TAG]--镜像版本默认最新版本
+
+  docker search 镜像名字 [--no-trunc(显示完整的镜像描述)/-s(列出收藏数不小于指定值的镜像)/--automated(只列出automated build类型的镜像)]
+
+  删除镜像
+  docker rmi [-f(强制删除)] imageName/多个imageName
+
+  删除全部镜像
+  docker rmi -f $(docker images - q)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;容器命令&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;  运行镜像
+  docker run [options] imageName [TAG][COMMANP][ARG]
+  [options说明]
+  --name=&amp;#34;name&amp;#34;:为容器指定一个名称
+  -d:后台运行模式
+  -i:以交互模式运行容器
+  -t:为容器重新分配一个伪输入终端，通常与-i同时使用
+  -P:随机分配端口映射
+  -p:指定端口映射
+
+  例: docker run -d -p 8080:8080 [-v xxxxxxxx]  tomcat《后台运行tomcat容器端口映射是8080，如果有-v可以用外部文件替代内部文件》
+
+  查看已经运行的容器
+  docker ps
+  docker ps -a
+
+  运行容器
+  docker start containerId
+  停止容器
+  docker stop containerId
+  docker kill containerId
+  重启容器
+  docker restart containerId
+  删除容器
+  docker rm containerId
+  强制删除容器
+  docker rm -f containerId
+  容器不停止退出
+  ctrl+P+Q
+  进入正在运行的容器并以命令行交互
+  docker exec(再容器中打开新的终端，并且可以启动新的进程)/attach(之间进入容器启动命令终端，不会启动新的进程) -it 容器名/容器ID  bash
+  查看容器日志
+  docker logs -f -t --tail containerId
+  查看容器进程
+  docker top containerId
+  查看容器内部细节（重要）
+  docker inspect containerId
+  从容器内拷贝文件到主机上
+  docker cp  containerId:文件绝对路径  宿主机文件路径
+  替换docker 内部文件
+  docker cp 文件路径 containerId:文件绝对路径  
+  
+  &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;运行nginx&lt;/strong&gt;&lt;br&gt;
 docker run &amp;ndash;name docker_nginx -d -p 80:80 &lt;br&gt;
--v /zzz/mynginx/nginx/log:/var/log/nginx&lt;br&gt;
--v /zzz/mynginx/nginx/conf:/etc/nginx/conf.d&lt;br&gt;
--v /zzz/mynginx/nginx/nginx.conf:/etc/nginx/nginx/conf&lt;br&gt;
--v /zzz/mynginx/nginx/html:/lx/html&lt;br&gt;
-nginx&lt;br&gt;
+  -v /zzz/mynginx/nginx/log:/var/log/nginx&lt;br&gt;
+  -v /zzz/mynginx/nginx/conf:/etc/nginx/conf.d&lt;br&gt;
+  -v /zzz/mynginx/nginx/nginx.conf:/etc/nginx/nginx/conf&lt;br&gt;
+  -v /zzz/mynginx/nginx/html:/lx/html&lt;br&gt;
+  nginx&lt;br&gt;
 第一个-v:挂载日志目录&lt;br&gt;
 第二个-v:挂载配置目录&lt;br&gt;
 第三个-v:干脆把配置文件直接挂出来，不推荐&lt;br&gt;
-第四个-v:挂载项目目录&lt;br&gt;
-&lt;strong&gt;进入容器(类似登录Linux)&lt;/strong&gt;&lt;br&gt;
-docker exec -it 容器名/容器ID  bash&lt;br&gt;
-&lt;strong&gt;查看已经运行的容器&lt;/strong&gt;&lt;br&gt;
-docker ps&lt;br&gt;
-docker container ls &lt;br&gt;
-&lt;strong&gt;其他指令&lt;/strong&gt;&lt;br&gt;
-docker rmi imageName&amp;mdash;删除镜像&lt;br&gt;
-docker start containerId &amp;mdash;运行容器&lt;br&gt;
-docker stop containerId&amp;mdash; 停止容器&lt;br&gt;
+第四个-v:挂载项目目录&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;其他指令&lt;/strong&gt;&lt;br&gt;
 docker container ls &amp;ndash;all &amp;mdash;查看所有容器（包含未运行的容器）&lt;br&gt;
-docker rm containerId&amp;mdash;删除容器&lt;br&gt;
-docker cp 文件路径 containerId:文件绝对路径  &amp;mdash;替换docker 内部文件&lt;br&gt;
 docker commit -m  &amp;ldquo;&amp;rdquo;   -a  &amp;ldquo;&amp;rdquo;   [CONTAINER ID]  [给新的镜像命名]   &amp;mdash;&amp;ndash;打包成镜像&lt;br&gt;
 systemctl enable docker    设置docker开机自启动
 docker update &amp;ndash;restart 容器ID   设置docker容器自启动&lt;/p&gt;
 
-&lt;h2 id=&#34;部署镜像私有仓库&#34;&gt;部署镜像私有仓库&lt;/h2&gt;&lt;/li&gt;
+&lt;h2 id=&#34;部署镜像私有仓库&#34;&gt;部署镜像私有仓库&lt;/h2&gt;
 
-&lt;li&gt;&lt;p&gt;1.下载镜像registry&lt;br&gt;
-$ docker pull registry&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;2.启动容器&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;1.下载镜像registry&lt;br&gt;
+$ docker pull registry&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;2.启动容器&lt;br&gt;
 $ docker run -d -p 5000:5000  &amp;ndash;name=registry-srv [-v /mydata/dockerRegistry:/var/lib/registry] registry&lt;br&gt;
-&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625200858.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;3.作制本地镜像上传仓库&lt;br&gt;
-$ docker tag 源镜像 仓库IP:5000/目标镜像&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;4.上传tag镜像到仓库&lt;br&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625200858.png&#34; alt=&#34;图片&#34; /&gt;&lt;/li&gt;
+&lt;li&gt;3.作制本地镜像上传仓库&lt;br&gt;
+$ docker tag 源镜像 仓库IP:5000/目标镜像&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;4.上传tag镜像到仓库&lt;br&gt;
 docker push 制作好的image&lt;br&gt;
 说明：push 会出现错误 Get &lt;a href=&#34;https://xxxxxxxx:5000/v1/_ping:&#34;&gt;https://xxxxxxxx:5000/v1/_ping:&lt;/a&gt; http: server gave HTTP response to HTTPS client&lt;br&gt;
 这是因为Docker在1.3.x之后默认docker registry使用的是https，为了解决这个问题，修改本地主机的docker启动配置文件&lt;br&gt;
 $ vim /etc/docker/daemon.json  不存在就新建&lt;br&gt;
 &lt;strong&gt;{&amp;ldquo;insecure-registries&amp;rdquo;:[&amp;ldquo;192.168.84.104:5000&amp;rdquo;]}&lt;/strong&gt;
-&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625202047.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190625202047.png&#34; alt=&#34;图片&#34; /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
       
