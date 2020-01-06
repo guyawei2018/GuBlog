@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>Spring Cloud Alibaba-搭建生产可用的Nacos集群 · GUBlog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="搭建生产可用的Nacos集 本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭" />
+  <meta name="description" content="docker启动容器指令 docker 使用mysql数据库启动 docker run --env MODE=standalone --env SPRING_DATASOURCE_PLATFORM=mysql --env MYSQL_MASTER_SERVICE_DB_NAME=nacos_devtest --env MYSQL_MASTER_SERVICE_HOST=192.168.100.169 --env MYSQL_MASTER_SERVICE_USER=root --env MYSQL_MASTER_SERVICE_PASSWORD=root --env MYSQL_SLAVE_SERVICE_HOST=192.168.100.169 --env MYSQL_SLAVE_SERVICE_PORT=3305 --name nacos -d -p 8848:8848 nacos/nacos-server 搭建生产可用的Nacos集 本节详细探讨如何" />
 
   <meta name="keywords" content="Hugo, theme, den" />
 
@@ -21,26 +21,26 @@
 
 
 <meta property="og:title" content="Spring Cloud Alibaba-搭建生产可用的Nacos集群" />
-<meta property="og:description" content="搭建生产可用的Nacos集 本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭" />
+<meta property="og:description" content="docker启动容器指令 docker 使用mysql数据库启动 docker run --env MODE=standalone --env SPRING_DATASOURCE_PLATFORM=mysql --env MYSQL_MASTER_SERVICE_DB_NAME=nacos_devtest --env MYSQL_MASTER_SERVICE_HOST=192.168.100.169 --env MYSQL_MASTER_SERVICE_USER=root --env MYSQL_MASTER_SERVICE_PASSWORD=root --env MYSQL_SLAVE_SERVICE_HOST=192.168.100.169 --env MYSQL_SLAVE_SERVICE_PORT=3305 --name nacos -d -p 8848:8848 nacos/nacos-server 搭建生产可用的Nacos集 本节详细探讨如何" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://guyawei.top/zh-cn/2019/10/22/spring-cloud-alibaba-%E6%90%AD%E5%BB%BA%E7%94%9F%E4%BA%A7%E5%8F%AF%E7%94%A8%E7%9A%84nacos%E9%9B%86%E7%BE%A4/" />
 <meta property="article:published_time" content="2019-10-22T16:01:23&#43;08:00"/>
 <meta property="article:modified_time" content="2019-10-22T16:01:23&#43;08:00"/>
 
 <meta itemprop="name" content="Spring Cloud Alibaba-搭建生产可用的Nacos集群">
-<meta itemprop="description" content="搭建生产可用的Nacos集 本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭">
+<meta itemprop="description" content="docker启动容器指令 docker 使用mysql数据库启动 docker run --env MODE=standalone --env SPRING_DATASOURCE_PLATFORM=mysql --env MYSQL_MASTER_SERVICE_DB_NAME=nacos_devtest --env MYSQL_MASTER_SERVICE_HOST=192.168.100.169 --env MYSQL_MASTER_SERVICE_USER=root --env MYSQL_MASTER_SERVICE_PASSWORD=root --env MYSQL_SLAVE_SERVICE_HOST=192.168.100.169 --env MYSQL_SLAVE_SERVICE_PORT=3305 --name nacos -d -p 8848:8848 nacos/nacos-server 搭建生产可用的Nacos集 本节详细探讨如何">
 
 
 <meta itemprop="datePublished" content="2019-10-22T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-10-22T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="1962">
+<meta itemprop="wordCount" content="2011">
 
 
 
 <meta itemprop="keywords" content="java," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Spring Cloud Alibaba-搭建生产可用的Nacos集群"/>
-<meta name="twitter:description" content="搭建生产可用的Nacos集 本节详细探讨如何搭建一个生产可用的Nacos集群。讨论的内容主要包括：使用MySQL作为存储持久化数据，以及如何搭"/>
+<meta name="twitter:description" content="docker启动容器指令 docker 使用mysql数据库启动 docker run --env MODE=standalone --env SPRING_DATASOURCE_PLATFORM=mysql --env MYSQL_MASTER_SERVICE_DB_NAME=nacos_devtest --env MYSQL_MASTER_SERVICE_HOST=192.168.100.169 --env MYSQL_MASTER_SERVICE_USER=root --env MYSQL_MASTER_SERVICE_PASSWORD=root --env MYSQL_SLAVE_SERVICE_HOST=192.168.100.169 --env MYSQL_SLAVE_SERVICE_PORT=3305 --name nacos -d -p 8848:8848 nacos/nacos-server 搭建生产可用的Nacos集 本节详细探讨如何"/>
 </head>
 <body>
   
@@ -145,6 +145,13 @@
 <div class="container content">
   <article>
   
+
+<h2 id="docker启动容器指令">docker启动容器指令</h2>
+
+<p>docker 使用mysql数据库启动</p>
+
+<pre><code>  docker run --env MODE=standalone --env SPRING_DATASOURCE_PLATFORM=mysql --env MYSQL_MASTER_SERVICE_DB_NAME=nacos_devtest --env MYSQL_MASTER_SERVICE_HOST=192.168.100.169 --env MYSQL_MASTER_SERVICE_USER=root --env MYSQL_MASTER_SERVICE_PASSWORD=root --env MYSQL_SLAVE_SERVICE_HOST=192.168.100.169 --env MYSQL_SLAVE_SERVICE_PORT=3305 --name nacos -d -p 8848:8848 nacos/nacos-server
+</code></pre>
 
 <h2 id="搭建生产可用的nacos集">搭建生产可用的Nacos集</h2>
 

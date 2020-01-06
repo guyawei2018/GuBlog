@@ -10,8 +10,52 @@
   
   <url>
     <loc>https://guyawei.top/zh-cn/categories/</loc>
-    <lastmod>2019-11-26T10:01:23+08:00</lastmod>
+    <lastmod>2020-01-05T16:01:23+08:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/</loc>
+    <lastmod>2020-01-05T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/category/java/</loc>
+    <lastmod>2020-01-05T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/posts/</loc>
+    <lastmod>2020-01-05T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/tags/</loc>
+    <lastmod>2020-01-05T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/2020/01/05/centos7%E4%B8%8Adocker%E9%83%A8%E7%BD%B2nexus/</loc>
+    <lastmod>2020-01-05T16:01:23+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/tag/java/</loc>
+    <lastmod>2020-01-05T16:01:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://guyawei.top/zh-cn/2020/01/05/mysql%E5%9C%A8centos7%E5%AE%89%E8%A3%85%E5%92%8Cdocker%E9%83%A8%E7%BD%B2/</loc>
+    <lastmod>2020-01-05T16:01:23+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <url>
@@ -26,36 +70,6 @@
     <lastmod>2019-11-26T10:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/</loc>
-    <lastmod>2019-11-26T10:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/category/java/</loc>
-    <lastmod>2019-11-26T10:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/posts/</loc>
-    <lastmod>2019-11-26T10:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/tags/</loc>
-    <lastmod>2019-11-26T10:01:23+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://guyawei.top/zh-cn/tag/java/</loc>
-    <lastmod>2019-11-26T10:01:23+08:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -288,7 +302,7 @@
   </url>
   
   <url>
-    <loc>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</loc>
+    <loc>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85%E5%92%8Cdocker%E9%83%A8%E7%BD%B2/</loc>
     <lastmod>2019-05-29T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

@@ -5,7 +5,7 @@
     <description>Recent content on GUBlog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 26 Nov 2019 10:01:23 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 05 Jan 2020 16:01:23 +0800</lastBuildDate>
     
         <atom:link href="https://guyawei.top/zh-cn/index.xml" rel="self" type="application/rss+xml" />
     
@@ -31,6 +31,135 @@
 
 &lt;p&gt;了解並貢獻： &lt;a href=&#34;https://github.com/gohugoio&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 </description>
+      
+    </item>
+    
+    <item>
+      <title>centos7上docker部署nexus</title>
+      <link>https://guyawei.top/zh-cn/2020/01/05/centos7%E4%B8%8Adocker%E9%83%A8%E7%BD%B2nexus/</link>
+      <pubDate>Sun, 05 Jan 2020 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2020/01/05/centos7%E4%B8%8Adocker%E9%83%A8%E7%BD%B2nexus/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;docker部署nexus&#34;&gt;docker部署nexus&lt;/h1&gt;
+
+&lt;h2 id=&#34;拉取镜像&#34;&gt;拉取镜像&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    docker pull sonatype/nexus3:3.19.1&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;新建外置文件夹&#34;&gt;新建外置文件夹&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    mkdir nexus
+    chmod 777 nexus&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;运行容器&#34;&gt;运行容器&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;   docker run -d -p 5000:5000 -p 8081:8081 -p 8082:8082 --name=nexus --restart=always  --privileged=true -v /usr/docker/nexus:/nexus-data sonatype/nexus3:3.19.1
+
+   docker logs -f -t --tail 300 nexus
+
+   或者
+   docker run -d --name nexus3 --restart=always  -p 8081:8081 -p 8082:8082 -p 5000:5000 --mount src=./nexus-data,target=/nexus-data  sonatype/nexus3:3.19.1&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>mysql在CentOS7安装和docker部署</title>
+      <link>https://guyawei.top/zh-cn/2020/01/05/mysql%E5%9C%A8centos7%E5%AE%89%E8%A3%85%E5%92%8Cdocker%E9%83%A8%E7%BD%B2/</link>
+      <pubDate>Sun, 05 Jan 2020 16:01:23 +0800</pubDate>
+      
+      <guid>https://guyawei.top/zh-cn/2020/01/05/mysql%E5%9C%A8centos7%E5%AE%89%E8%A3%85%E5%92%8Cdocker%E9%83%A8%E7%BD%B2/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;yum安装mysql-5-6&#34;&gt;yum安装mysql 5.6&lt;/h1&gt;
+
+&lt;h2 id=&#34;检查系统是否安装其他版本的mysql数据&#34;&gt;检查系统是否安装其他版本的MYSQL数据&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    yum list installed | grep mysql
+    yum -y remove mysql-libs.x86_64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;安装及配置&#34;&gt;安装及配置&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    wget http://repo.mysql.com/mysql-community-release-el6-5.noarch.rpm   
+    rpm -ivh mysql-community-release-el6-5.noarch.rpm
+    yum repolist all | grep mysql
+
+    安装MYSQL数据库
+    yum install mysql-community-server -y
+
+    设置为开机启动(2、3、4都是on代表开机自动启动)
+    chkconfig --list | grep mysqld
+    chkconfig mysqld on&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;设置远程root&#34;&gt;设置远程root&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    启动mysql
+    service mysqld start
+
+    设置root密码
+    mysql_secure_installation
+
+    登陆root账号
+    mysql -uroot -p 
+
+    建立远程root用户
+    mysql&amp;gt; GRANT ALL PRIVILEGES ON *.* TO &amp;#39;root&amp;#39;@&amp;#39;%&amp;#39; IDENTIFIED BY &amp;#39;123456&amp;#39; WITH GRANT OPTION;
+    mysql&amp;gt; flush privileges;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;设置utf-8编码&#34;&gt;设置utf-8编码&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    查看mysql原本编码：
+    mysql&amp;gt; show variables like &amp;#39;character%&amp;#39;;
+
+    设置编码
+    # vi /etc/my.cnf
+
+    如下(少补)：
+    复制代码
+    [mysqld]
+    character-set-server=utf8 
+    collation-server=utf8_general_ci 
+    performance_schema_max_table_instances=400 
+    table_definition_cache=400 
+    table_open_cache=256
+
+    # 修改
+    sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+
+    [mysql]
+    default-character-set = utf8
+
+    [mysql.server]
+    default-character-set = utf8
+
+
+    [mysqld_safe]
+    default-character-set = utf8
+
+
+    [client]
+    default-character-set = utf8
+
+    
+
+    重启mysql
+
+    # service mysqld restart
+    再次查看编码：
+
+    # mysql -uroot -p
+    mysql&amp;gt; show variables like &amp;#39;character%&amp;#39;;
+
+    +--------------------------+----------------------------+
+    | Variable_name | Value |
+    +--------------------------+----------------------------+
+    | character_set_client | utf8 |
+    | character_set_connection | utf8 |
+    | character_set_database | utf8 |
+    | character_set_filesystem | binary |
+    | character_set_results | utf8 |
+    | character_set_server | utf8 |
+    | character_set_system | utf8 |
+    | character_sets_dir | /usr/share/mysql/charsets/ |
+    +--------------------------+----------------------------+
+    8 rows in set (0.00 sec)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h1 id=&#34;docker-部署mysql&#34;&gt;docker 部署Mysql&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;    拉取镜像需要注意版本
+    docker pull mysql:5.7.28
+
+    运行容器
+    docker run --name mysql -d --restart always -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v /usr/docker/mysql:/var/lib/mysql mysql:5.7.28&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
       
     </item>
     
@@ -4724,6 +4853,13 @@ Send shutdown request to mqnamesrv(36664) OK&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt
       
         <description>
 
+&lt;h2 id=&#34;docker启动容器指令&#34;&gt;docker启动容器指令&lt;/h2&gt;
+
+&lt;p&gt;docker 使用mysql数据库启动&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  docker run --env MODE=standalone --env SPRING_DATASOURCE_PLATFORM=mysql --env MYSQL_MASTER_SERVICE_DB_NAME=nacos_devtest --env MYSQL_MASTER_SERVICE_HOST=192.168.100.169 --env MYSQL_MASTER_SERVICE_USER=root --env MYSQL_MASTER_SERVICE_PASSWORD=root --env MYSQL_SLAVE_SERVICE_HOST=192.168.100.169 --env MYSQL_SLAVE_SERVICE_PORT=3305 --name nacos -d -p 8848:8848 nacos/nacos-server
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;h2 id=&#34;搭建生产可用的nacos集&#34;&gt;搭建生产可用的Nacos集&lt;/h2&gt;
 
 &lt;ul&gt;
@@ -5904,13 +6040,15 @@ scp -r /opt/soft/mongodb root@192.168.120.204:/opt/soft/scptest
     </item>
     
     <item>
-      <title>redis在CentOS7安装</title>
-      <link>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</link>
+      <title>redis在CentOS7安装和docker部署</title>
+      <link>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85%E5%92%8Cdocker%E9%83%A8%E7%BD%B2/</link>
       <pubDate>Wed, 29 May 2019 16:01:23 +0800</pubDate>
       
-      <guid>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85/</guid>
+      <guid>https://guyawei.top/zh-cn/2019/05/29/redis%E5%9C%A8centos7%E5%AE%89%E8%A3%85%E5%92%8Cdocker%E9%83%A8%E7%BD%B2/</guid>
       
-        <description>&lt;p&gt;&lt;strong&gt;redis在CentOS7安装&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
+        <description>
+
+&lt;p&gt;&lt;strong&gt;redis在CentOS7安装&lt;/strong&gt;&lt;br&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;1.# wget &lt;a href=&#34;http://download.redis.io/releases/redis-5.0.3.tar.gz&#34;&gt;http://download.redis.io/releases/redis-5.0.3.tar.gz&lt;/a&gt;&lt;br&gt;&lt;/li&gt;
@@ -5945,6 +6083,45 @@ flushdb 清当前库 flushall 情况所有库&lt;/code&gt;&lt;/pre&gt;&lt;/div&g
 
 &lt;p&gt;&lt;p&gt; redis知识点&lt;/P&gt;
 &lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/redis.png&#34; alt=&#34;图片&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;docker-部署-redis&#34;&gt;docker 部署 redis&lt;/h2&gt;
+
+&lt;p&gt;查看官网说明 &lt;a href=&#34;https://hub.docker.com/_/redis?tab=description&#34;&gt;https://hub.docker.com/_/redis?tab=description&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;下载镜像&#34;&gt;下载镜像&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;docker pull redis
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;启动容器&#34;&gt;启动容器&lt;/h3&gt;
+
+&lt;p&gt;这里我把容器的映射建立在/usr/docker/redis/data，/usr/docker/redis目录下面，这两个目录自己创建，配置文件redis.conf从别的途径获取的(&lt;a href=&#34;http://download.redis.io/redis-stable/redis.conf&#34;&gt;http://download.redis.io/redis-stable/redis.conf&lt;/a&gt;)&lt;br&gt;
+启动前，需要对目录加入白名单，不然启动会失败，错误为没有权限&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ chcon -Rt svirt_sandbox_file_t /usr/docker/redis/data
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;启动语句如下(redis-6379.conf中不需要开启后台守护模式)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+docker run --name redis -p 6379:6379 -v /usr/docker/redis/redis-6379.conf:/usr/local/etc/redis/redis.conf -v /usr/docker/redis/data:/data -d redis redis-server /usr/local/etc/redis/redis.conf
+
+docker logs -f -t --tail 300 redis
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;防火墙&#34;&gt;防火墙&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;
+firewall-cmd --permanent --add-port=6379/tcp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;先在本地启动redis客户端&#34;&gt;先在本地启动redis客户端&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;
+ docker run -it --link redis:redis --rm redis redis-cli -h redis -p 6379
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;测试成功后再远程测试&lt;/p&gt;
 </description>
       
     </item>
