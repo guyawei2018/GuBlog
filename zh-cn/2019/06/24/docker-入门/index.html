@@ -33,7 +33,7 @@
 
 <meta itemprop="datePublished" content="2019-06-24T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2019-06-24T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="1654">
+<meta itemprop="wordCount" content="1662">
 
 
 
@@ -183,35 +183,33 @@ Docker 要求 CentOS 系统的内核版本高于 3.10 ，查看本页面的前�
 Docker CE 即社区免费版，Docker EE 即企业版，强调安全，但需付费使用。<br>
 本文介绍 Docker CE 的安装使用。</p></li>
 
-<li><p>1.移除旧的版本：<br>
-$ yum remove docker <br />
-              docker-client <br />
-              docker-client-latest <br />
-              docker-common <br />
-              docker-latest <br />
-              docker-latest-logrotate <br />
-              docker-logrotate <br />
-              docker-selinux <br />
-              docker-engine-selinux <br />
-              docker-engine</p></li>
-
-<li><p>2.安装一些必要的系统工具：<br>
-yum install -y yum-utils device-mapper-persistent-data lvm2</p></li>
-
-<li><p>3.建议使用阿里云的地址，国外的地址，下载比较慢，而且很容易链接超时：<br>
+<li><p>1.移除旧的版本：<br></p></li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-plant" data-lang="plant">  yum remove docker \
+            docker-client \
+            docker-client-latest \
+            docker-common \
+            docker-latest \
+            docker-latest-logrotate \
+            docker-logrotate \
+            docker-selinux \
+            docker-engine-selinux \
+            docker-engine</code></pre></div>
+<ul>
+<li>2.安装一些必要的系统工具：<br>
+yum install -y yum-utils device-mapper-persistent-data lvm2</li>
+<li>3.建议使用阿里云的地址，国外的地址，下载比较慢，而且很容易链接超时：<br>
 官网地址<br>
 sudo yum-config-manager <br />
 &ndash;add-repo <br />
 <a href="https://download.docker.com/linux/centos/docker-ce.repo">https://download.docker.com/linux/centos/docker-ce.repo</a><br>
 阿里云地址<br>
-yum-config-manager &ndash;add-repo <a href="http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo">http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</a><br></p></li>
-
-<li><p>4.更新 yum 缓存和安装docker<br>
+yum-config-manager &ndash;add-repo <a href="http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo">http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</a><br></li>
+<li>4.更新 yum 缓存和安装docker<br>
 yum makecache fast<br>
-yum install docker-ce<br></p></li>
-
-<li><p>5.启动 Docker 后台服务<br>
-sudo systemctl start docker<br></p></li>
+yum install docker-ce<br></li>
+<li>5.启动 Docker 后台服务<br>
+sudo systemctl start docker<br></li>
 
 <li><p>6.测试运行 hello-world<br>
 docker run hello-world</p>

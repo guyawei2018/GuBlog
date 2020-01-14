@@ -5592,14 +5592,24 @@ InstanceWithWeight太重了，在 weightRandom 还得再两层for循环，还挺
 &lt;h2 id=&#34;docker-部署jenkins&#34;&gt;Docker 部署jenkins&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://hub.docker.com/_/jenkins&#34;&gt;https://hub.docker.com/_/jenkins&lt;/a&gt; 查看官方提供的部署信息&lt;br&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://jenkins.io/zh/doc/book/installing/&#34;&gt;https://jenkins.io/zh/doc/book/installing/&lt;/a&gt; 查看官方提供的部署信息&lt;br&gt;&lt;br&gt;&lt;/p&gt;
 
-&lt;li&gt;&lt;p&gt;拉取镜像&lt;/p&gt;
+&lt;h3 id=&#34;拉取镜像&#34;&gt;拉取镜像&lt;/h3&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;h3 id=&#34;docker-pull-jenkins-br&#34;&gt;docker pull jenkins&lt;br&gt;&lt;/h3&gt;
+&lt;p&gt;建议使用的Docker映像是jenkinsci/blueocean image(来自 the Docker Hub repository)。 该镜像包含当前的长期支持 (LTS) 的Jenkins版本 （可以投入使用） ，捆绑了所有Blue Ocean插件和功能。这意味着你不需要单独安装Blue Ocean插件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;  docker run \
+    -u root \
+    --rm \
+    -d \
+    -p 8080:8080 \
+    -p 50000:50000 \
+    -v jenkins-data:/var/jenkins_home \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    jenkinsci/blueocean&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins1.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://gu-static.oss-cn-shanghai.aliyuncs.com/GuBlog/img/docker_jenkins/jenkins1.png&#34; alt=&#34;图片&#34; /&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
-
+&lt;ul&gt;
 &lt;li&gt;&lt;p&gt;运行镜像&lt;/p&gt;
 
 &lt;h3 id=&#34;docker-run-p-8080-8080-p-50000-50000-v-your-home-var-jenkins-home-jenkins-br&#34;&gt;docker run -p 8080:8080 -p 50000:50000 -v /your/home:/var/jenkins_home jenkins &lt;br&gt;&lt;/h3&gt;
@@ -5781,35 +5791,33 @@ Docker 要求 CentOS 系统的内核版本高于 3.10 ，查看本页面的前�
 Docker CE 即社区免费版，Docker EE 即企业版，强调安全，但需付费使用。&lt;br&gt;
 本文介绍 Docker CE 的安装使用。&lt;/p&gt;&lt;/li&gt;
 
-&lt;li&gt;&lt;p&gt;1.移除旧的版本：&lt;br&gt;
-$ yum remove docker &lt;br /&gt;
-              docker-client &lt;br /&gt;
-              docker-client-latest &lt;br /&gt;
-              docker-common &lt;br /&gt;
-              docker-latest &lt;br /&gt;
-              docker-latest-logrotate &lt;br /&gt;
-              docker-logrotate &lt;br /&gt;
-              docker-selinux &lt;br /&gt;
-              docker-engine-selinux &lt;br /&gt;
-              docker-engine&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;2.安装一些必要的系统工具：&lt;br&gt;
-yum install -y yum-utils device-mapper-persistent-data lvm2&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;3.建议使用阿里云的地址，国外的地址，下载比较慢，而且很容易链接超时：&lt;br&gt;
+&lt;li&gt;&lt;p&gt;1.移除旧的版本：&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;  yum remove docker \
+            docker-client \
+            docker-client-latest \
+            docker-common \
+            docker-latest \
+            docker-latest-logrotate \
+            docker-logrotate \
+            docker-selinux \
+            docker-engine-selinux \
+            docker-engine&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;2.安装一些必要的系统工具：&lt;br&gt;
+yum install -y yum-utils device-mapper-persistent-data lvm2&lt;/li&gt;
+&lt;li&gt;3.建议使用阿里云的地址，国外的地址，下载比较慢，而且很容易链接超时：&lt;br&gt;
 官网地址&lt;br&gt;
 sudo yum-config-manager &lt;br /&gt;
 &amp;ndash;add-repo &lt;br /&gt;
 &lt;a href=&#34;https://download.docker.com/linux/centos/docker-ce.repo&#34;&gt;https://download.docker.com/linux/centos/docker-ce.repo&lt;/a&gt;&lt;br&gt;
 阿里云地址&lt;br&gt;
-yum-config-manager &amp;ndash;add-repo &lt;a href=&#34;http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo&#34;&gt;http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo&lt;/a&gt;&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;4.更新 yum 缓存和安装docker&lt;br&gt;
+yum-config-manager &amp;ndash;add-repo &lt;a href=&#34;http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo&#34;&gt;http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo&lt;/a&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;4.更新 yum 缓存和安装docker&lt;br&gt;
 yum makecache fast&lt;br&gt;
-yum install docker-ce&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;5.启动 Docker 后台服务&lt;br&gt;
-sudo systemctl start docker&lt;br&gt;&lt;/p&gt;&lt;/li&gt;
+yum install docker-ce&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;5.启动 Docker 后台服务&lt;br&gt;
+sudo systemctl start docker&lt;br&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;6.测试运行 hello-world&lt;br&gt;
 docker run hello-world&lt;/p&gt;
