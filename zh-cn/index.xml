@@ -3694,7 +3694,11 @@ nohup sh bin/mqbroker -n 192.168.44.78:9876 -c conf/broker.conf autoCreateTopicE
 tail -f ~/logs/rocketmqlogs/broker.log
 
 # 如果启动成功，能看到类似如下的日志：
-2019-07-18 17:08:41 INFO main - The broker[itmuchcomdeMacBook-Pro.local, 192.168.43.197:10911] boot success. serializeType=JSON and name server is localhost:9876&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+2019-07-18 17:08:41 INFO main - The broker[itmuchcomdeMacBook-Pro.local, 192.168.43.197:10911] boot success. serializeType=JSON and name server is localhost:9876
+
+#启动时报错 &amp;#34;RocketMQ：Cannot allocate memory&amp;#34;
+
+尝试修改了RocketMQ的Broker内存大小，之后解决了这个问题。  文件路径：/{RocketMq-home}/bin/runbroker.sh&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id=&#34;3-2-验证rocketmq功能正常-可选&#34;&gt;3.2 验证RocketMQ功能正常（可选）&lt;/h3&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-plant&#34; data-lang=&#34;plant&#34;&gt;3.2.1 验证生产消息正常
 执行如下命令：
